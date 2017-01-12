@@ -1,17 +1,263 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{b8cc04d6-3567-466a-95be-d139cd9addc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{970eece3-ea7b-452f-bdb5-0ca6dd39376f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Common\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Runtime">
+      <UniqueIdentifier>{2651daf1-85a8-438a-b321-6b3d2169f3d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configure">
+      <UniqueIdentifier>{a267423a-9cb7-433f-8224-0af7fb3a1645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{1f835008-5a57-466a-94cd-f7397b708c98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\D3D11">
+      <UniqueIdentifier>{79055add-f13a-454d-9e5b-be33ec8c4cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{f4dafae5-20af-4fe7-8a1a-a58ec4892dc3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Configure\Config.xml">
+      <Filter>Configure</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\Source\Configure.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Source\Timer.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Source\AABBox.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Header\Math.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderState.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderView.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\SceneManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\SceneObject.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\ShaderObject.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\StateManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Texture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Viewport.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Window.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\App.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Camera.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Context.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\DeferredRendering.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\FrameBuffer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Frustum.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\GameObject.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\GameState.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Light.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Mesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Model.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\MyApp.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\PostProcess.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderBuffer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderElement.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderEngine.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderFactory.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderLayout.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\Header\Sphere.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Timer.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\UUID.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Vector.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\AABBox.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\CommonPreDec.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Configure.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Frustum.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Math.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Math.hpp">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Matrix.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\Ray.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderEngine.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderFactory.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderLayout.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderState.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderView.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\SceneManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\SceneObject.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\ShaderObject.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\StateManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\texture.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\TypeAndFormat.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Viewport.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Window.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\App.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Camera.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\CommonTools.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Context.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\DeferredRendering.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\EnginePreDec.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\FrameBuffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\GameObject.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\GameState.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Light.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Mesh.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Model.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\MyApp.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\PostProcess.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderBuffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderElement.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

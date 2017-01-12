@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<configure>
+  <context>
+    <render_factory name="D3D11"/>
+  </context>
+  
+  <render>
+    <frame width="1280" height="800" fullscreen="0">      
+      </frame>
+    <msaa4x value="1"/>
+    <gamma value="1"/>
+    <deferred_rendering value="1">
+      <gbuffer_size value ="3"/>
+      </deferred_rendering>
+  </render>
+</configure>

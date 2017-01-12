@@ -18,6 +18,85 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Configure\Config.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\Header\Math.cpp" />
+    <ClCompile Include="Common\Source\AABBox.cpp" />
+    <ClCompile Include="Common\Source\Configure.cpp" />
+    <ClCompile Include="Common\Source\Timer.cpp" />
+    <ClCompile Include="Engine\Source\App.cpp" />
+    <ClCompile Include="Engine\Source\Camera.cpp" />
+    <ClCompile Include="Engine\Source\Context.cpp" />
+    <ClCompile Include="Engine\Source\DeferredRendering.cpp" />
+    <ClCompile Include="Engine\Source\FrameBuffer.cpp" />
+    <ClCompile Include="Engine\Source\Frustum.cpp" />
+    <ClCompile Include="Engine\Source\GameObject.cpp" />
+    <ClCompile Include="Engine\Source\GameState.cpp" />
+    <ClCompile Include="Engine\Source\Light.cpp" />
+    <ClCompile Include="Engine\Source\Mesh.cpp" />
+    <ClCompile Include="Engine\Source\Model.cpp" />
+    <ClCompile Include="Engine\Source\MyApp.cpp" />
+    <ClCompile Include="Engine\Source\PostProcess.cpp" />
+    <ClCompile Include="Engine\Source\RenderBuffer.cpp" />
+    <ClCompile Include="Engine\Source\RenderElement.cpp" />
+    <ClCompile Include="Engine\Source\RenderEngine.cpp" />
+    <ClCompile Include="Engine\Source\RenderFactory.cpp" />
+    <ClCompile Include="Engine\Source\RenderLayout.cpp" />
+    <ClCompile Include="Engine\Source\RenderState.cpp" />
+    <ClCompile Include="Engine\Source\RenderView.cpp" />
+    <ClCompile Include="Engine\Source\SceneManager.cpp" />
+    <ClCompile Include="Engine\Source\SceneObject.cpp" />
+    <ClCompile Include="Engine\Source\ShaderObject.cpp" />
+    <ClCompile Include="Engine\Source\StateManager.cpp" />
+    <ClCompile Include="Engine\Source\Texture.cpp" />
+    <ClCompile Include="Engine\Source\Viewport.cpp" />
+    <ClCompile Include="Engine\Source\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\Header\AABBox.h" />
+    <ClInclude Include="Common\Header\CommonPreDec.h" />
+    <ClInclude Include="Common\Header\Configure.h" />
+    <ClInclude Include="Common\Header\Frustum.h" />
+    <ClInclude Include="Common\Header\Math.h" />
+    <ClInclude Include="Common\Header\Math.hpp" />
+    <ClInclude Include="Common\Header\Matrix.h" />
+    <ClInclude Include="Common\Header\Ray.h" />
+    <ClInclude Include="Common\Header\Sphere.h" />
+    <ClInclude Include="Common\Header\Timer.h" />
+    <ClInclude Include="Common\Header\UUID.h" />
+    <ClInclude Include="Common\Header\Vector.h" />
+    <ClInclude Include="Engine\Header\App.h" />
+    <ClInclude Include="Engine\Header\Camera.h" />
+    <ClInclude Include="Engine\Header\CommonTools.h" />
+    <ClInclude Include="Engine\Header\Context.h" />
+    <ClInclude Include="Engine\Header\DeferredRendering.h" />
+    <ClInclude Include="Engine\Header\EnginePreDec.h" />
+    <ClInclude Include="Engine\Header\FrameBuffer.h" />
+    <ClInclude Include="Engine\Header\GameObject.h" />
+    <ClInclude Include="Engine\Header\GameState.h" />
+    <ClInclude Include="Engine\Header\Light.h" />
+    <ClInclude Include="Engine\Header\Mesh.h" />
+    <ClInclude Include="Engine\Header\Model.h" />
+    <ClInclude Include="Engine\Header\MyApp.h" />
+    <ClInclude Include="Engine\Header\PostProcess.h" />
+    <ClInclude Include="Engine\Header\RenderBuffer.h" />
+    <ClInclude Include="Engine\Header\RenderElement.h" />
+    <ClInclude Include="Engine\Header\RenderEngine.h" />
+    <ClInclude Include="Engine\Header\RenderFactory.h" />
+    <ClInclude Include="Engine\Header\RenderLayout.h" />
+    <ClInclude Include="Engine\Header\RenderState.h" />
+    <ClInclude Include="Engine\Header\RenderView.h" />
+    <ClInclude Include="Engine\Header\SceneManager.h" />
+    <ClInclude Include="Engine\Header\SceneObject.h" />
+    <ClInclude Include="Engine\Header\ShaderObject.h" />
+    <ClInclude Include="Engine\Header\StateManager.h" />
+    <ClInclude Include="Engine\Header\texture.h" />
+    <ClInclude Include="Engine\Header\TypeAndFormat.h" />
+    <ClInclude Include="Engine\Header\Viewport.h" />
+    <ClInclude Include="Engine\Header\Window.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{21DB105E-D529-4661-81F0-F6FBF97511B5}</ProjectGuid>
     <RootNamespace>vEngine</RootNamespace>
@@ -38,7 +117,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -68,7 +147,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -81,6 +162,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,8 +192,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
