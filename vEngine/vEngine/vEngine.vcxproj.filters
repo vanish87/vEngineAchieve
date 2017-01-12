@@ -95,9 +95,6 @@
     <ClCompile Include="Engine\Source\FrameBuffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Source\Frustum.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Source\GameObject.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -133,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Source\RenderLayout.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Source\Frustum.cpp">
+      <Filter>Common\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

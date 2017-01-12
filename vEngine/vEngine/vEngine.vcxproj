@@ -25,13 +25,13 @@
     <ClCompile Include="Common\Header\Math.cpp" />
     <ClCompile Include="Common\Source\AABBox.cpp" />
     <ClCompile Include="Common\Source\Configure.cpp" />
+    <ClCompile Include="Common\Source\Frustum.cpp" />
     <ClCompile Include="Common\Source\Timer.cpp" />
     <ClCompile Include="Engine\Source\App.cpp" />
     <ClCompile Include="Engine\Source\Camera.cpp" />
     <ClCompile Include="Engine\Source\Context.cpp" />
     <ClCompile Include="Engine\Source\DeferredRendering.cpp" />
     <ClCompile Include="Engine\Source\FrameBuffer.cpp" />
-    <ClCompile Include="Engine\Source\Frustum.cpp" />
     <ClCompile Include="Engine\Source\GameObject.cpp" />
     <ClCompile Include="Engine\Source\GameState.cpp" />
     <ClCompile Include="Engine\Source\Light.cpp" />

@@ -1,5 +1,5 @@
-#include "SceneObject.h"
-#include "Context.h"
+#include "Engine\Header\SceneObject.h"
+#include "Engine\Header\Context.h"
 
 namespace MocapGE
 {

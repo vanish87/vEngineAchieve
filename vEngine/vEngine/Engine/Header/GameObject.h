@@ -3,7 +3,7 @@
 
 #pragma once
 #include "Common\Header\CommonPreDec.h"
-#include "UUID.h"
+#include "Common\Header\UUID.h"
 
 namespace MocapGE
 {

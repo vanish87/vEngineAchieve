@@ -19,7 +19,7 @@
 #include "RenderLayout.h"
 #include "TypeAndFormat.h"
 #include "Mesh.h"
-#include "Texture.h"
+#include "Engine\Header\Texture.h"
 
 
 #ifdef _DEBUG

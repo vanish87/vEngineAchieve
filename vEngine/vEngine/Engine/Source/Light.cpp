@@ -1,5 +1,5 @@
-#include "Light.h"
-#include "Context.h"
+#include "Engine\Header\Light.h"
+#include "Engine\Header\Context.h"
 
 namespace MocapGE
 {

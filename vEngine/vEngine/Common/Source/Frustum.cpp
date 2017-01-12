@@ -1,4 +1,4 @@
-#include "Frustum.h"
+#include "Common\Header\Frustum.h"
 
 namespace MocapGE
 {

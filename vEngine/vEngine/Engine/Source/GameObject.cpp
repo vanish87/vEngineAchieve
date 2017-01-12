@@ -1,4 +1,4 @@
-#include "GameObject.h"
+#include "Engine\Header\GameObject.h"
 
 namespace MocapGE
 {

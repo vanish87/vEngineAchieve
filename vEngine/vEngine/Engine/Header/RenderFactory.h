@@ -2,11 +2,11 @@
 #define RENDERFACTORY_H_
 
 #pragma once
-#include "EnginePreDec.h"
+#include "Engine\Header\EnginePreDec.h"
 
-#include "RenderEngine.h"
-#include "TypeAndFormat.h"
-#include "Texture.h"
+#include "Engine\Header\RenderEngine.h"
+#include "Engine\Header\TypeAndFormat.h"
+#include "Engine\Header\Texture.h"
 
 namespace MocapGE
 {

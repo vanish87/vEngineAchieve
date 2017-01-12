@@ -2,12 +2,12 @@
 #define D3DFRAMEBUFFER_H_
 
 #pragma once
-#include "FrameBuffer.h"
+#include "Engine\Header\FrameBuffer.h"
 #include "D3DPreDec.h"
 #include "D3DRenderView.h"
 #include "D3DTexture.h"
 #include "D3DRenderEngine.h"
-#include "Context.h"
+#include "Engine\Header\Context.h"
 
 namespace MocapGE
 {
