@@ -2,7 +2,7 @@
 #define D3DRENDRBUFFER_H_
 
 #pragma once
-#include "RenderBuffer.h"
+#include "Engine\Header\RenderBuffer.h"
 
 #include "D3DPreDec.h"
 #include "D3DTexture.h"

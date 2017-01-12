@@ -1,6 +1,6 @@
-#include "MyApp.h"
+#include "Engine\Header\MyApp.h"
 #include "Engine\Header\Context.h"
-#include "Timer.h"
+#include "Common\Header\Timer.h"
 
 //#include "StartMenu.h"
 
