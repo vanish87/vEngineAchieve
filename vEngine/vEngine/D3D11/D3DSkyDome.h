@@ -3,11 +3,11 @@
 
 #pragma once
 
-#include "EnginePreDec.h"
+#include "Engine\Header\EnginePreDec.h"
 #include "D3DPreDec.h"
-#include "Model.h"
+#include "Engine\Header\Model.h"
 
-#include "..\External\DDSTextureLoader.h"
+#include "DDSTextureLoader.h"
 
 
 namespace MocapGE

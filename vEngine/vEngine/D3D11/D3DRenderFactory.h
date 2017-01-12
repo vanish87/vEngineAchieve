@@ -23,7 +23,7 @@ namespace MocapGE
 		D3DRenderFactory(void);
 		~D3DRenderFactory(void);		
 		
-		virtual FrameBuffer* MakeFrameBuffer( RenderSetting& render_setting );
+		virtual FrameBuffer* MakeFrameBuffer( Configure::RenderSetting& render_setting );
 
 	private:
 

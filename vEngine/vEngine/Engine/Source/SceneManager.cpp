@@ -1,9 +1,9 @@
-#include "SceneManager.h"
+#include "Engine\Header\SceneManager.h"
 #include "Engine\Header\Context.h"
 
 //TODO: bad!! Write a independent shader object loader
 #include "D3D11\D3DShaderobject.h"
-#include "PostProcess.h"
+#include "Engine\Header\PostProcess.h"
 
 namespace MocapGE
 {

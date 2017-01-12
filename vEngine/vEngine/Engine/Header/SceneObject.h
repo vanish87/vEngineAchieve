@@ -4,7 +4,7 @@
 #pragma once
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\Matrix.h"
-#include "RenderElement.h"
+#include "Engine\Header\RenderElement.h"
 
 namespace MocapGE
 {
