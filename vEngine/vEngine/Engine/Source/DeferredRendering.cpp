@@ -63,7 +63,7 @@ namespace MocapGE
 		fullscreen_mesh_ = new MocapGE::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
 
 		//According to config file
-		for(size_t i=0; i< render_setting.gbuffer_size; i++)
+		for(int i=0; i< render_setting.gbuffer_size; i++)
 		{
 			//create render target
 			Texture* texture_2d = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
