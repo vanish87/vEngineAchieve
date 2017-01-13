@@ -27,6 +27,17 @@
     <ClCompile Include="Common\Source\Configure.cpp" />
     <ClCompile Include="Common\Source\Frustum.cpp" />
     <ClCompile Include="Common\Source\Timer.cpp" />
+    <ClCompile Include="D3D11\D3DFrameBuffer.cpp" />
+    <ClCompile Include="D3D11\D3DModel.cpp" />
+    <ClCompile Include="D3D11\D3DRenderBuffer.cpp" />
+    <ClCompile Include="D3D11\D3DRenderEngine.cpp" />
+    <ClCompile Include="D3D11\D3DRenderFactory.cpp" />
+    <ClCompile Include="D3D11\D3DRenderLayout.cpp" />
+    <ClCompile Include="D3D11\D3DRenderState.cpp" />
+    <ClCompile Include="D3D11\D3DRenderView.cpp" />
+    <ClCompile Include="D3D11\D3DShaderobject.cpp" />
+    <ClCompile Include="D3D11\D3DSkyDome.cpp" />
+    <ClCompile Include="D3D11\D3DTexture.cpp" />
     <ClCompile Include="Engine\Source\App.cpp" />
     <ClCompile Include="Engine\Source\Camera.cpp" />
     <ClCompile Include="Engine\Source\Context.cpp" />
@@ -67,6 +78,18 @@
     <ClInclude Include="Common\Header\Timer.h" />
     <ClInclude Include="Common\Header\UUID.h" />
     <ClInclude Include="Common\Header\Vector.h" />
+    <ClInclude Include="D3D11\D3DFrameBuffer.h" />
+    <ClInclude Include="D3D11\D3DModel.h" />
+    <ClInclude Include="D3D11\D3DPreDec.h" />
+    <ClInclude Include="D3D11\D3DRenderBuffer.h" />
+    <ClInclude Include="D3D11\D3DRenderEngine.h" />
+    <ClInclude Include="D3D11\D3DRenderFactory.h" />
+    <ClInclude Include="D3D11\D3DRenderLayout.h" />
+    <ClInclude Include="D3D11\D3DRenderState.h" />
+    <ClInclude Include="D3D11\D3DRenderView.h" />
+    <ClInclude Include="D3D11\D3DShaderobject.h" />
+    <ClInclude Include="D3D11\D3DSkyDome.h" />
+    <ClInclude Include="D3D11\D3DTexture.h" />
     <ClInclude Include="Engine\Header\App.h" />
     <ClInclude Include="Engine\Header\Camera.h" />
     <ClInclude Include="Engine\Header\CommonTools.h" />
@@ -117,7 +140,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -162,7 +185,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>

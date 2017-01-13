@@ -40,7 +40,7 @@ namespace MocapGE
 		this->depth_texture_->SetUsage(TU_DEPTH_SR);
 	}
 
-	D3DFrameBuffer::D3DFrameBuffer( RenderSetting& render_setting )
+	D3DFrameBuffer::D3DFrameBuffer( Configure::RenderSetting& render_setting )
 		: FrameBuffer(render_setting.left, render_setting.top, render_setting.width, render_setting.height),
 		  depth_stencil_view_(new D3DDepthStencilRenderView)		
 	{

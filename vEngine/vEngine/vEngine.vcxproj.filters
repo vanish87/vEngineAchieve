@@ -134,6 +134,39 @@
     <ClCompile Include="Common\Source\Frustum.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D3D11\D3DRenderView.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DShaderobject.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DSkyDome.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DTexture.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DFrameBuffer.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DModel.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DRenderBuffer.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DRenderEngine.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DRenderFactory.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DRenderLayout.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11\D3DRenderState.cpp">
+      <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -258,6 +291,42 @@
     </ClInclude>
     <ClInclude Include="Engine\Header\RenderElement.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DRenderView.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DShaderobject.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DSkyDome.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DTexture.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DFrameBuffer.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DModel.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DPreDec.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DRenderBuffer.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DRenderEngine.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DRenderFactory.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DRenderLayout.h">
+      <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11\D3DRenderState.h">
+      <Filter>Rendering\D3D11</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

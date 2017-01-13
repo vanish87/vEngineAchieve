@@ -18,7 +18,7 @@ namespace MocapGE
 		return new D3DRenderEngine();
 	}
 	
-	FrameBuffer* D3DRenderFactory::MakeFrameBuffer( RenderSetting& render_setting )
+	FrameBuffer* D3DRenderFactory::MakeFrameBuffer( Configure::RenderSetting& render_setting )
 	{
 		return new D3DFrameBuffer(render_setting);
 	}

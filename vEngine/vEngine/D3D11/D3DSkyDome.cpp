@@ -34,19 +34,19 @@ namespace MocapGE
 		init_data.data = vb;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_VERTEX, vertices.size() ,sizeof(VertexType));
+		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_VERTEX, (uint32_t)vertices.size() ,sizeof(VertexType));
 		//delete[] vb;
 		//call MakeRenderBuffer(Index)
 		init_data.data = ib;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_INDEX, indices.size(), sizeof(uint32_t));
+		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_INDEX, (uint32_t)indices.size(), sizeof(uint32_t));
 		//delete[] ib;
 
 		//add VertexBuffer to renderlayout;
 		render_layout->AddBuffer(vertex_buffer, sizeof(VertexType));
 		//add IndexBuffer to renderlayout;
-		render_layout->AddBuffer(index_buffer, indices.size());
+		render_layout->AddBuffer(index_buffer, (uint32_t)indices.size());
 		//set Primitivetype of renderlayout;
 		render_layout->SetPrimitive(PT_TRIANGLELIST);
 		//set Input layout Semi
@@ -55,7 +55,7 @@ namespace MocapGE
 		render_layout->SetInputLayout(inputlayout);
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
-		sky_mesh_ = new MocapGE::Mesh("SkyDome", render_layout, model_matrix, vb, vertices.size(), ib);
+		sky_mesh_ = new MocapGE::Mesh("SkyDome", render_layout, model_matrix, vb, (uint32_t)vertices.size(), ib);
 
 		model_matrix_ = model_matrix;
 	}
@@ -139,7 +139,6 @@ namespace MocapGE
 
 	void D3DSkyDome::BuildGeoSphere(int numSubdivisions, float radius, VertexList& vertices, IndexList& indices)
 	{
-		// 最小的细分数量.
 		numSubdivisions = Math::Min(numSubdivisions, 5);
 
 		const float X = 0.525731f; 

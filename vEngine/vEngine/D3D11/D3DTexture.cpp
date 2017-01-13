@@ -1,7 +1,7 @@
 #include "D3DTexture.h"
-#include "Context.h"
+#include "Engine\Header\Context.h"
 #include "D3DRenderEngine.h"
-#include "RenderView.h"
+#include "Engine\Header\RenderView.h"
 
 namespace MocapGE
 {
@@ -19,8 +19,8 @@ namespace MocapGE
 	{
 
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
-		desc_.Width = width_;
-		desc_.Height = height_;
+		desc_.Width = (UINT)width_;
+		desc_.Height = (UINT)height_;
 		desc_.ArraySize = array_size_;
 		desc_.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 		desc_.CPUAccessFlags = 0;

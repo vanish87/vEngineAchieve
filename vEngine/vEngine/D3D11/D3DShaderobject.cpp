@@ -1,5 +1,5 @@
 #include "D3DShaderobject.h"
-#include "Context.h"
+#include "Engine\Header\Context.h"
 
 namespace MocapGE
 {
@@ -62,9 +62,9 @@ namespace MocapGE
 		//TODO: write a better solution for cast float4x4 to float*
 		ID3DX11EffectMatrixVariable* mat_var = GetMatrixVariable(name);
 		float *p = new float[matrix.size()];
-		for(size_t i = 0; i< matrix.row(); i++)
-			for(size_t j = 0; j < matrix.col(); j++)
-				p[i*matrix.row() + j] = matrix[i][j];
+		for(int i = 0; i< matrix.row(); i++)
+			for(int j = 0; j < matrix.col(); j++)
+				p[i*(int)matrix.row() + j] = matrix[i][j];
 		HRESULT res = mat_var->SetMatrix(p);
 		if(FAILED(res))
 			PRINT("Cannot set Shader Matrix");
@@ -110,7 +110,7 @@ namespace MocapGE
 	void D3DShaderobject::Apply( size_t pass_index )
 	{
 		D3DRenderEngine* d3d_render_engine = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
-		HRESULT res = tech_->GetPassByIndex(pass_index)->Apply(0, d3d_render_engine->D3DDeviceImmContext());
+		HRESULT res = tech_->GetPassByIndex((UINT)pass_index)->Apply(0, d3d_render_engine->D3DDeviceImmContext());
 		if(FAILED(res))
 			PRINT("Cannot apply pass");
 	}
@@ -155,7 +155,7 @@ namespace MocapGE
 
 	void D3DShaderobject::SetShaderResourceVariable( std::string name )
 	{
-		bool valid = fx_->GetVariableByName(name.c_str())->IsValid();
+		bool valid = (bool)(fx_->GetVariableByName(name.c_str())->IsValid());
 		if( !valid)
 			PRINT("Cannot find Variables");
 		shader_resource_variable_[name] = fx_->GetVariableByName(name.c_str())->AsShaderResource();

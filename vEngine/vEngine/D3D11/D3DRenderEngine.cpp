@@ -13,7 +13,7 @@ namespace MocapGE
 	{
 	}
 
-	void D3DRenderEngine::InitRenderWindow( std::string const & name, RenderSetting const & render_setting )
+	void D3DRenderEngine::InitRenderWindow( std::string const & name, Configure::RenderSetting const & render_setting )
 	{
 		RenderEngine::InitRenderWindow(name, render_setting);
 
@@ -74,7 +74,7 @@ namespace MocapGE
 
 		swap_chain_desc.BufferUsage  = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swap_chain_desc.BufferCount  = 1;
-		swap_chain_desc.OutputWindow = Context::Instance().AppInstance().GetWindow().GetWnd();
+		//swap_chain_desc.OutputWindow = Context::Instance().AppInstance().GetWindow().GetWnd();
 		swap_chain_desc.Windowed     = true;
 		swap_chain_desc.SwapEffect   = DXGI_SWAP_EFFECT_DISCARD;
 		swap_chain_desc.Flags        = 0;
