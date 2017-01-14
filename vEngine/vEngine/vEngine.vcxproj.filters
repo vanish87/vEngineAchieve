@@ -34,6 +34,9 @@
     <Filter Include="Header">
       <UniqueIdentifier>{f4dafae5-20af-4fe7-8a1a-a58ec4892dc3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External">
+      <UniqueIdentifier>{7e03ecc1-5996-45bc-8752-7e016a331e52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Configure\Config.xml">
@@ -166,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="D3D11\D3DRenderState.cpp">
       <Filter>Rendering\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\TinyXML2\tinyxml2.cpp">
+      <Filter>External</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -327,6 +333,9 @@
     </ClInclude>
     <ClInclude Include="D3D11\D3DRenderState.h">
       <Filter>Rendering\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\TinyXML2\tinyxml2.h">
+      <Filter>External</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
