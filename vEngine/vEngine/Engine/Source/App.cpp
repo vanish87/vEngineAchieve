@@ -22,13 +22,18 @@ namespace MocapGE
 	void App::Initialize()
 	{
 		Configure::ContextSetting config = Context::Instance().GetConfigure();
-		Context::Instance().GetRenderFactory().GetRenderEngine().InitRenderWindow(app_name_, config.render_setting);
+
+		//register app here
 
 
+		//then create system window
 		if (this->win_ == nullptr)
 		{
 			this->win_ = new Window(app_name_, config.render_setting);
 		}
+
+		//then create rendering window
+		Context::Instance().GetRenderFactory().GetRenderEngine().InitRenderWindow(app_name_, config.render_setting);
 
 		//init deferred rendering here
 		if(config.render_setting.deferred_rendering)
