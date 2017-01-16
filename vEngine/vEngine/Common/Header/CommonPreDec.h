@@ -20,6 +20,8 @@
 #include <iostream>
 #define PRINT(x) std::cout<<x<<std::endl;
 
+#define ENABLE_TEST
+
 namespace MocapGE
 {
 	typedef __int8  int8_t;

@@ -22,6 +22,8 @@ namespace MocapGE
 		void LockCursor(bool lock);
 		void SetCursor(int x, int y);
 
+		const Window& GetWindow() const;
+
 	private:
 		std::string app_name_;
 		Window* win_;

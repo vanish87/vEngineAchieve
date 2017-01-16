@@ -207,10 +207,11 @@ void MyApp::Update()
 }*/
 
 
+#ifndef ENABLE_TEST
 
 int main()
 {
-	 _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	Configure MyConfig;
 	MyConfig.LoadConfig("Configure/Config.xml");
 	Context::Instance().Setup(MyConfig.GetContextSetting());
@@ -224,5 +225,7 @@ int main()
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
+#endif // !ENABLE_TEST
+
 
  

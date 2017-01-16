@@ -27,6 +27,8 @@
     <ClCompile Include="Common\Source\AABBox.cpp" />
     <ClCompile Include="Common\Source\Configure.cpp" />
     <ClCompile Include="Common\Source\Frustum.cpp" />
+    <ClCompile Include="Common\Source\ReturnCode.cpp" />
+    <ClCompile Include="Common\Source\Thread.cpp" />
     <ClCompile Include="Common\Source\Timer.cpp" />
     <ClCompile Include="D3D11\D3DFrameBuffer.cpp" />
     <ClCompile Include="D3D11\D3DModel.cpp" />
@@ -65,6 +67,7 @@
     <ClCompile Include="Engine\Source\Texture.cpp" />
     <ClCompile Include="Engine\Source\Viewport.cpp" />
     <ClCompile Include="Engine\Source\Window.cpp" />
+    <ClCompile Include="TestCase\ThreadTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\TinyXML2\tinyxml2.h" />
@@ -76,7 +79,9 @@
     <ClInclude Include="Common\Header\Math.hpp" />
     <ClInclude Include="Common\Header\Matrix.h" />
     <ClInclude Include="Common\Header\Ray.h" />
+    <ClInclude Include="Common\Header\ReturnCode.h" />
     <ClInclude Include="Common\Header\Sphere.h" />
+    <ClInclude Include="Common\Header\Thread.h" />
     <ClInclude Include="Common\Header\Timer.h" />
     <ClInclude Include="Common\Header\UUID.h" />
     <ClInclude Include="Common\Header\Vector.h" />
