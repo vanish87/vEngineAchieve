@@ -37,7 +37,7 @@ void MyApp::InitObjects()
 
 	float4x4 mat,trans;
 	D3DModel *model = new D3DModel();
-	model->LoadFile("Media/sponza/sponza.obj");
+	model->LoadFile("Media/sponza/sponza.sobj");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	Math::Scale(mat, 0.5);
 	model->SetModelMatrix(mat);

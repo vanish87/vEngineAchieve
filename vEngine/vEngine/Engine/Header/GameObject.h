@@ -2,6 +2,7 @@
 #define GAMEOBJECT_H_
 
 #pragma once
+#include <vector>
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\UUID.h"
 
@@ -14,11 +15,14 @@ namespace MocapGE
 		virtual ~GameObject(void);
 
 		virtual void Update();
+		virtual void AddComponent(const GameObject& GameObject_);
 
 		static GameObject& NullObject();
 
 	protected:
 		UUID id;
+
+		std::vector<GameObject> ConponentList;
 	};
 
 	class NGameObject : public GameObject
