@@ -237,8 +237,12 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTKd.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTexd.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /e /y /i /f "$(SolutionDir)Media" "$(OutDir)Media"
+xcopy /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

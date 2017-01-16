@@ -11,7 +11,6 @@
 #include "Engine\Header\Model.h"
 
 #include "D3DShaderobject.h"
-#include "WICTextureLoader.h"
 
 //#pragma comment(lib, "..\\External\\DirectXTK.lib")
 

@@ -1,4 +1,5 @@
 #include "D3DModel.h"
+#include "DirectXTex.h"
 
 namespace MocapGE
 {
@@ -145,11 +146,23 @@ namespace MocapGE
 		//if I have a original texture file loader, remove it, do Texture loading on Model Class
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		ID3D11Resource* texture;
-		if(file_name.find(".tga") != std::string::npos)
-			file_name.replace(file_name.size()-4,file_name.size()-1,".jpg");
+		
+		DirectX::TexMetadata metadata;
+		DirectX::ScratchImage image;
+		if (file_name.find(".tga") != std::string::npos)
+		{
+			HRESULT result = DirectX::LoadFromTGAFile(std::wstring(file_name.begin(), file_name.end()).c_str(), &metadata, image);
+			if (FAILED(result))
+				PRINT("Cannot Load Texture File" + file_name);
+		}
+		else
+		{
+			HRESULT result = DirectX::LoadFromWICFile(std::wstring(file_name.begin(), file_name.end()).c_str(), NULL, &metadata, image);
+			if (FAILED(result))
+				PRINT("Cannot Load Texture File" + file_name);
+		}
 		std::wstring widestr = std::wstring(file_name.begin(), file_name.end());
-		HRESULT result = DirectX::CreateWICTextureFromFile(d3d_re->D3DDevice(), NULL,
-											widestr.c_str(), &texture, NULL);
+		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata,&texture);
 		if(FAILED(result))
 			PRINT("Cannot Load Texture File");
 		ID3D11Texture2D* texture_2d= static_cast<ID3D11Texture2D*>(texture);
