@@ -30,7 +30,7 @@ namespace MocapGE
 		fin.read(&compiledShader[0], size);
 		fin.close();
 		D3DRenderEngine* render_engine = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
-		HRESULT result = D3DX11CreateEffectFromMemory(&compiledShader[0], size,	0, render_engine->D3DDevice(), &fx_);
+		HRESULT result = D3DX11CreateEffectFromMemory(&compiledShader[0], size,	0, render_engine->D3DDevice(), &fx_,NULL);
 		if(FAILED(result))
 			PRINT("Cannot Load Effect File");
 	}

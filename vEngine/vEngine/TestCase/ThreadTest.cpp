@@ -12,15 +12,21 @@ using namespace MocapGE;
 
 class TestThread : public Thread
 {
+public:
+	struct Para
+	{
+		int num;
+	};
 	ReturnCode Main(void* para)
 	{
+		Para* p = static_cast<Para*>(para);
 		PRINT("test");
+		PRINT(p->num);
 		return Success();
 	}
 };
 
 #ifdef ENABLE_TEST
-
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -29,12 +35,17 @@ int main()
 	Context::Instance().Setup(MyConfig.GetContextSetting());
 	
 	TestThread thread[10];
+	TestThread::Para p[10];
 	for (int i = 0; i < 10; ++i)
 	{
-		thread[i].Create();
+		p[i].num = i;
+		thread[i].Create(&p[i]);
 	}
 
-
+	for (int i = 0; i < 10; ++i)
+	{
+		thread[i].Join();
+	}
 	_CrtDumpMemoryLeaks();
 	return 0;
 }

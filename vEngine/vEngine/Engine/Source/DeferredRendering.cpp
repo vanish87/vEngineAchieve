@@ -135,7 +135,7 @@ namespace MocapGE
 		ssdo_so_->SetTechnique("PPTech");
 
 		D3DModel *random_tex_dummy = new D3DModel();
-		noise_tex_ = random_tex_dummy->LoadTexture("../Media/noise.png");
+		noise_tex_ = random_tex_dummy->LoadTexture("Media/noise.png");
 		delete random_tex_dummy;
 
 		occlusion_tex_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,

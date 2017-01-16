@@ -59,7 +59,7 @@ namespace MocapGE
 
 	void Context::RegisterAppInstance(App * app_instance)
 	{
-		if (this->app_instance_ != nullptr && app_instance != nullptr)
+		if (this->app_instance_ == nullptr && app_instance != nullptr)
 		{
 			this->app_instance_ = app_instance;
 		}

@@ -57,7 +57,8 @@ namespace MocapGE
         {
             printf("Thread: %u returned Error\n", RunningInstance->ThreadInstance.get_id());
         }
-		RunningInstance->ThreadInstance.detach();
+		//RunningInstance->ThreadInstance.detach();
+		//return value is ignored by std::thread
 		return ThreadData;
     };
 }

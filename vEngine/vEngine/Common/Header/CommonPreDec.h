@@ -20,7 +20,7 @@
 #include <iostream>
 #define PRINT(x) std::cout<<x<<std::endl;
 
-#define ENABLE_TEST
+//#define ENABLE_TEST
 
 namespace MocapGE
 {

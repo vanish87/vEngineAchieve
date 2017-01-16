@@ -40,6 +40,9 @@
     <Filter Include="Test">
       <UniqueIdentifier>{6d173707-cd53-446c-899f-4690971b95c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{f24f750e-8593-43a9-bf87-d0869794e460}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Configure\Config.xml">
@@ -355,5 +358,28 @@
     <ClInclude Include="Common\Header\ReturnCode.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\LinearizeDepthPostProcess.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Rendering.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\SkyDome.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\SSDO.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\DeferredLighting.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\GaussianBlurXFilterPostProcess.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\GaussianBlurYFilterPostProcess.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
