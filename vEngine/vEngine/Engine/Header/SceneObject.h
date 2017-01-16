@@ -5,10 +5,11 @@
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\Matrix.h"
 #include "Engine\Header\RenderElement.h"
+#include "Engine\Header\GameObject.h"
 
 namespace MocapGE
 {
-	class SceneObject
+	class SceneObject : public GameObject
 	{
 	public:
 		SceneObject(void);

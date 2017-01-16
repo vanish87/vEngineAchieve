@@ -2,13 +2,14 @@
 #define RENDERELEMENT_H_
 
 #pragma once
-#include "EnginePreDec.h"
 #include "Common\Header\Matrix.h"
-#include "ShaderObject.h"
+#include "Engine\Header\EnginePreDec.h"
+#include "Engine\Header\ShaderObject.h"
+#include "Engine\Header\GameObject.h"
 
 namespace MocapGE
 {
-	class RenderElement
+	class RenderElement : public GameObject
 	{
 		friend class SceneObject;
 	public:

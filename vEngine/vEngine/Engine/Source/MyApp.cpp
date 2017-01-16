@@ -37,7 +37,7 @@ void MyApp::InitObjects()
 
 	float4x4 mat,trans;
 	D3DModel *model = new D3DModel();
-	model->LoadFile("../Media/sponza.dae");
+	model->LoadFile("Media/sponza/sponza.sobj");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	Math::Scale(mat, 0.5);
 	model->SetModelMatrix(mat);
@@ -45,14 +45,14 @@ void MyApp::InitObjects()
 	ship_->AddToScene();
 
 	model = new D3DModel();
-	model->LoadFile("../Media/spacecraft_new.dae");
+	//model->LoadFile("Media/spacecraft_new.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	Math::Scale(mat, 10);
 	Math::Translate(trans,0,10,0);
 	model->SetModelMatrix(trans * mat);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
-
+	
 	timer_ = new Timer();
 	timer_->Retart();
 	
@@ -207,10 +207,11 @@ void MyApp::Update()
 }*/
 
 
+#ifndef ENABLE_TEST
 
 int main()
 {
-	 _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	Configure MyConfig;
 	MyConfig.LoadConfig("Configure/Config.xml");
 	Context::Instance().Setup(MyConfig.GetContextSetting());
@@ -224,5 +225,7 @@ int main()
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
+#endif // !ENABLE_TEST
+
 
  

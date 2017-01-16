@@ -24,7 +24,7 @@ namespace MocapGE
 		Configure::ContextSetting config = Context::Instance().GetConfigure();
 
 		//register app here
-
+		Context::Instance().RegisterAppInstance(this);
 
 		//then create system window
 		if (this->win_ == nullptr)
@@ -88,8 +88,9 @@ namespace MocapGE
 		}
 	}
 
-	void App::InitializeWindow(Configure::RenderSetting* render_setting )
+	const Window& App::GetWindow() const
 	{
+		return *(this->win_);
 	}
 
 	void App::LockCursor( bool lock )

@@ -71,10 +71,9 @@ namespace MocapGE
 			swap_chain_desc.SampleDesc.Count   = 1;
 			swap_chain_desc.SampleDesc.Quality = 0;
 		}
-
 		swap_chain_desc.BufferUsage  = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swap_chain_desc.BufferCount  = 1;
-		//swap_chain_desc.OutputWindow = Context::Instance().AppInstance().GetWindow().GetWnd();
+		swap_chain_desc.OutputWindow = Context::Instance().GetAppInstance().GetWindow().GetWnd();
 		swap_chain_desc.Windowed     = true;
 		swap_chain_desc.SwapEffect   = DXGI_SWAP_EFFECT_DISCARD;
 		swap_chain_desc.Flags        = 0;

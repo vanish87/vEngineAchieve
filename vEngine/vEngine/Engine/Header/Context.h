@@ -29,6 +29,8 @@ namespace MocapGE
 		RenderFactory& GetRenderFactory();
 		SceneManager& GetSceneManager();
 		StateManager& GetStateManager();
+		void RegisterAppInstance(App* app_instance);
+		const App& GetAppInstance() const;
 		//ResourceLoader& GetResourceLoader();
 
 	private:
@@ -38,6 +40,8 @@ namespace MocapGE
 		SceneManager* scene_manager_;
 		StateManager* state_manager_;
 		//ResourceLoader* resource_loader_;
+
+		App* app_instance_;
 	};
 }
 

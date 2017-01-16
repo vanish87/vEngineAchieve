@@ -18,6 +18,11 @@ namespace MocapGE
 
 	}	
 
+	void GameObject::AddComponent(const GameObject& GameObject_)
+	{
+		this->ConponentList.push_back(GameObject_);
+	}
+
 	GameObject& GameObject::NullObject()
 	{
 		static NGameObject Instance;

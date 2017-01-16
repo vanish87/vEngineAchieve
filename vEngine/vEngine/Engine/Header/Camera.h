@@ -8,10 +8,11 @@
 #include "Common\Header\Vector.h"
 #include "Common\Header\Matrix.h"
 #include "Common\Header\Math.h"
+#include "Engine\Header\SceneObject.h"
 
 namespace MocapGE
 {
-	class Camera
+	class Camera : public SceneObject
 	{
 	public:
 		Camera(void);

@@ -57,6 +57,19 @@ namespace MocapGE
 		return *state_manager_;
 	}
 
+	void Context::RegisterAppInstance(App * app_instance)
+	{
+		if (this->app_instance_ == nullptr && app_instance != nullptr)
+		{
+			this->app_instance_ = app_instance;
+		}
+	}
+
+	const App& Context::GetAppInstance() const
+	{
+		return *this->app_instance_;
+	}
+
 // 	ResourceLoader& Context::GetResourceLoader()
 // 	{
 // 		if(resource_loader_ == nullptr)std::cout<< "no Resource Loader"<<std::endl;

@@ -7,7 +7,6 @@
 #include "D3DPreDec.h"
 #include "Engine\Header\Model.h"
 
-#include "DDSTextureLoader.h"
 
 
 namespace MocapGE

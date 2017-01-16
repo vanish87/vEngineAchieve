@@ -2,6 +2,7 @@
 
 #include "D3DRenderEngine.h"
 #include "D3DTexture.h"
+#include "DirectXTex.h"
 
 namespace MocapGE
 {
@@ -73,7 +74,10 @@ namespace MocapGE
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		ID3D11Resource* texture;
 		std::wstring widestr = std::wstring(file_name.begin(), file_name.end());
-		HRESULT result = DirectX::CreateDDSTextureFromFile(d3d_re->D3DDevice(), widestr.c_str(), &texture, NULL);
+		DirectX::TexMetadata metadata;
+		DirectX::ScratchImage image;
+		DirectX::LoadFromDDSFile(widestr.c_str(), NULL, &metadata, image);
+		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
 			PRINT("Cannot Load Texture File");
 		ID3D11Texture2D* texture_2d= static_cast<ID3D11Texture2D*>(texture);

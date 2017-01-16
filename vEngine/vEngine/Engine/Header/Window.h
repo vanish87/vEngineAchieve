@@ -21,7 +21,7 @@ namespace MocapGE
 		Window(std::string app_name, Configure::RenderSetting render_setting);
 		~Window(void);
 
-		HWND GetWnd()
+		HWND GetWnd() const
 		{
 			return wnd_;
 		}
