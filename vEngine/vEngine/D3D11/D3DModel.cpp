@@ -146,6 +146,11 @@ namespace MocapGE
 		//if I have a original texture file loader, remove it, do Texture loading on Model Class
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		ID3D11Resource* texture;
+		std::ifstream ifs(file_name);
+		if (!ifs.good())
+		{
+			file_name = "Media/" + file_name;
+		}
 		
 		DirectX::TexMetadata metadata;
 		DirectX::ScratchImage image;
