@@ -99,7 +99,7 @@ namespace MocapGE
 	}
 
 	size_t D3DShaderobject::GetPass()
-	{
+	{ 
 		D3DX11_TECHNIQUE_DESC tech_desc;
 		HRESULT res = tech_->GetDesc( &tech_desc );
 		if(FAILED(res))
