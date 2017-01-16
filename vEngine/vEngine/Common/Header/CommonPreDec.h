@@ -4,9 +4,9 @@
 //#pragma warning(disable:4819 4355) take care
 
 //deal with the 'max' macro in windows.h colliding with 'max' in 'std'
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif // !NOMINMAX
+//#ifndef NOMINMAX
+//#define NOMINMAX
+//#endif // !NOMINMAX
 
 #pragma once
 
