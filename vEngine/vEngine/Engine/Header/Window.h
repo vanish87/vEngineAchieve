@@ -17,7 +17,6 @@ namespace MocapGE
 	class Window
 	{
 	public:
-		Window(void);
 		Window(std::string app_name, Configure::RenderSetting render_setting);
 		~Window(void);
 
@@ -29,6 +28,7 @@ namespace MocapGE
 		int2 GetCenter();
 
 	private:
+		Window(void);
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		LRESULT CALLBACK MsgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 		HWND wnd_;
