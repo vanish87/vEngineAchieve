@@ -31,6 +31,7 @@ void MyApp::InitObjects()
 	assert(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
 
 	DebugTracking::GetInstace().PrintALL();
+	DebugTracking::GetInstace().PrintALL();
 
 	//set up lights
 	for(int i = -30; i < 30 ; ++i)
