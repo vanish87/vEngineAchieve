@@ -20,6 +20,7 @@ namespace vEngine
 
 	void GameObject::AddComponent(const GameObject& GameObject_)
 	{
+		assert(GameObject_ != GameObject::NullObject());
 		this->ConponentList.push_back(GameObject_);
 	}
 

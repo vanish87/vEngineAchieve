@@ -62,6 +62,10 @@ namespace vEngine
 		{
 			return  this->data_ == rhs.data_;
 		}
+		bool operator!=(const UUID & rhs) const
+		{
+			return  this->data_ != rhs.data_;
+		}
 	private:
 		uint64_t data_;
 	};
