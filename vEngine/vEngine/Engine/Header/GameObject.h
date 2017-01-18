@@ -19,6 +19,15 @@ namespace vEngine
 
 		static GameObject& NullObject();
 
+		bool operator==(const GameObject& rhs) const
+		{
+			return this->id == rhs.id;
+		}
+		bool operator!=(const GameObject& rhs) const
+		{
+			return this->id != rhs.id;
+		}
+
 	protected:
 		UUID id;
 
