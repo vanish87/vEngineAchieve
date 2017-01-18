@@ -32,6 +32,7 @@ void MyApp::InitObjects()
 
 	DebugTracking::GetInstace().PrintALL();
 	DebugTracking::GetInstace().PrintALL();
+	DebugTracking::GetInstace().PrintALL();
 
 	//set up lights
 	for(int i = -30; i < 30 ; ++i)
