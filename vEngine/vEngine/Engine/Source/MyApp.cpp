@@ -19,6 +19,19 @@ MyApp::~MyApp(void)
 
 void MyApp::InitObjects()
 {
+	SceneObject testoject, testoject1;
+	testoject.AddComponent(testoject1);
+
+	vEngine::UUID RefID = testoject1.id();
+	vEngine::UUID nullID = GameObject::NullObject().id();
+	//vEngine::UUID newID;
+	assert(testoject1 == testoject.FindComponentByUUID(RefID));
+	assert(testoject1 != testoject.FindComponentByUUID(nullID));
+	assert(GameObject::NullObject() == testoject.FindComponentByUUID(nullID));
+	assert(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
+
+	DebugTracking::GetInstace().PrintALL();
+
 	//set up lights
 	for(int i = -30; i < 30 ; ++i)
 	{

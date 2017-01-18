@@ -20,6 +20,9 @@
 #include <iostream>
 #define PRINT(x) std::cout<<x<<std::endl;
 
+#define DEBUG_CLASS_FILE_NAME virtual std::string GetName() { return __FILE__; };
+#define DEBUG_CLASS_NAME(x) virtual std::string GetName() { return x; };
+
 //#define ENABLE_TEST
 
 namespace vEngine

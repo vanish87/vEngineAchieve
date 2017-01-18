@@ -20,6 +20,8 @@ namespace vEngine
 		};
 		~SceneObject(void);
 
+		DEBUG_CLASS_FILE_NAME
+
 		//do update aabb and set model_matrix equals to its render_element_'s
 		virtual void Update();
 		virtual RenderElement* & GetRenderElement();

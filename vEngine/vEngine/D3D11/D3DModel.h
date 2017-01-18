@@ -24,6 +24,8 @@ namespace vEngine
 		D3DModel(void);
 		~D3DModel(void);
 
+		DEBUG_CLASS_FILE_NAME
+
 		//Load .dae file
 		virtual void LoadFile(std::string file_name);
 		//use this to load .fxo file only

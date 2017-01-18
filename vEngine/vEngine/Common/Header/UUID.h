@@ -26,15 +26,19 @@ namespace vEngine
 		}
 		uint64_t Generate()
 		{
-			return ++currentid_;
+			return ++this->currentid_;
 		}
 	};
 
 	class UUID
 	{
+		friend struct std::hash<vEngine::UUID>;
+		friend class GameObject;
+		friend class DebugTracking;
 	public:
 		~UUID(void) {};
 
+	private:
 		UUID()
 		:data_(0)
 		{
@@ -68,6 +72,19 @@ namespace vEngine
 		}
 	private:
 		uint64_t data_;
+	};
+}
+
+namespace std
+{
+	template <>
+	struct hash<vEngine::UUID>
+	{
+		vEngine::uint64_t operator()(vEngine::UUID const& value) const
+		{
+			 hash<vEngine::uint64_t> HashFunc;
+			 return HashFunc(value.data_);
+		}
 	};
 }
 

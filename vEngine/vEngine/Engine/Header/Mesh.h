@@ -13,7 +13,9 @@ namespace vEngine
 	{
 	public:
 		Mesh(void);
-		~Mesh(void);
+		~Mesh(void); 
+		
+		DEBUG_CLASS_FILE_NAME
 
 		Mesh(std::string name, RenderLayout* render_layout, float4x4 model_matrix, VertexType* vb,uint32_t vsize, uint32_t* ib, uint8_t mat_id = NULL)
 			:RenderElement(model_matrix), name_(name), render_layout_(render_layout),
