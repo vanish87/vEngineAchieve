@@ -1,6 +1,6 @@
 #include "Common\Header\Timer.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Timer::Timer(void)
 	{

@@ -1,6 +1,6 @@
 #include "Engine\Header\StateManager.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	StateManager::StateManager(void)
 		:current_state_(nullptr)

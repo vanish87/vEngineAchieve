@@ -3,7 +3,7 @@
 #include "D3DRenderEngine.h"
 #include "Engine\Header\RenderView.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DTexture2D::D3DTexture2D(void)
 		:d3d_texture2D_(nullptr),d3d_rt_view_(nullptr), d3d_sr_view_(nullptr), d3d_ds_view_(nullptr)

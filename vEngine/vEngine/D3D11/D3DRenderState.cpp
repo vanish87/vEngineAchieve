@@ -2,7 +2,7 @@
 #include "Engine\Header\Context.h"
 #include "D3DRenderEngine.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DRenderState::D3DRenderState(void) 
 		:rasterizer_state_(nullptr), 

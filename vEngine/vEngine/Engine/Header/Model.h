@@ -33,7 +33,7 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
-namespace MocapGE
+namespace vEngine
 {
 	class Model : public RenderElement
 	{

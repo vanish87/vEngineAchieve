@@ -1,6 +1,6 @@
 #include "Engine\Header\RenderState.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	RenderState::RenderState(void)
 	{

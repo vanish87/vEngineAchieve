@@ -6,7 +6,7 @@
 #include "Camera.h"
 #include "TypeAndFormat.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class Light
 	{

@@ -14,7 +14,7 @@
 
 //#pragma comment(lib, "..\\External\\DirectXTK.lib")
 
-namespace MocapGE
+namespace vEngine
 {
 	//Use LoadFile to load .dae file
 	//Use LoadShaderFile to load .fxo file, which is the compiled file of .fx file

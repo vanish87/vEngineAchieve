@@ -19,7 +19,7 @@
 #pragma comment(lib, "d3d11.lib") //may fix in the future
 #pragma comment( lib, "dxguid.lib") 
 
-namespace MocapGE
+namespace vEngine
 {
 	class D3DRenderEngine :	public RenderEngine
 	{

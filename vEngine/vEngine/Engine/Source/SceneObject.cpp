@@ -1,7 +1,7 @@
 #include "Engine\Header\SceneObject.h"
 #include "Engine\Header\Context.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	SceneObject::SceneObject(void)
 	{

@@ -1,6 +1,6 @@
 #include "Engine\Header\RenderView.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	RenderView::RenderView(void)
 	{

@@ -1,6 +1,6 @@
 #include "Engine\Header\Window.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Window::Window(void)
 	{

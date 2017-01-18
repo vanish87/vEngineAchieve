@@ -1,7 +1,7 @@
 #include "D3DRenderEngine.h"
 
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DRenderEngine::D3DRenderEngine(void)
 	{		
@@ -204,13 +204,13 @@ namespace MocapGE
 		PrimitiveType pri_type = d3d_rl->GetPrimitive();
 		switch (pri_type)
 		{
-		case MocapGE::PT_POINTLIST:
+		case vEngine::PT_POINTLIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 			break;
-		case MocapGE::PT_TRIANGLELIST:
+		case vEngine::PT_TRIANGLELIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			break;
-		case MocapGE::PT_LINELIST:
+		case vEngine::PT_LINELIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 			break;
 		default:

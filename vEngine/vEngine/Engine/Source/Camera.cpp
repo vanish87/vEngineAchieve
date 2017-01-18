@@ -1,6 +1,6 @@
 #include "Engine\Header\Camera.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Camera::Camera(void)
 	{

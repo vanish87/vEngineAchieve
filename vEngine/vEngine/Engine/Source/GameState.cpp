@@ -1,7 +1,7 @@
 #include "Engine\Header\GameState.h"
 
 
-namespace MocapGE
+namespace vEngine
 {
 	GameState::GameState(void)
 	{

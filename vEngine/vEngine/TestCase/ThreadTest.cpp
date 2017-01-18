@@ -8,7 +8,7 @@
 #include "D3D11\D3DSkyDome.h"
 #include "Common\Header\Thread.h"
 
-using namespace MocapGE;
+using namespace vEngine;
 
 class TestThread : public Thread
 {
@@ -22,7 +22,7 @@ public:
 		Para* p = static_cast<Para*>(para);
 		PRINT("test");
 		PRINT(p->num);
-		return Success();
+		return RCSuccess();
 	}
 };
 

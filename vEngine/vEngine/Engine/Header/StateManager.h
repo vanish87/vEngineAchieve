@@ -8,7 +8,7 @@
 
 #include "GameState.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class StateManager
 	{

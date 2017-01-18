@@ -4,7 +4,7 @@
 
 using namespace tinyxml2;
 
-namespace MocapGE
+namespace vEngine
 {	
 	Configure::Configure()
 	{

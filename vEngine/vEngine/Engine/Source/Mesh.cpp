@@ -1,7 +1,7 @@
 #include "Engine\Header\Mesh.h"
 #include "Engine\Header\Context.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Mesh::Mesh(void)
 	{

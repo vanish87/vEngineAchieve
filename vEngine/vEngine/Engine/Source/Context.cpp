@@ -1,7 +1,7 @@
 #include "Engine\Header\Context.h"
 #include "D3D11\D3DRenderFactory.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Context::Context(void)
 	{

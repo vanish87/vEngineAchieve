@@ -1,7 +1,7 @@
 #include "Engine\Header\PostProcess.h"
 #include "Engine\Header\Context.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	PostProcess::PostProcess(void)
 	{
@@ -52,7 +52,7 @@ namespace MocapGE
 		render_layout->SetInputLayout(inputlayout);
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
-		fullscreen_mesh_ = new MocapGE::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
+		fullscreen_mesh_ = new vEngine::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
 	}
 
 

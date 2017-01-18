@@ -2,7 +2,7 @@
 #include "Engine\Header\Context.h"
 #include "D3DRenderEngine.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DRenderBuffer::D3DRenderBuffer(void)
 	{

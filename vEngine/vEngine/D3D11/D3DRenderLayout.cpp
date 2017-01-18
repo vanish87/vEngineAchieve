@@ -1,7 +1,7 @@
 #include "D3DRenderLayout.h"
 
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DRenderLayout::D3DRenderLayout(void)
 	{

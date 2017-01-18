@@ -1,7 +1,7 @@
 #include "D3DModel.h"
 #include "DirectXTex.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DModel::D3DModel(void)
 	{

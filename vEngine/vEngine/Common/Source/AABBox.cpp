@@ -2,7 +2,7 @@
 #include "Common\Header\AABBox.h"
 #include "Common\Header\Math.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	AABBox::AABBox(void)
 	{
@@ -37,12 +37,12 @@ namespace MocapGE
 		min_ = min;
 	}
 
-	MocapGE::float3 AABBox::Min()
+	vEngine::float3 AABBox::Min()
 	{
 		return min_;
 	}
 
-	MocapGE::float3 AABBox::Max()
+	vEngine::float3 AABBox::Max()
 	{
 		return max_;
 	}

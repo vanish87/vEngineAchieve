@@ -4,7 +4,7 @@
 #include "D3DTexture.h"
 #include "DirectXTex.h"
 
-namespace MocapGE
+namespace vEngine
 {
 
 	D3DSkyDome::D3DSkyDome(std::string file_name )
@@ -56,7 +56,7 @@ namespace MocapGE
 		render_layout->SetInputLayout(inputlayout);
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
-		sky_mesh_ = new MocapGE::Mesh("SkyDome", render_layout, model_matrix, vb, (uint32_t)vertices.size(), ib);
+		sky_mesh_ = new vEngine::Mesh("SkyDome", render_layout, model_matrix, vb, (uint32_t)vertices.size(), ib);
 
 		model_matrix_ = model_matrix;
 	}

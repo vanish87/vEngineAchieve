@@ -2,7 +2,7 @@
 #define ENGINE_PREDEC_H_
 
 
-namespace MocapGE
+namespace vEngine
 {
 	class App;
 	class Window;

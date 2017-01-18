@@ -9,7 +9,7 @@
 #include "D3DRenderEngine.h"
 #include "Engine\Header\Context.h"
 
-namespace MocapGE
+namespace vEngine
 {
 
 	class D3DFrameBuffer : public FrameBuffer

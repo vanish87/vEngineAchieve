@@ -3,7 +3,7 @@
 #include "Common\Header\Ray.h"
 #include "Common\Header\AABBox.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	namespace Math
 	{

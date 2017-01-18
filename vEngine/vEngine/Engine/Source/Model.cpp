@@ -2,7 +2,7 @@
 #include "Engine\Header\Context.h"
 #include <assimp/Importer.hpp>
 
-namespace MocapGE
+namespace vEngine
 {
 	Model::Model(void)
 		:pom_enabled_(false), pom_texture_(nullptr)
@@ -268,7 +268,7 @@ namespace MocapGE
 		inputlayout.push_back(VU_BINORMAL);
 		render_layout->SetInputLayout(inputlayout);
 		//add renderlayout to model;
-		this->AddMesh(new MocapGE::Mesh(meshes[i]->name_, render_layout, meshes[i]->model_matrix_, vb, ib));
+		this->AddMesh(new vEngine::Mesh(meshes[i]->name_, render_layout, meshes[i]->model_matrix_, vb, ib));
 		//this->AddMaterial(mat);*/
 		//}
 
@@ -799,7 +799,7 @@ namespace MocapGE
 			my_mat[3][0] = mat[3][0];my_mat[3][1] = mat[3][1];my_mat[3][2] = mat[3][2];my_mat[3][3] = mat[3][3];
 			my_mat = Math::Transpose(my_mat);
 			std::cout<<"Vertex count = " <<v_size<<std::endl;
-			this->AddMesh(new MocapGE::Mesh(name, render_layout, my_mat, vb, v_size, ib, mesh->mMaterialIndex));
+			this->AddMesh(new vEngine::Mesh(name, render_layout, my_mat, vb, v_size, ib, mesh->mMaterialIndex));
 		}
 
 		for(size_t i = 0; i < node->mNumChildren; ++i)

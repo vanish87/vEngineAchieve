@@ -5,7 +5,7 @@
 #include "Common\Header\CommonPreDec.h"
 #include <windows.h>
 
-namespace MocapGE
+namespace vEngine
 {
 	class GameState
 	{

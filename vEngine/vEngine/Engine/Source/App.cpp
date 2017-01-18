@@ -2,7 +2,7 @@
 #include "Engine\Header\Context.h"
 #include "Engine\Header\Window.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	App::App(void)
 	{

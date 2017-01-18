@@ -6,7 +6,7 @@
 
 #include "Common\Header\CommonPreDec.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class Timer
 	{

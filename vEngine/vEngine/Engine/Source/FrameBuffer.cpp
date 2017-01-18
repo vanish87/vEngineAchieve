@@ -1,6 +1,6 @@
 #include "Engine\Header\FrameBuffer.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	FrameBuffer::FrameBuffer( void )
 	{

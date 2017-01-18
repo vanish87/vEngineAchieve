@@ -4,7 +4,7 @@
 #pragma once
 #include "Engine\Header\Renderlayout.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class D3DRenderLayout : public RenderLayout
 	{

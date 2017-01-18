@@ -6,7 +6,7 @@
 #include "EnginePreDec.h"
 #include "TypeAndFormat.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	//TODO : Add Mapper class to make sure the Type definition when mapping resource
 	class RenderBuffer

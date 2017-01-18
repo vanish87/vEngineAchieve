@@ -4,7 +4,7 @@
 #pragma once
 #include "Common\Header\Vector.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	template <typename T>
 	class Sphere

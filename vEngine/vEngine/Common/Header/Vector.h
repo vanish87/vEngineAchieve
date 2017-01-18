@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace MocapGE
+namespace vEngine
 {
 	template <typename T>
 	class Vec2

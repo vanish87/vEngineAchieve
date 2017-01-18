@@ -12,7 +12,7 @@
 #include "StateManager.h"
 //#include "ResourceLoader.h" // find in Deprecated Files folder
 
-namespace MocapGE
+namespace vEngine
 {
 	class Context
 	{

@@ -1,6 +1,6 @@
 #include "Engine\Header\Viewport.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Viewport::Viewport(void)
 	{

@@ -1,6 +1,6 @@
 #include "Engine\Header\RenderLayout.h"
 
-namespace MocapGE
+namespace vEngine
 {
 
 	RenderLayout::RenderLayout(void)

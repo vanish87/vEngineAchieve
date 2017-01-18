@@ -13,7 +13,7 @@
 #include "SceneObject.h"
 #include "RenderBuffer.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class RenderEngine
 	{

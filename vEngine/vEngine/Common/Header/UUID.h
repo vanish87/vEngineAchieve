@@ -4,7 +4,7 @@
 #pragma once
 #include "Common\Header\CommonPreDec.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	//very simple and intuitive uuid generate
 	class UUIDGenerator

@@ -1,7 +1,7 @@
 #include "D3DShaderobject.h"
 #include "Engine\Header\Context.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DShaderobject::D3DShaderobject(void)
 	{

@@ -5,7 +5,7 @@
 #include "D3D11\D3DShaderobject.h"
 #include "Engine\Header\PostProcess.h"
 
-namespace MocapGE
+namespace vEngine
 {
 
 	SceneManager::SceneManager(void)

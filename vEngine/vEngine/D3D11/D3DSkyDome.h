@@ -9,7 +9,7 @@
 
 
 
-namespace MocapGE
+namespace vEngine
 {
 	class D3DSkyDome : public Model
 	{

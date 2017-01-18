@@ -7,7 +7,7 @@
 #include "D3DPreDec.h"
 #include "D3DTexture.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class D3DRenderBuffer : public RenderBuffer
 	{

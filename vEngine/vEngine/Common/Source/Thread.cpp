@@ -8,7 +8,7 @@
 
 #include "Common\Header\Thread.h"
 
-namespace MocapGE
+namespace vEngine
 {
     Thread::Thread()
     {
@@ -39,13 +39,13 @@ namespace MocapGE
         }
         
         
-        return Success();
+        return RCSuccess();
     };
     
     ReturnCode Thread::Join()
     {
 		this->ThreadInstance.join();
-        return Success();
+        return RCSuccess();
     }
         
     void* Thread::ThreadMain(void* ThreadData)
@@ -53,9 +53,9 @@ namespace MocapGE
         //call pure virtual main here
         Thread* RunningInstance = static_cast<Thread*>(ThreadData);
         ReturnCode RC=RunningInstance->Main(RunningInstance->Parameter);
-        if (RC != Success())
+        if (RC != RCSuccess())
         {
-            printf("Thread: %u returned Error\n", RunningInstance->ThreadInstance.get_id());
+            PRINT("Thread: "<< RunningInstance->ThreadInstance.get_id() << "returned Error\n");
         }
 		//RunningInstance->ThreadInstance.detach();
 		//return value is ignored by std::thread

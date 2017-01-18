@@ -7,7 +7,7 @@
 
 #include "Camera.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class Viewport
 	{

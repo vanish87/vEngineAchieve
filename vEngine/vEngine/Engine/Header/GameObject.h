@@ -6,7 +6,7 @@
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\UUID.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class GameObject
 	{

@@ -1,6 +1,6 @@
 #include "Engine\Header\RenderBuffer.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	RenderBuffer::RenderBuffer(void)
 	{

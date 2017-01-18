@@ -9,7 +9,7 @@
 #include "Engine\Header\TypeAndFormat.h"
 
 
-namespace MocapGE
+namespace vEngine
 {
 	class AABBox
 	{

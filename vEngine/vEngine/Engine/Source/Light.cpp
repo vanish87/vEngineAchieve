@@ -1,7 +1,7 @@
 #include "Engine\Header\Light.h"
 #include "Engine\Header\Context.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Light::~Light(void)
 	{
@@ -63,7 +63,7 @@ namespace MocapGE
 		throw std::exception("The method or operation is not implemented.");
 	}
 
-	MocapGE::float3 PointLight::GetPos()
+	vEngine::float3 PointLight::GetPos()
 	{
 		return pos_;
 	}

@@ -12,7 +12,7 @@
 #include "Engine\Header\Context.h"
 #include "App.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class Window
 	{

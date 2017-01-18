@@ -13,7 +13,7 @@
 
 #include "PostProcess.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	//temp solution for pp
 	class D3DShaderobject;

@@ -11,7 +11,7 @@
 #include "SceneObject.h"
 #include "Light.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class SceneManager
 	{

@@ -6,7 +6,7 @@
 #include "Common\Header\CommonPreDec.h"
 #include "EnginePreDec.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class ShaderObject
 	{

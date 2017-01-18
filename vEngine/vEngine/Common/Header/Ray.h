@@ -5,7 +5,7 @@
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\Vector.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class Ray
 	{

@@ -1,6 +1,6 @@
 #include "D3DRenderView.h"
 
-namespace MocapGE
+namespace vEngine
 {
 
 	D3DRenderTargetView::D3DRenderTargetView(void)

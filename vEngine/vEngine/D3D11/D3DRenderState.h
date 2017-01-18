@@ -7,7 +7,7 @@
 #include "D3DPreDec.h"
 
 
-namespace MocapGE
+namespace vEngine
 {
 	//TODO : use different D3D class to implement different RenderState
 	class D3DRenderState : public RenderState

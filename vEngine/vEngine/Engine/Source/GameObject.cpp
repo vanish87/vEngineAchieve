@@ -1,6 +1,6 @@
 #include "Engine\Header\GameObject.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	static UUID ZERO_UUID;
 	GameObject::GameObject(void)

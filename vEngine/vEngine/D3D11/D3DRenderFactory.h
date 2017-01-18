@@ -15,7 +15,7 @@
 #include "D3DRenderBuffer.h"
 #include "D3DTexture.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class MOCAPGE_API D3DRenderFactory : public RenderFactory
 	{

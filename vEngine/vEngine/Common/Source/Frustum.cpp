@@ -1,6 +1,6 @@
 #include "Common\Header\Frustum.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Frustum::Frustum(void)
 	{

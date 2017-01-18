@@ -1,6 +1,6 @@
 #include "Engine\Header\RenderEngine.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	RenderEngine::RenderEngine(void)
 	{

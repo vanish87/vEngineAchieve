@@ -22,7 +22,7 @@
 
 //#define ENABLE_TEST
 
-namespace MocapGE
+namespace vEngine
 {
 	typedef __int8  int8_t;
 	typedef __int32 int32_t;

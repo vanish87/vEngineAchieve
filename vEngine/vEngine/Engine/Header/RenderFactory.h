@@ -8,7 +8,7 @@
 #include "Engine\Header\TypeAndFormat.h"
 #include "Engine\Header\Texture.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class RenderFactory
 	{

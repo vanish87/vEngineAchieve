@@ -6,7 +6,7 @@
 #include "EnginePreDec.h"
 #include "TypeAndFormat.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class RenderState
 	{

@@ -2,7 +2,7 @@
 #include "D3D11\D3DModel.h"
 
 
-namespace MocapGE
+namespace vEngine
 {
 	static const float4x4 TEXCOOD_TRANS = 
 		float4x4(
@@ -60,7 +60,7 @@ namespace MocapGE
 		render_layout->SetInputLayout(inputlayout);
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
-		fullscreen_mesh_ = new MocapGE::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
+		fullscreen_mesh_ = new vEngine::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
 
 		//According to config file
 		for(int i=0; i< render_setting.gbuffer_size; i++)

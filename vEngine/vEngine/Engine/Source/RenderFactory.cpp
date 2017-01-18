@@ -1,6 +1,6 @@
 #include "Engine\Header\RenderFactory.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	RenderFactory::RenderFactory(void)
 	{

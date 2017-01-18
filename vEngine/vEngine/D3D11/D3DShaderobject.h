@@ -22,7 +22,7 @@
 // #pragma comment(lib, "../External/d3dcompiler.lib")
 
 
-namespace MocapGE
+namespace vEngine
 {
 	class D3DShaderobject : public ShaderObject
 	{

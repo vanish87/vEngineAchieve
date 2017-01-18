@@ -1,6 +1,6 @@
 #include "Engine\Header\ShaderObject.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	ShaderObject::ShaderObject(void)
 	{

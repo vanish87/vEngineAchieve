@@ -9,7 +9,7 @@
 #include "RenderView.h"
 #include "Viewport.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class FrameBuffer
 	{

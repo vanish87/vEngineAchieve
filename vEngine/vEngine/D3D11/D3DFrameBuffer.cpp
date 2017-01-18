@@ -1,6 +1,6 @@
 #include "D3DFrameBuffer.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DFrameBuffer::D3DFrameBuffer(void)
 		: FrameBuffer(0, 0,1280, 800),

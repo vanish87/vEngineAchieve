@@ -6,7 +6,7 @@
 
 #include "D3D11\D3DSkyDome.h"
 
-using namespace MocapGE;
+using namespace vEngine;
 MyApp::MyApp(void) : App("The CentBebop Design")
 {
 

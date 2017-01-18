@@ -11,7 +11,7 @@
 
 
 class MyApp :
-	public MocapGE:: App
+	public vEngine:: App
 {
 public:
 	MyApp(void);
@@ -21,16 +21,16 @@ public:
 	void Update();
 
 private:
-	MocapGE::PointLight* point_light_;
-	MocapGE::SpotLight* spot_light_;
+	vEngine::PointLight* point_light_;
+	vEngine::SpotLight* spot_light_;
 
-	MocapGE::SceneObject* ship_;
+	vEngine::SceneObject* ship_;
 
-	MocapGE::Timer* timer_;
+	vEngine::Timer* timer_;
 
 	bool first_person_;
-	MocapGE::float3 cam_pos_;
-	MocapGE::float3 cam_look_;
+	vEngine::float3 cam_pos_;
+	vEngine::float3 cam_look_;
 
 	float pitch_angle_;
 	float speed_;

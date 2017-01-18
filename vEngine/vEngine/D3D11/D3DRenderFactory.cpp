@@ -1,6 +1,6 @@
 #include "D3DRenderFactory.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	D3DRenderFactory::D3DRenderFactory(void)
 		

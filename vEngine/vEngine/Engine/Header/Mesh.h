@@ -7,7 +7,7 @@
 #include "Engine\Header\RenderElement.h"
 #include "TypeAndFormat.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class Mesh :public RenderElement
 	{

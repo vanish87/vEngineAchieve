@@ -10,7 +10,7 @@
 #include "Common\Header\Math.h"
 #include "Engine\Header\SceneObject.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class Camera : public SceneObject
 	{

@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace MocapGE
+namespace vEngine
 {
 	
 	class Frustum

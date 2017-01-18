@@ -10,11 +10,12 @@
 #define Thread_hpp
 
 #include <string>
-#include "Common\Header\ReturnCode.h"
 #include <thread>
+#include "Common\Header\CommonPreDec.h"
+#include "Common\Header\ReturnCode.h"
 
 
-namespace MocapGE
+namespace vEngine
 {
     class Thread
     {

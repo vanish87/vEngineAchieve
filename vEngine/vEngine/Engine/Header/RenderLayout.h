@@ -8,7 +8,7 @@
 #include "TypeAndFormat.h"
 #include "RenderBuffer.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class RenderLayout
 	{

@@ -1,6 +1,6 @@
 #include "Engine\Header\Texture.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	Texture::Texture(void)
 	{

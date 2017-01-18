@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace MocapGE
+namespace vEngine
 {
 	class Configure
 	{

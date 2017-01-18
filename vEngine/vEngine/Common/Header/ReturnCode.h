@@ -9,13 +9,21 @@
 #ifndef ReturnCode_hpp
 #define ReturnCode_hpp
 
+#pragma once
+
 #include <stdio.h>
 #include <string>
 
-namespace MocapGE {
+namespace vEngine {
 
     class ReturnCode
     {
+	public:
+		enum CODE
+		{
+			SUCCEED = 0,
+			FAILURE = -1,
+		};
     public:
         ReturnCode(int Val, std::string Message_ = nullptr)
         {
@@ -59,14 +67,14 @@ namespace MocapGE {
         std::string Message;
     };
     
-    static ReturnCode Success(std::string Message = "Success")
+    static ReturnCode RCSuccess(std::string Message = "Success")
     {
-        return ReturnCode(0, Message);
+        return ReturnCode(ReturnCode::SUCCEED, Message);
     }
     
-    static ReturnCode Failure(std::string Message = "Failure")
+    static ReturnCode RCFailure(std::string Message = "Failure")
     {
-        return ReturnCode(-1, Message);
+        return ReturnCode(ReturnCode::FAILURE, Message);
     }
 }
 

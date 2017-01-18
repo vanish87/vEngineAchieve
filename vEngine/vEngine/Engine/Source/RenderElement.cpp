@@ -1,6 +1,6 @@
 #include "Engine\Header\RenderElement.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	RenderElement::RenderElement(void)
 	{

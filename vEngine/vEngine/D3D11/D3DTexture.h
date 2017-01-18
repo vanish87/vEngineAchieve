@@ -7,7 +7,7 @@
 #include "Engine\Header\Texture.h"
 #include "D3DPreDec.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class D3DTexture2D :	public Texture
 	{

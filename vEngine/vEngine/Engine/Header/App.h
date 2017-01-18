@@ -8,7 +8,7 @@
 #include "EnginePreDec.h"
 #include "Common\Header\Configure.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class App
 	{

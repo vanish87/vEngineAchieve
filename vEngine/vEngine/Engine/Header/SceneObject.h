@@ -7,7 +7,7 @@
 #include "Engine\Header\RenderElement.h"
 #include "Engine\Header\GameObject.h"
 
-namespace MocapGE
+namespace vEngine
 {
 	class SceneObject : public GameObject
 	{
