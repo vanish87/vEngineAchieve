@@ -16,7 +16,7 @@ namespace vEngine
 		virtual ~GameObject(void);
 
 		virtual void Update();
-		virtual void AddComponent(const GameObject& GameObject_);
+		virtual void AddComponent(GameObject* const GameObject_);
 		virtual GameObject& FindComponentByUUID(const UUID& UUID_);
 
 		virtual std::string GetName();
@@ -52,7 +52,7 @@ namespace vEngine
 	protected:
 		UUID id_;
 
-		std::unordered_map<UUID, GameObject> ConponentList_;
+		std::unordered_map<UUID, GameObject*> ConponentList_;
 	};
 
 	class NGameObject : public GameObject

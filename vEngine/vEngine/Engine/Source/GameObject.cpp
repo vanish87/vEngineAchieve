@@ -24,17 +24,17 @@ namespace vEngine
 		return "ERROR";
 	}
 
-	void GameObject::AddComponent(const GameObject& GameObject_)
+	void GameObject::AddComponent(GameObject* const GameObject_)
 	{
-		assert(GameObject_ != GameObject::NullObject() && GameObject_.id() != this->id());
-		this->ConponentList_[GameObject_.id()] = GameObject_;
-		assert(this->ConponentList_[GameObject_.id()] == GameObject_);
+		assert(GameObject_ != &GameObject::NullObject() && GameObject_ != this);
+		this->ConponentList_[GameObject_->id()] = GameObject_;
+		assert(this->ConponentList_[GameObject_->id()] == GameObject_);
 	}
 
 	GameObject& GameObject::FindComponentByUUID(const UUID& UUID_)
 	{
 		if(this->ConponentList_.find(UUID_) == this->ConponentList_.end()) return GameObject::NullObject();
-		return this->ConponentList_[UUID_];
+		return *this->ConponentList_[UUID_];
 	}
 
 
