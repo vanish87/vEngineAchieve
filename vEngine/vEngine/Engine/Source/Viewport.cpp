@@ -1,4 +1,5 @@
 #include "Engine\Header\Viewport.h"
+#include "Engine\Header\Camera.h"
 
 namespace vEngine
 {

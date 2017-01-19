@@ -22,6 +22,7 @@ namespace vEngine
 	class ShaderObject;
 	class PostProcess;
 
+	class GameObject;
 	class SceneObject;
 	class SceneManager;
 

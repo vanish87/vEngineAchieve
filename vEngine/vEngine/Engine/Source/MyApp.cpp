@@ -30,9 +30,7 @@ void MyApp::InitObjects()
 	assert(GameObject::NullObject() == testoject.FindComponentByUUID(nullID));
 	assert(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
 
-	DebugTracking::GetInstace().PrintALL();
-	DebugTracking::GetInstace().PrintALL();
-	DebugTracking::GetInstace().PrintALL();
+	DebugTracking::GetInstance().PrintALL();
 
 	//set up lights
 	for(int i = -30; i < 30 ; ++i)
@@ -79,6 +77,9 @@ void MyApp::InitObjects()
 	cam_look_ = float3(81.78f,270.16f,-66.94f);
 	camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
 	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
+
+
+	DebugTracking::GetInstance().PrintALL();
 }
 
 void MyApp::ReleaseObjects()

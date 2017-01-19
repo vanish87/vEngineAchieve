@@ -4,8 +4,7 @@
 #pragma once
 
 #include "Common\Header\CommonPreDec.h"
-
-#include "Camera.h"
+#include "Engine\Header\EnginePreDec.h"
 
 namespace vEngine
 {

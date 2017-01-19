@@ -35,7 +35,7 @@ namespace vEngine
 	{
 		//TODO : After write a normal ShaderObject, move these to SceneManager->Flush(), because all Render_elenment shader the same lights.
 		//set light parameter
-		std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
+		//std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
 		//D3DRenderBuffer* lights_buffer = static_cast<D3DRenderBuffer*>(Context::Instance().GetRenderFactory().GetRenderEngine().GetLightsBuufer());
 		//shader_object_->SetReource("gLight", lights_buffer, 0);
 
@@ -166,7 +166,6 @@ namespace vEngine
 			if (FAILED(result))
 				PRINT("Cannot Load Texture File" + file_name);
 		}
-		std::wstring widestr = std::wstring(file_name.begin(), file_name.end());
 		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata,&texture);
 		if(FAILED(result))
 			PRINT("Cannot Load Texture File");
