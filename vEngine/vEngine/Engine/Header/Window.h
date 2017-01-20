@@ -10,14 +10,14 @@
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\Configure.h"
 #include "Engine\Header\Context.h"
-#include "App.h"
 
 namespace vEngine
 {
 	class Window
 	{
+		friend class App;
 	public:
-		Window(std::string app_name, Configure::RenderSetting render_setting);
+		void InitWindow(std::string app_name, Configure::RenderSetting render_setting);
 		~Window(void);
 
 		HWND GetWnd() const
@@ -26,14 +26,23 @@ namespace vEngine
 		}
 
 		int2 GetCenter();
+		struct WinndowRect
+		{
+			uint16_t top;
+			uint16_t left;
+			uint16_t width;
+			uint16_t height;
+		};
 
 	private:
 		Window(void);
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		LRESULT CALLBACK MsgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 		HWND wnd_;
-		RECT rect;
 		std::string win_name_;
+		bool inited_; 
+		//WinndowRect should slightly bigger than rendering resolution
+		WinndowRect window_rect_;
 	};
 }
 

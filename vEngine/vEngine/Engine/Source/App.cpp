@@ -27,10 +27,7 @@ namespace vEngine
 		Context::Instance().RegisterAppInstance(this);
 
 		//then create system window
-		if (this->win_ == nullptr)
-		{
-			this->win_ = new Window(app_name_, config.render_setting);
-		}
+		this->win_.InitWindow(app_name_, config.render_setting);
 
 		//then create rendering window
 		Context::Instance().GetRenderFactory().GetRenderEngine().InitRenderWindow(app_name_, config.render_setting);
@@ -80,7 +77,7 @@ namespace vEngine
 					POINT pt; 
 					pt.x = config.render_setting.width / 2;
 					pt.y = config.render_setting.height/ 2;
-					ClientToScreen(win_->GetWnd(), &pt); 
+					ClientToScreen(win_.GetWnd(), &pt); 
 					::SetCursorPos(pt.x, pt.y);
 				}
 
@@ -90,7 +87,7 @@ namespace vEngine
 
 	const Window& App::GetWindow() const
 	{
-		return *(this->win_);
+		return this->win_;
 	}
 
 	void App::LockCursor( bool lock )

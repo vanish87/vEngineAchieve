@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Configure\Config.xml" />
+    <Xml Include="Configure\DefaultConfig.xml" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\External\TinyXML2\tinyxml2.cpp" />

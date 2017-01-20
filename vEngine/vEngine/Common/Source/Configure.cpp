@@ -8,7 +8,7 @@ namespace vEngine
 {	
 	Configure::Configure()
 	{
-
+		this->LoadConfig("Configure/DefaultConfig.xml");
 	}
 
 	Configure::~Configure()

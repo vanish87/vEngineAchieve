@@ -48,6 +48,9 @@
     <Xml Include="Configure\Config.xml">
       <Filter>Configure</Filter>
     </Xml>
+    <Xml Include="Configure\DefaultConfig.xml">
+      <Filter>Configure</Filter>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\Source\Configure.cpp">

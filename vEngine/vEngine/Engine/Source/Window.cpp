@@ -3,12 +3,17 @@
 namespace vEngine
 {
 	Window::Window(void)
+		:inited_(false)
 	{
 	}
 
-	Window::Window( std::string app_name, Configure::RenderSetting render_setting )
-		:win_name_(app_name)
+	void Window::InitWindow( std::string app_name, Configure::RenderSetting render_setting )
 	{
+		if (this->inited_)
+			PRINT_AND_RETURN("Window has been Initied", );
+
+		this->win_name_ = app_name;
+
 		HINSTANCE hInstance = ::GetModuleHandle(NULL);
 
 		WNDCLASSEX wcex;
@@ -18,43 +23,50 @@ namespace vEngine
 		wcex.cbClsExtra = 0;
 		wcex.cbWndExtra = sizeof(this);
 		wcex.hInstance = hInstance;
-		wcex.hIcon = NULL;
-		wcex.hCursor = ::LoadCursor( NULL, IDC_ARROW );
-		wcex.hbrBackground = (HBRUSH)(COLOR_WINDOWFRAME);
-		wcex.lpszMenuName = NULL;
+		wcex.hIcon = nullptr;
+		wcex.hCursor = ::LoadCursor(nullptr, IDC_ARROW );
+		wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+		wcex.lpszMenuName = nullptr;
 		wcex.lpszClassName = win_name_.c_str();
-		wcex.hIconSm = NULL;
+		wcex.hIconSm = nullptr;
 		if( !RegisterClassEx( &wcex ) )
-			PRINT("Register Window Failed");
+			PRINT_AND_RETURN("Register Window Failed",);
 
-		uint32_t wstyle = render_setting.full_screen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
+		RECT rc = { 0, 0, render_setting.width, render_setting.height };
+		//get real window size; should slightly bigger than rendering resolution
+		::AdjustWindowRect( &rc, render_setting.full_screen ? WS_POPUP : WS_OVERLAPPEDWINDOW, FALSE );
 
-		RECT rc = { render_setting.left, render_setting.top, render_setting.width, render_setting.height };
-		::AdjustWindowRect( &rc, wstyle, FALSE );
-		wnd_ = CreateWindow( win_name_.c_str(), win_name_.c_str(), wstyle,
-			render_setting.left, render_setting.top, rc.right - rc.left, rc.bottom - rc.top, 
-			NULL, NULL, hInstance, NULL );
+		window_rect_.top	= static_cast<uint16_t>(render_setting.top);
+		window_rect_.left	= static_cast<uint16_t>(render_setting.left);
+		window_rect_.width  = static_cast<uint16_t>(rc.right - rc.left);
+		window_rect_.height = static_cast<uint16_t>(rc.bottom - rc.top);
+		this->wnd_ = CreateWindow( win_name_.c_str(), win_name_.c_str(), WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+							window_rect_.left, window_rect_.top, window_rect_.width, window_rect_.height,
+							nullptr, nullptr, hInstance, nullptr);
 
-		if( !wnd_ )
-			PRINT("Create Window Failed");
+		if( !this->wnd_ )
+			PRINT_AND_RETURN("Create Window Failed",);
 
-		::SetWindowLongPtr(wnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+		::SetWindowLongPtr(this->wnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 		
-		::ShowWindow(wnd_, SW_SHOWNORMAL);
-		::SetForegroundWindow(wnd_);
-		::SetFocus(wnd_);
+		::ShowWindow(this->wnd_, SW_SHOWNORMAL);
+		::SetForegroundWindow(this->wnd_);
+		::SetFocus(this->wnd_);
 		::ShowCursor(!render_setting.full_screen);
-		::UpdateWindow(wnd_);
+		::UpdateWindow(this->wnd_);
+
+		this->inited_ = true;
 	}
 
 
 	Window::~Window(void)
 	{
-		if (wnd_ != NULL)
+		if (this->wnd_ != nullptr)
 		{
-			::DestroyWindow(wnd_);
-			wnd_ = NULL;
+			::DestroyWindow(this->wnd_);
+			this->wnd_ = nullptr;
 		}
+		this->inited_ = false;
 	}
 
 	LRESULT CALLBACK Window::WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam)
@@ -117,6 +129,7 @@ namespace vEngine
 
 	int2 Window::GetCenter()
 	{
+		RECT rect;
 		::GetClientRect(wnd_, &rect);
 		int2 ret(rect.left + rect.right /2, rect.top + rect.bottom /2);
 		return ret;
