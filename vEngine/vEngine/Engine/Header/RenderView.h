@@ -12,7 +12,7 @@ namespace vEngine
 	{
 	public:
 		RenderView(void);
-		~RenderView(void);
+		virtual ~RenderView(void);
 
 		size_t Width(){return width_;};
 		size_t Height(){return height_;};

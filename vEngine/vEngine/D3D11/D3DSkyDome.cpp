@@ -35,13 +35,13 @@ namespace vEngine
 		init_data.data = vb;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_VERTEX, (uint32_t)vertices.size() ,sizeof(VertexType));
+		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_VERTEX, (uint32_t)vertices.size() ,sizeof(VertexType));
 		//delete[] vb;
 		//call MakeRenderBuffer(Index)
 		init_data.data = ib;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_INDEX, (uint32_t)indices.size(), sizeof(uint32_t));
+		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_INDEX, (uint32_t)indices.size(), sizeof(uint32_t));
 		//delete[] ib;
 
 		//add VertexBuffer to renderlayout;
@@ -127,7 +127,7 @@ namespace vEngine
 		Math::Translate(model_matrix_, cam_pos.x(), cam_pos.y(), cam_pos.z());
 		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
 		d3d_re->TrunoffCull();
-		RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ, BU_SHADER_RES); 
+		RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
 		shader_object_->SetReource("background_tex", cude_srv , 1);
 		//throw std::exception("The method or operation is not implemented.");
 	}

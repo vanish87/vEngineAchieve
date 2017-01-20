@@ -3,15 +3,6 @@
 
 namespace vEngine
 {
-	Context::Context(void)
-	{
-	}
-
-
-	Context::~Context(void)
-	{
-	}
-
 	Context& Context::Instance()
 	{
 		static Context context;
@@ -25,15 +16,13 @@ namespace vEngine
 
 	void Context::Setup(Configure::ContextSetting const & cfg )
 	{
+		//this is supposed to choose rendering plugin by configure
 		if(!context_config_.render_factory_name.compare(cfg.render_factory_name) || render_factory_==nullptr)
 		{
 			//this->LoadRenderFactory(cfg.render_factory_name);
 			render_factory_= new D3DRenderFactory();
 		}
 
-		//TODO: make it Singleton
-		scene_manager_ = new SceneManager();
-		state_manager_ = new StateManager();
 		//resource_loader_ = new ResourceLoader();
 
 		context_config_ = cfg;
@@ -47,22 +36,20 @@ namespace vEngine
 
 	SceneManager& Context::GetSceneManager()
 	{
-		if(scene_manager_ == nullptr)std::cout<< "no Scene Manager"<<std::endl;
-		return *scene_manager_;
+		return scene_manager_;
 	}
 
 	StateManager& Context::GetStateManager()
 	{
-		if(state_manager_ == nullptr)std::cout<< "no State Manager"<<std::endl;
-		return *state_manager_;
+		return state_manager_;
 	}
 
 	void Context::RegisterAppInstance(App * app_instance)
 	{
-		if (this->app_instance_ == nullptr && app_instance != nullptr)
-		{
-			this->app_instance_ = app_instance;
-		}
+		if (this->app_instance_ != nullptr)
+			PRINT_AND_ASSERT("this is not supported");
+		
+		this->app_instance_ = app_instance;
 	}
 
 	const App& Context::GetAppInstance() const

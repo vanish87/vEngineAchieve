@@ -6,7 +6,7 @@ namespace vEngine
 	PostProcess::PostProcess(void)
 	{
 		Configure::RenderSetting render_setting =  Context::Instance().GetRenderFactory().GetRenderEngine().GetRenderSetting();
-		output_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting);
+		output_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width,render_setting.height);
 		//make a full screen qua for lighting pass
 		VertexType* vb = new VertexType[6];
 		uint32_t* ib = new uint32_t[6];
@@ -31,13 +31,13 @@ namespace vEngine
 		init_data.data = vb;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_VERTEX, 6 ,sizeof(VertexType));
+		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_VERTEX, 6 ,sizeof(VertexType));
 		//delete[] vb;
 		//call MakeRenderBuffer(Index)
 		init_data.data = ib;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_INDEX, 6, sizeof(uint32_t));
+		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_INDEX, 6, sizeof(uint32_t));
 		//delete[] ib;
 
 		//add VertexBuffer to renderlayout;
@@ -68,7 +68,7 @@ namespace vEngine
 	void PostProcess::SetInput( Texture* tex, size_t index )
 	{
 
-		RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(tex, AT_GPU_READ, BU_SHADER_RES);
+		RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(tex, AT_GPU_READ_WRITE, BU_SHADER_RES);
 		if(index >= input_srv_.size())
 		{
 			//Add to input

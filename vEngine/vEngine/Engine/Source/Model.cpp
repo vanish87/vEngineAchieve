@@ -141,13 +141,13 @@ namespace vEngine
 			init_data.data = vb;
 			init_data.row_pitch = 0;
 			init_data.slice_pitch = 0;
-			RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_CPU_WRITE, BU_VERTEX, v_size ,sizeof(VertexType));
+			RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_VERTEX, v_size ,sizeof(VertexType));
 			//delete[] vb;
 			//call MakeRenderBuffer(Index)
 			init_data.data = ib;
 			init_data.row_pitch = 0;
 			init_data.slice_pitch = 0;
-			RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_INDEX, i_size, sizeof(uint32_t));
+			RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_INDEX, i_size, sizeof(uint32_t));
 			//delete[] ib;
 			//add VertexBuffer to renderlayout;
 			render_layout->AddBuffer(vertex_buffer, sizeof(VertexType));
@@ -252,7 +252,7 @@ namespace vEngine
 				if(tex)
 				{
 					textures_.push_back(tex);
-					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(),AT_GPU_READ,BU_SHADER_RES));
+					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
 					//index 0 reserved for null
 					mat->diffuse_tex = static_cast<float>(textures_.size());
 				}
@@ -270,7 +270,7 @@ namespace vEngine
 				if(tex)
 				{
 					textures_.push_back(tex);
-					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(),AT_GPU_READ,BU_SHADER_RES));
+					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
 					//index 0 reserved for null
 					mat->normalmap_tex = static_cast<float>(textures_.size());
 				}

@@ -19,7 +19,7 @@ namespace vEngine
 	{
 	public:
 		RenderEngine(void);
-		~RenderEngine(void);
+		virtual ~RenderEngine(void);
 		virtual void InitRenderWindow(std::string const & name, Configure::RenderSetting const & render_setting);
 		Configure::RenderSetting& GetRenderSetting(){return render_setting_;};
 		void InitLights();

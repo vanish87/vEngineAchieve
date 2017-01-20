@@ -2,8 +2,7 @@
 
 namespace vEngine
 {
-	D3DRenderFactory::D3DRenderFactory(void)
-		
+	D3DRenderFactory::D3DRenderFactory(void)		
 	{
 		render_engine_ = nullptr;
 	}
@@ -18,9 +17,9 @@ namespace vEngine
 		return new D3DRenderEngine();
 	}
 	
-	FrameBuffer* D3DRenderFactory::MakeFrameBuffer( Configure::RenderSetting& render_setting )
+	FrameBuffer* D3DRenderFactory::MakeFrameBuffer(uint32_t width, uint32_t height)
 	{
-		return new D3DFrameBuffer(render_setting);
+		return new D3DFrameBuffer(width, height);
 	}
 
 	RenderLayout* D3DRenderFactory::MakeRenderLayout()

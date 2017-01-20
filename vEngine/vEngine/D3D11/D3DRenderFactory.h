@@ -23,7 +23,7 @@ namespace vEngine
 		D3DRenderFactory(void);
 		~D3DRenderFactory(void);		
 		
-		virtual FrameBuffer* MakeFrameBuffer( Configure::RenderSetting& render_setting );
+		virtual FrameBuffer* MakeFrameBuffer(uint32_t width, uint32_t height);
 
 	private:
 

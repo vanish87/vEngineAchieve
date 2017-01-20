@@ -34,6 +34,7 @@ namespace vEngine
 
 		RECT rc = { 0, 0, render_setting.width, render_setting.height };
 		//get real window size; should slightly bigger than rendering resolution
+		//we should render a frame with render_setting, so window is enlarged.
 		::AdjustWindowRect( &rc, render_setting.full_screen ? WS_POPUP : WS_OVERLAPPEDWINDOW, FALSE );
 
 		window_rect_.top	= static_cast<uint16_t>(render_setting.top);

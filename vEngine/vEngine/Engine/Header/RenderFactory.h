@@ -18,7 +18,7 @@ namespace vEngine
 
 		RenderEngine& GetRenderEngine();
 
-		virtual FrameBuffer* MakeFrameBuffer(Configure::RenderSetting& render_setting) = 0;
+		virtual FrameBuffer* MakeFrameBuffer(uint32_t width, uint32_t type_size) = 0;
 		virtual RenderLayout* MakeRenderLayout() = 0;	
 		//make sure you you can use the same type when you call Map method of RenderBuffer
 		//Only support one type of BufferUsage

@@ -19,16 +19,17 @@ namespace vEngine
 
 		HRESULT result;
 		UINT create_device_flags = 0;
-		#if defined(DEBUG) || defined(_DEBUG)  
+		#if defined(_DEBUG)  
 		create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;
 		#endif
+
 		D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
 		result = D3D11CreateDevice(
-				0,                 // default adapter
+				nullptr,                 // default adapter
 				md3dDriverType,
-				0,                 // no software device
+				nullptr,                 // no software device
 				create_device_flags, 
-				0, 0,              // default feature level array
+				nullptr, 0,				//  D11 feature level array
 				D3D11_SDK_VERSION,
 				&d3d_device_,
 				&d3d_feature_level_,
@@ -39,28 +40,31 @@ namespace vEngine
 			PRINT("D3D11CreateDevice Failed.");
 		}
 
-		if( d3d_feature_level_ != D3D_FEATURE_LEVEL_11_0 )
+		if( d3d_feature_level_ < D3D_FEATURE_LEVEL_11_0)
 		{
-			PRINT("Direct3D Feature Level 11 unsupported.");
+			PRINT_AND_RETURN("Direct3D Feature Level 11 unsupported.",);
 		}
-		UINT msaa_quality = 0;
-		result = d3d_device_->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaa_quality);
-		if(FAILED(result) )
-		{
-			PRINT("msaa_quality Failed.");
-		}
+		
 
 		DXGI_SWAP_CHAIN_DESC swap_chain_desc;
-		swap_chain_desc.BufferDesc.Width  = render_setting_.width;
-		swap_chain_desc.BufferDesc.Height = render_setting_.height;
+		ZeroMemory(&swap_chain_desc, sizeof(swap_chain_desc));
+		swap_chain_desc.BufferDesc.Width  = this->render_setting_.width;
+		swap_chain_desc.BufferDesc.Height = this->render_setting_.height;
 		swap_chain_desc.BufferDesc.RefreshRate.Numerator = 60;
 		swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
 		swap_chain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swap_chain_desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		swap_chain_desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
+		UINT msaa_quality = 0;
+		result = d3d_device_->CheckMultisampleQualityLevels(swap_chain_desc.BufferDesc.Format, 4, &msaa_quality);
+		if (FAILED(result) || msaa_quality == 0)
+		{
+			PRINT("msaa_quality Failed.");
+		}
+
 		// Use 4X MSAA? 
-		if( render_setting_.msaa4x )
+		if( this->render_setting_.msaa4x )
 		{
 			swap_chain_desc.SampleDesc.Count   = 4;
 			swap_chain_desc.SampleDesc.Quality = msaa_quality-1;
@@ -74,7 +78,7 @@ namespace vEngine
 		swap_chain_desc.BufferUsage  = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swap_chain_desc.BufferCount  = 1;
 		swap_chain_desc.OutputWindow = Context::Instance().GetAppInstance().GetWindow().GetWnd();
-		swap_chain_desc.Windowed     = true;
+		swap_chain_desc.Windowed     = !this->render_setting_.full_screen;
 		swap_chain_desc.SwapEffect   = DXGI_SWAP_EFFECT_DISCARD;
 		swap_chain_desc.Flags        = 0;
 
@@ -92,14 +96,18 @@ namespace vEngine
 			PRINT("dxgiAdapter Failed.");
 		}
 
-		IDXGIFactory* dxgiFactory = 0;
-		result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+		IDXGIFactory1* dxgiFactory = 0;
+		result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory1), (void**)&dxgiFactory);
 		if( FAILED(result) )
 		{
 			PRINT("dxgiFactory Failed.");
 		}
+		//optional IDXGIFactory2 not used until D3D11.1 or later feature
+		IDXGIFactory2* dxgiFactory2 = nullptr;
+		result = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
 
 		result = dxgiFactory->CreateSwapChain(d3d_device_, &swap_chain_desc, &d3d_swap_chain);
+
 		if( FAILED(result) )
 		{
 			PRINT("d3d_swap_chain Failed.");
@@ -108,11 +116,9 @@ namespace vEngine
 		dxgi_device->Release();
 		dxgi_adapter->Release();
 		dxgiFactory->Release();
-
+		if (dxgiFactory2 != nullptr) dxgiFactory2->Release();
 
 		this->OnResize();
-
-
 
 	}
 
@@ -252,7 +258,7 @@ namespace vEngine
 		D3DFrameBuffer* d3d_frame_buffer;
 		if(cur_frame_buffer_ == nullptr)
 		{
-			cur_frame_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting_);
+			cur_frame_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting_.width, render_setting_.height);
 		    d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
 		}
 		else
@@ -264,7 +270,7 @@ namespace vEngine
 		}
 
 		//TODO : Use new size of window to resize FrameBuffer
-		result = d3d_swap_chain->ResizeBuffers(1, render_setting_.width, render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+		result = d3d_swap_chain->ResizeBuffers(1, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 		if(FAILED(result))
 			PRINT("ResizeBuffer Failed!");
 
@@ -280,15 +286,15 @@ namespace vEngine
 
 		D3D11_TEXTURE2D_DESC depth_stencil_desc;
 	
-		depth_stencil_desc.Width     = render_setting_.width;
-		depth_stencil_desc.Height    = render_setting_.height;
+		depth_stencil_desc.Width     = this->render_setting_.width;
+		depth_stencil_desc.Height    = this->render_setting_.height;
 		depth_stencil_desc.MipLevels = 1;
 		depth_stencil_desc.ArraySize = 1;
 		depth_stencil_desc.Format    = DXGI_FORMAT_R24G8_TYPELESS;
 
 
 
-		if( render_setting_.msaa4x )
+		if( this->render_setting_.msaa4x )
 		{
 			UINT msaa_quality = 0;
 			result = d3d_device_->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaa_quality);
@@ -427,25 +433,22 @@ namespace vEngine
 
 	}
 
-	DXGI_FORMAT D3DRenderEngine::MapFormat( Format format )
+	DXGI_FORMAT D3DRenderEngine::MapFormat( Format format)
 	{
 		switch (format)
 		{
 		case A8_U:
 			return DXGI_FORMAT_A8_UNORM;
-			break;
 		case R8_U:
 			return DXGI_FORMAT_R8_UNORM;
-			break;
 		case R8G8B8A8_U:
 			return DXGI_FORMAT_R8G8B8A8_UNORM;
-			break;
 		case R32G32B32A32_F:
 			return DXGI_FORMAT_R32G32B32A32_FLOAT;
-			break;
+		case D24_U_S8_U:
+			return DXGI_FORMAT_D24_UNORM_S8_UINT;
 		default:
 			return DXGI_FORMAT_R32G32B32A32_UINT;
-			break;
 		}
 	}
 

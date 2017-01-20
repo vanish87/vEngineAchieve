@@ -15,8 +15,7 @@ namespace vEngine
 	class D3DFrameBuffer : public FrameBuffer
 	{
 	public:
-		D3DFrameBuffer(void);
-		D3DFrameBuffer(Configure::RenderSetting& render_setting);
+		D3DFrameBuffer(uint32_t width, uint32_t height);
 		~D3DFrameBuffer(void);
 
 		D3DRenderTargetView* const D3DRTView(size_t index = 0) const {return static_cast<D3DRenderTargetView*>(render_views_[index]);};
@@ -27,6 +26,7 @@ namespace vEngine
 		virtual void OnBind();
 
 	private:
+		D3DFrameBuffer(void);
 		D3DDepthStencilRenderView* depth_stencil_view_;
 	};
 }
