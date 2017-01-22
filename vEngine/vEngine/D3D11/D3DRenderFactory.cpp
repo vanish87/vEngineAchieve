@@ -76,18 +76,25 @@ namespace vEngine
 
 		switch (access_type)
 		{
-		case AT_CPU_READ:
-			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+		case AT_CPU_GPU_ALL:
+			buffer_desc.Usage = D3D11_USAGE_STAGING;
+			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 			break;
-		case AT_CPU_WRITE:
-			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		case AT_CPU_WRITE_GPU_READ:
 			buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			break;
-		case AT_GPU_READ:
+		case AT_GPU_READ_ONLY:
+			buffer_desc.Usage = D3D11_USAGE_IMMUTABLE;
+			buffer_desc.CPUAccessFlags = 0;
 			break;
-		case AT_GPU_WRITE:
+		case AT_GPU_READ_WRITE:
+			buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+			buffer_desc.CPUAccessFlags = 0;
 			break;
 		default:
+			buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+			buffer_desc.CPUAccessFlags = 0;
 			break;
 		}
 		ID3D11Buffer* buffer;

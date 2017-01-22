@@ -447,6 +447,8 @@ namespace vEngine
 			return DXGI_FORMAT_R32G32B32A32_FLOAT;
 		case D24_U_S8_U:
 			return DXGI_FORMAT_D24_UNORM_S8_UINT;
+		case R24G8_TYPELESS:
+			return DXGI_FORMAT_R24G8_TYPELESS;
 		default:
 			return DXGI_FORMAT_R32G32B32A32_UINT;
 		}

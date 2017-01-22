@@ -14,7 +14,7 @@ namespace vEngine
 	{
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 
-		Texture* depth_stencil_texture = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, width, height, 1, 1, D24_U_S8_U, 1, 0, AT_GPU_READ_WRITE, TU_DEPTH_SR);
+		Texture* depth_stencil_texture = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, width, height, 1, 1, R24G8_TYPELESS, 1, 0, AT_GPU_READ_WRITE, TU_DEPTH_SR);
 
 		depth_stencil_view_ = new D3DDepthStencilRenderView();
 		depth_texture_ = new D3DTexture2D();

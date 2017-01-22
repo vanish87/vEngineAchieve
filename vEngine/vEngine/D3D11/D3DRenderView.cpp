@@ -36,7 +36,12 @@ namespace vEngine
 
 	}
 
-	void D3DDepthStencilRenderView::SetD3DDSV( ID3D11DepthStencilView* depth_stencil_view )
+	D3DDepthStencilRenderView::~D3DDepthStencilRenderView(void)
+	{
+
+	}
+
+	void D3DDepthStencilRenderView::SetD3DDSV(ID3D11DepthStencilView* depth_stencil_view)
 	{
 		this->depth_stencil_view_=depth_stencil_view;
 	}

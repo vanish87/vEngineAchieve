@@ -184,7 +184,7 @@ namespace vEngine
 		//TODO: write a add material fun to add pom texture
 		pom_enabled_ = true;
 		pom_texture_ = LoadTexture(file_name);
-		pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ,BU_SHADER_RES);
+		pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 	}
 
 
