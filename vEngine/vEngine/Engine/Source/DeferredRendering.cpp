@@ -157,7 +157,6 @@ namespace vEngine
 
 		//back camera
 		back_buffer_ = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer();
-		back_frame_camera_ = &Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetViewport().GetCamera();
 
 	}
 
@@ -245,7 +244,7 @@ namespace vEngine
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
 		ShaderObject* shader_object = render_list[0]->GetShaderObject();
 		
-		//back_frame_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
+		back_frame_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
 		//Deferred Lighting
 			//pass 0
 			render_engine->SetNormalState();
@@ -268,13 +267,13 @@ namespace vEngine
 
 			//pass 1
 			//bind lighting buffer
-			lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
+			//lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
 			render_engine->BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
 			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
 			LightStruct* light_buffer = new LightStruct[lights.size()];
-			float4x4 view_mat = back_frame_camera_->GetViewMatirx();
+			float4x4 view_mat = lighting_buffer_->GetViewport().GetCamera().GetViewMatirx();
 			float4x4 invtrans_view_mat = Math::InverTranspose(view_mat);
 			float4x4 shadow_trans_mat;
 			float4x4 light_view_proj;
@@ -363,12 +362,12 @@ namespace vEngine
 				std::cout<<view_proj_mat[0][0]<<" "<<view_proj_mat[0][1]<<" "<<view_proj_mat[0][2]<<"\n";
 				std::cout<<view_proj_mat[1][0]<<" "<<view_proj_mat[1][1]<<" "<<view_proj_mat[1][2]<<"\n";
 				std::cout<<view_proj_mat[2][0]<<" "<<view_proj_mat[2][1]<<" "<<view_proj_mat[2][2]<<"\n\n";*/
-				lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
+				//lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
 				render_engine->BindFrameBuffer(lighting_buffer_);
 				//render_engine->RenderFrameBegin();
 				render_engine->SetDeferredRenderingState();
 				shader_object->SetMatrixVariable("g_shadow_transform", shadow_trans_mat);
-				shader_object->SetMatrixVariable("g_light_view_proj", view_proj_mat);
+				//shader_object->SetMatrixVariable("g_light_view_proj", Math::Identity(view_proj_mat));
 
 				fullscreen_mesh_->SetShaderObject(shader_object);
 				fullscreen_mesh_->SetRenderParameters();

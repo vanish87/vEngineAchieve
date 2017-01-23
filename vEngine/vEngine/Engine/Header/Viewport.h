@@ -22,8 +22,8 @@ namespace vEngine
 		int Height(){return height_;};
 
 
-		void SetWidth(uint32_t width) { this->width_ = width_; };
-		void SetHeight(uint32_t height) { this->height_ = height_; };
+		void SetWidth(uint32_t width) { this->width_ = width; };
+		void SetHeight(uint32_t height) { this->height_ = height; };
 
 		Camera& GetCamera(){return camera_;};
 		void SetCamera(Camera* camera);
