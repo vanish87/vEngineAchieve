@@ -96,6 +96,8 @@ namespace vEngine
 		format_ = R8G8B8A8_U;
 		d3d_texture2D_ = texture;
 		type_ = type;
+
+		PRINT_AND_ASSERT("Remove this: Should make a Texture first");
 	}
 
 

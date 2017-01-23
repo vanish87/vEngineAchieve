@@ -267,6 +267,9 @@ namespace vEngine
 			d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
 			d3d_frame_buffer->D3DRTView()->D3DRTV()->Release();
 			d3d_frame_buffer->D3DDSView()->D3DDSV()->Release();
+			//
+			PRINT_AND_ASSERT("This should be check and make a new MakeFrameBuffer here");
+			//then the rest of this function should only handle render targets
 		}
 
 		//TODO : Use new size of window to resize FrameBuffer
@@ -283,67 +286,18 @@ namespace vEngine
 		if(FAILED(result))
 			PRINT("CreateRenderTargetView Failed!");
 		back_buffer->Release();
-
-		D3D11_TEXTURE2D_DESC depth_stencil_desc;
-	
-		depth_stencil_desc.Width     = this->render_setting_.width;
-		depth_stencil_desc.Height    = this->render_setting_.height;
-		depth_stencil_desc.MipLevels = 1;
-		depth_stencil_desc.ArraySize = 1;
-		depth_stencil_desc.Format    = DXGI_FORMAT_R24G8_TYPELESS;
-
-
-
-		if( this->render_setting_.msaa4x )
-		{
-			UINT msaa_quality = 0;
-			result = d3d_device_->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaa_quality);
-			if(FAILED(result) )
-			{
-				PRINT("msaa_quality Failed.");
-			}
-			depth_stencil_desc.SampleDesc.Count   = 4;
-			depth_stencil_desc.SampleDesc.Quality = msaa_quality-1;
-		}
-		// No MSAA
-		else
-		{
-			depth_stencil_desc.SampleDesc.Count   = 1;
-			depth_stencil_desc.SampleDesc.Quality = 0;
-		}
-
-		//TODO : Create Texture RTV through RenderFactory, as well as FrameBuffer->Onbind()
-		depth_stencil_desc.Usage          = D3D11_USAGE_DEFAULT;
-		depth_stencil_desc.BindFlags      = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-		depth_stencil_desc.CPUAccessFlags = 0; 
-		depth_stencil_desc.MiscFlags      = 0;
-
-		ID3D11Texture2D* depth_stencil_buffer;// = d3d_frame_buffer->D3DDSBuffer()->D3DTexture();
-		ID3D11DepthStencilView*	depth_stencil_view;// = d3d_frame_buffer->D3DDSView()->D3DDSV();
-
-		result = d3d_device_->CreateTexture2D(&depth_stencil_desc, 0, &depth_stencil_buffer);
-		if(FAILED(result))
-			PRINT("depth_stencil create Failed!");
-
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
-		ZeroMemory(&dsvd, sizeof(dsvd));
-		dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dsvd.Texture2D.MipSlice = 0;
-
-		result = d3d_device_->CreateDepthStencilView(depth_stencil_buffer, &dsvd, &depth_stencil_view);
-		if(FAILED(result))
-			PRINT("depth_stencil_view create Failed!");
-
+		
+		//TODO: Use render factory to create this
+		//RenderFactory should have a CreateTexture2D function with texture pointer,
+		//then here we can use Texture->GetRenderTargetView to have this
 		D3DRenderTargetView* d3d_rtv = new D3DRenderTargetView();
 		d3d_rtv->SetD3DRTV(render_target_view);
 		d3d_frame_buffer->AddRenderView(d3d_rtv);
-		static_cast<D3DTexture2D*>(d3d_frame_buffer->GetDepthTexture())->SetD3DTexture(depth_stencil_buffer);
-		d3d_frame_buffer->GetDepthTexture()->SetUsage(TU_DEPTH_SR);
-		d3d_frame_buffer->D3DDSView()->SetD3DDSV(depth_stencil_view);
 
 		this->BindFrameBuffer(d3d_frame_buffer);
 
+
+		//TODO have some good way to maintain varies of RenderState
 
 		// Set up the description of the stencil state.
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;

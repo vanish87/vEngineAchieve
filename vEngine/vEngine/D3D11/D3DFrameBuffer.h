@@ -20,14 +20,15 @@ namespace vEngine
 
 		D3DRenderTargetView* const D3DRTView(size_t index = 0) const {return static_cast<D3DRenderTargetView*>(render_views_[index]);};
 		size_t D3DRTViewSize(){return render_views_.size();};
-		D3DDepthStencilRenderView* const &D3DDSView() const {return depth_stencil_view_;};
+		D3DDepthStencilRenderView* const &D3DDSView() const {return static_cast<D3DDepthStencilRenderView*>(depth_stencil_view_);};
 		//D3DTexture2D* const &D3DDSBuffer() const {return depth_texture_;};
 
 		virtual void OnBind();
 
 	private:
 		D3DFrameBuffer(void);
-		D3DDepthStencilRenderView* depth_stencil_view_;
+		RenderView* depth_stencil_view_;
+		Viewport* viewport_;
 	};
 }
 

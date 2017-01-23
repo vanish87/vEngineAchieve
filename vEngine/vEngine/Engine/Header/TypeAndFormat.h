@@ -52,6 +52,13 @@ namespace vEngine
 
 	};
 
+	enum DepthStencilUsage
+	{
+		DSU_DEPTH_ONLY,
+		DSU_STENCIL_ONLY,
+		DSU_BOTH,
+	};
+
 	enum AccessType
 	{
 		AT_CPU_GPU_ALL,

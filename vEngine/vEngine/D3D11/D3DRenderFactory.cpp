@@ -126,4 +126,9 @@ namespace vEngine
 		return new D3DRenderTargetView(*texture, array_size, mip_level );
 	}
 
+	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level, DepthStencilUsage usage)
+	{
+		return new D3DDepthStencilRenderView(*texture, array_size, mip_level, usage);
+	}
+
 }
