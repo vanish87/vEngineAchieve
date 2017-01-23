@@ -114,14 +114,20 @@ namespace vEngine
 	}
 
 	Texture* D3DRenderFactory::MakeTexture2D( InitData const * init_data, uint32_t width, uint32_t height, uint32_t numMipMaps, uint32_t array_size, Format format, uint32_t sample_count, uint32_t sample_quality, AccessType access_type, TextureUsage texture_usage )
-	{
-		
+	{		
 		return new D3DTexture2D(width, height, access_type, array_size, 
 			format, numMipMaps, sample_count, sample_quality, texture_usage,
 			init_data);
 	}
 
-	RenderView* D3DRenderFactory::MakeRenderView( Texture* texture, int array_size, int mip_level  )
+	vEngine::Texture* D3DRenderFactory::MakeTexture2D(void* TextureData)
+	{
+		assert(TextureData != nullptr);
+		ID3D11Texture2D* ptr = static_cast<ID3D11Texture2D*>(TextureData);
+		return new D3DTexture2D(ptr);
+	}
+
+	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)
 	{
 		return new D3DRenderTargetView(*texture, array_size, mip_level );
 	}

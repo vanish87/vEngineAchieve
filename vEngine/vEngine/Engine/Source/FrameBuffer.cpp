@@ -11,17 +11,13 @@ namespace vEngine
 	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height)
 		: width_(width), height_(height)
 	{
-
+		viewport_.SetWidth(width);
+		viewport_.SetHeight(height);
 	}
 
 	FrameBuffer::~FrameBuffer( void )
 	{
 
-	}
-
-	Camera* FrameBuffer::GetFrameCamera()
-	{
-		return viewport_.GetCamera();
 	}
 
 	void FrameBuffer::AddRenderView( RenderView* render_view )
@@ -35,10 +31,6 @@ namespace vEngine
 		render_views_.push_back(render_view);
 	}
 
-	void FrameBuffer::SetFrameCamera( Camera* camera )
-	{
-		viewport_.SetCamera(camera);
-	}
 
 	Viewport& FrameBuffer::GetViewport()
 	{

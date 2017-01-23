@@ -72,12 +72,12 @@ void MyApp::InitObjects()
 	first_person_ = false;
 	pitch_angle_ = 0;
 	speed_ = 2.5;
-	Camera* camera = new Camera();// = Context::Instance().AppInstance().GetCamera();
+	camera_ = new Camera(1280/800.0f);// Context::Instance().GetSceneManager().GetMainCamera();
 	cam_pos_ = float3(82.2f,270.87f,-67.49f);
 	cam_look_ = float3(81.78f,270.16f,-66.94f);
-	camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
+	camera_->SetView(cam_pos_, cam_look_, float3(0,1,0));
 	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
-
+	camera_->AddToScene();
 
 	DebugTracking::GetInstance().PrintALL();
 }
@@ -87,6 +87,7 @@ void MyApp::ReleaseObjects()
 	delete point_light_;
 	delete spot_light_;
 	delete timer_;
+	delete camera_;
 }
 
 void MyApp::Update()
@@ -94,8 +95,8 @@ void MyApp::Update()
 	//std::cout<<timer_->Time()<<"\r";
 	if(first_person_)
 	{
-		Camera* camera = new Camera();// = Context::Instance().AppInstance().GetCamera();
-		camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
+		//Camera* camera = Context::Instance().GetSceneManager().GetMainCamera();
+		camera_->SetView(cam_pos_, cam_look_, float3(0,1,0));
 
 		float4x4 mat,trans, rotate;
 		Math::Scale(mat, 30);

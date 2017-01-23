@@ -44,7 +44,8 @@ namespace vEngine
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
 		ZeroMemory(&dsvd, sizeof(dsvd));
-		dsvd.Format = d3d_re->MapFormat(d3d_texture->GetFormat());
+		//TODO check format compatibility
+		dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//d3d_re->MapFormat(d3d_texture->GetFormat());
 		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		dsvd.Texture2D.MipSlice = mip_level;
 		HRESULT result = d3d_re->D3DDevice()->CreateDepthStencilView(d3d_texture->D3DTexture(), &dsvd, &depth_stencil_view_);

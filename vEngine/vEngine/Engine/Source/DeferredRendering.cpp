@@ -1,4 +1,5 @@
 #include "Engine\Header\DeferredRendering.h"
+#include "Engine\Header\RenderTools.h"
 #include "D3D11\D3DModel.h"
 
 
@@ -15,52 +16,7 @@ namespace vEngine
 		gbuffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		lighting_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		//make a full screen qua for lighting pass
-		VertexType* vb = new VertexType[6];
-		uint32_t* ib = new uint32_t[6];
-		//clock wise
-		vb[0].position = float3(-1, +1, 1);
-		vb[1].position = float3(+1, +1, 1);
-		vb[2].position = float3(-1, -1, 1);
-		vb[3].position = float3(+1, -1, 1);
-		vb[4].position = float3(-1, -1, 1);
-		vb[5].position = float3(+1, +1, 1);
-
-		ib[0] = 0;
-		ib[1] = 1;
-		ib[2] = 2;
-		ib[3] = 3;
-		ib[4] = 4;
-		ib[5] = 5;
-
-		//call MakeRenderLayout
-		RenderLayout* render_layout = Context::Instance().GetRenderFactory().MakeRenderLayout();
-		//call MakeRenderBuffer(Vertex)
-		InitData init_data;
-		init_data.data = vb;
-		init_data.row_pitch = 0;
-		init_data.slice_pitch = 0;
-		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_VERTEX, 6 ,sizeof(VertexType));
-		//delete[] vb;
-		//call MakeRenderBuffer(Index)
-		init_data.data = ib;
-		init_data.row_pitch = 0;
-		init_data.slice_pitch = 0;
-		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_INDEX, 6, sizeof(uint32_t));
-		//delete[] ib;
-
-		//add VertexBuffer to renderlayout;
-		render_layout->AddBuffer(vertex_buffer, sizeof(VertexType));
-		//add IndexBuffer to renderlayout;
-		render_layout->AddBuffer(index_buffer, 6);
-		//set Primitivetype of renderlayout;
-		render_layout->SetPrimitive(PT_TRIANGLELIST);
-		//set Input layout Semi
-		std::vector<VertexUsage> inputlayout;
-		inputlayout.push_back(VU_POSITION);
-		render_layout->SetInputLayout(inputlayout);
-		float4x4 model_matrix;
-		Math::Identity(model_matrix);
-		fullscreen_mesh_ = new vEngine::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
+		fullscreen_mesh_ = RenderTools::GetInstance().MakeFullScreenMesh();
 
 		//According to config file
 		for(int i=0; i< render_setting.gbuffer_size; i++)
@@ -72,7 +28,9 @@ namespace vEngine
 			//Add to gbuffer
 			RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(texture_2d, 1, 0);
 			RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ_WRITE, BU_SHADER_RES);
-			AddGBuffer(render_view);
+			//as render target
+			gbuffer_->AddRenderView(render_view);
+			//as shader resource
 			AddGBuffer(shader_resource);
 		}
 
@@ -134,9 +92,8 @@ namespace vEngine
 		ssdo_so_->LoadFxoFile("FxFiles/SSDO.cso");
 		ssdo_so_->SetTechnique("PPTech");
 
-		D3DModel *random_tex_dummy = new D3DModel();
-		noise_tex_ = random_tex_dummy->LoadTexture("Media/noise.png");
-		delete random_tex_dummy;
+		D3DModel random_tex_dummy;
+		noise_tex_ = random_tex_dummy.LoadTexture("Media/noise.png");
 
 		occlusion_tex_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
 			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
@@ -179,7 +136,7 @@ namespace vEngine
 			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		render_view = Context::Instance().GetRenderFactory().MakeRenderView(texture_2d, 1, 0);
 		RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ_WRITE, BU_SHADER_RES);
-		AddLightingBuffer(render_view);
+		lighting_buffer_->AddRenderView(render_view);
 		AddLightingBuffer(shader_resource);
 
 		linearize_depth_so_ = new D3DShaderobject();
@@ -200,7 +157,7 @@ namespace vEngine
 
 		//back camera
 		back_buffer_ = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer();
-		back_frame_camera_= back_buffer_->GetFrameCamera();
+		back_frame_camera_ = &Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetViewport().GetCamera();
 
 	}
 
@@ -209,26 +166,11 @@ namespace vEngine
 	{
 	}
 
-	void DeferredRendering::AddGBuffer( RenderView* render_target_view )
-	{
-		gbuffer_->AddRenderView(render_target_view);
-	}
-
 	void DeferredRendering::AddGBuffer( RenderBuffer* shader_resource_view )
 	{
 		gbuffer_srv_.push_back(shader_resource_view);
 	}
-
-	Mesh* DeferredRendering::GetFullscreenQuad()
-	{
-		return fullscreen_mesh_;
-	}
-
-	void DeferredRendering::AddLightingBuffer( RenderView* render_view )
-	{
-		lighting_buffer_->AddRenderView(render_view);
-	}
-
+	
 	void DeferredRendering::AddLightingBuffer( RenderBuffer* shader_resource)
 	{
 		lighting_srv_ = shader_resource;
@@ -302,12 +244,13 @@ namespace vEngine
 		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
 		ShaderObject* shader_object = render_list[0]->GetShaderObject();
-
+		
+		//back_frame_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
 		//Deferred Lighting
 			//pass 0
 			render_engine->SetNormalState();
 			//bind gbuffer
-			gbuffer_->SetFrameCamera(back_frame_camera_);
+			gbuffer_->GetViewport().SetCamera(back_frame_camera_);
 			render_engine->BindFrameBuffer(gbuffer_);
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
@@ -325,7 +268,7 @@ namespace vEngine
 
 			//pass 1
 			//bind lighting buffer
-			lighting_buffer_->SetFrameCamera(back_frame_camera_);
+			lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
 			render_engine->BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
@@ -377,7 +320,7 @@ namespace vEngine
 
 					//std::cout<<static_cast<SpotLight*>(lights[i])->GetDir().x()<<" "<<static_cast<SpotLight*>(lights[i])->GetDir().y()<<" "<<static_cast<SpotLight*>(lights[i])->GetDir().z()<<"\r";
 					
-					shadow_map_buffer_->SetFrameCamera(sm_camera);
+					shadow_map_buffer_->GetViewport().SetCamera(sm_camera);
 					render_engine->BindFrameBuffer(shadow_map_buffer_);
 					render_engine->SetNormalState();
 
@@ -400,7 +343,7 @@ namespace vEngine
 				}							
 
 
-				ssdo_pp_->SetCamera(back_frame_camera_);
+				//ssdo_pp_->SetCamera(back_frame_camera_);
 // 				ssdo_pp_->Apply();
 // 				occlusion_xblur_pp_->Apply();
 // 				occlusion_yblur_pp_->Apply();
@@ -420,7 +363,7 @@ namespace vEngine
 				std::cout<<view_proj_mat[0][0]<<" "<<view_proj_mat[0][1]<<" "<<view_proj_mat[0][2]<<"\n";
 				std::cout<<view_proj_mat[1][0]<<" "<<view_proj_mat[1][1]<<" "<<view_proj_mat[1][2]<<"\n";
 				std::cout<<view_proj_mat[2][0]<<" "<<view_proj_mat[2][1]<<" "<<view_proj_mat[2][2]<<"\n\n";*/
-				lighting_buffer_->SetFrameCamera(back_frame_camera_);
+				lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
 				render_engine->BindFrameBuffer(lighting_buffer_);
 				//render_engine->RenderFrameBegin();
 				render_engine->SetDeferredRenderingState();

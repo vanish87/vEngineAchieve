@@ -17,8 +17,6 @@ namespace vEngine
 		FrameBuffer(uint32_t width, uint32_t height);
 		virtual ~FrameBuffer(void);
 
-		Camera* GetFrameCamera();
-		void SetFrameCamera(Camera* camera);
 		Viewport& GetViewport();
 
 		virtual void OnBind() = 0;

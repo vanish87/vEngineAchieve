@@ -129,10 +129,10 @@ namespace vEngine
 		//Get view and Projection Matrix
 		D3DFrameBuffer* d3d_frame_buffer;
 		d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
-		float4x4 view_mat = d3d_frame_buffer->GetFrameCamera()->GetViewMatirx();
-		float4x4 proj_mat = d3d_frame_buffer->GetFrameCamera()->GetProjMatrix();
-		float3 camera_pos = d3d_frame_buffer->GetFrameCamera()->GetPos();
-		float3 camera_at =  d3d_frame_buffer->GetFrameCamera()->GetLookAt();
+		float4x4 view_mat = d3d_frame_buffer->GetViewport().GetCamera().GetViewMatirx();
+		float4x4 proj_mat = d3d_frame_buffer->GetViewport().GetCamera().GetProjMatrix();
+		float3 camera_pos = d3d_frame_buffer->GetViewport().GetCamera().GetPos();
+		float3 camera_at =  d3d_frame_buffer->GetViewport().GetCamera().GetLookAt();
 
 		//Make sure every Shader has a constant named view_proj_matrix
 		shader_object->SetMatrixVariable("g_view_proj_matrix", view_mat*proj_mat);
@@ -277,22 +277,15 @@ namespace vEngine
 		if(FAILED(result))
 			PRINT("ResizeBuffer Failed!");
 
-		ID3D11Texture2D* back_buffer;
-		ID3D11RenderTargetView* render_target_view;// = d3d_frame_buffer->D3DRTView()->D3DRTV();
+		ID3D11Texture2D* back_buffer = nullptr;
+		ID3D11RenderTargetView* render_target_view = nullptr;
 		result = d3d_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&back_buffer));
 		if(FAILED(result))
-			PRINT("GetBuffer Failed!");
-		result = d3d_device_->CreateRenderTargetView(back_buffer, 0, &render_target_view);
-		if(FAILED(result))
-			PRINT("CreateRenderTargetView Failed!");
-		back_buffer->Release();
+			PRINT("Get back Buffer Failed!");
 		
-		//TODO: Use render factory to create this
-		//RenderFactory should have a CreateTexture2D function with texture pointer,
-		//then here we can use Texture->GetRenderTargetView to have this
-		D3DRenderTargetView* d3d_rtv = new D3DRenderTargetView();
-		d3d_rtv->SetD3DRTV(render_target_view);
-		d3d_frame_buffer->AddRenderView(d3d_rtv);
+		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(back_buffer);
+		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(d3d_tex, 1, 0);
+		d3d_frame_buffer->AddRenderView(render_view);
 
 		this->BindFrameBuffer(d3d_frame_buffer);
 
@@ -408,7 +401,29 @@ namespace vEngine
 		}
 	}
 
-	void D3DRenderEngine::BindFrameBuffer( FrameBuffer* const & fb )
+	Format D3DRenderEngine::ReverseMapFormat(DXGI_FORMAT format)
+	{
+		switch (format)
+		{
+		case DXGI_FORMAT_A8_UNORM:
+			return A8_U;
+		case DXGI_FORMAT_R8_UNORM:
+			return R8_U;
+		case DXGI_FORMAT_R8G8B8A8_UNORM:
+			return R8G8B8A8_U;
+		case DXGI_FORMAT_R32G32B32A32_FLOAT:
+			return R32G32B32A32_F;
+		case DXGI_FORMAT_D24_UNORM_S8_UINT:
+			return D24_U_S8_U;
+		case DXGI_FORMAT_R24G8_TYPELESS:
+			return R24G8_TYPELESS;
+		default:
+			PRINT_AND_ASSERT("Should handle this");
+			return R32G32B32A32_U;
+		}
+	}
+
+	void D3DRenderEngine::BindFrameBuffer(FrameBuffer* const & fb)
 	{
 		cur_frame_buffer_ = fb;
 		fb->OnBind();

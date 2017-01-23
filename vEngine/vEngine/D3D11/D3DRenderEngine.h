@@ -39,6 +39,7 @@ namespace vEngine
 		ID3D11DeviceContext* const & D3DDeviceImmContext() const{return d3d_imm_context_;};
 
 		DXGI_FORMAT MapFormat(Format format);
+		Format		ReverseMapFormat(DXGI_FORMAT format);
 
 		virtual void BindFrameBuffer( FrameBuffer* const & fb );
 

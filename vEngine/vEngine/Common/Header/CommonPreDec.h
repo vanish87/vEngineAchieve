@@ -21,6 +21,7 @@
 #define PRINT(x) std::cout<<x<<std::endl;
 #define PRINT_AND_RETURN(x, returnVal) {std::cout<<x<<std::endl;return returnVal;}
 #define PRINT_AND_ASSERT(x) {std::cout<<x<<std::endl; assert(false);}
+#define COMPILE_PRINT_AND_ASSERT(exp, x) {static_assert(exp, x);}
 
 #define DEBUG_CLASS_FILE_NAME virtual std::string GetName() { return __FILE__; };
 #define DEBUG_CLASS_NAME(x) virtual std::string GetName() { return x; };

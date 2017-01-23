@@ -18,7 +18,7 @@ namespace vEngine
 		D3DTexture2D(uint32_t width, uint32_t height, AccessType access_type, uint32_t array_size, 
 			Format format, uint32_t mip_level, uint32_t sample_count, uint32_t sample_quality, TextureUsage usage,
 			InitData const * init_data);
-		D3DTexture2D(D3D11_TEXTURE2D_DESC desc,	ID3D11Texture2D* & texture, TextureType type);
+		D3DTexture2D(ID3D11Texture2D* & texture);
 
 		ID3D11Texture2D* const & D3DTexture() const
 		{

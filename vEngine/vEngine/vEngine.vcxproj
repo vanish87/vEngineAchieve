@@ -60,6 +60,7 @@
     <ClCompile Include="Engine\Source\RenderFactory.cpp" />
     <ClCompile Include="Engine\Source\RenderLayout.cpp" />
     <ClCompile Include="Engine\Source\RenderState.cpp" />
+    <ClCompile Include="Engine\Source\RenderTools.cpp" />
     <ClCompile Include="Engine\Source\RenderView.cpp" />
     <ClCompile Include="Engine\Source\SceneManager.cpp" />
     <ClCompile Include="Engine\Source\SceneObject.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Engine\Header\RenderFactory.h" />
     <ClInclude Include="Engine\Header\RenderLayout.h" />
     <ClInclude Include="Engine\Header\RenderState.h" />
+    <ClInclude Include="Engine\Header\RenderTools.h" />
     <ClInclude Include="Engine\Header\RenderView.h" />
     <ClInclude Include="Engine\Header\SceneManager.h" />
     <ClInclude Include="Engine\Header\SceneObject.h" />

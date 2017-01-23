@@ -16,8 +16,6 @@ namespace vEngine
 
 		this->depth_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, width, height, 1, 1, R24G8_TYPELESS, 1, 0, AT_GPU_READ_WRITE, TU_DEPTH_SR);
 		this->depth_stencil_view_ = Context::Instance().GetRenderFactory().MakeRenderView(this->depth_texture_, 0, 0, DSU_BOTH);
-		//TODO : move it to Base Case
-		viewport_ = new Viewport(0 , 0,width,height);
 	}
 
 
@@ -47,10 +45,10 @@ namespace vEngine
 		}
 
 		D3D11_VIEWPORT d3d_viewport;
-		d3d_viewport.TopLeftX = viewport_->Top();
-		d3d_viewport.TopLeftY = viewport_->Left();
-		d3d_viewport.Width    = static_cast<float>(viewport_->Width());
-		d3d_viewport.Height   = static_cast<float>(viewport_->Height());
+		d3d_viewport.TopLeftX = viewport_.Top();
+		d3d_viewport.TopLeftY = viewport_.Left();
+		d3d_viewport.Width    = static_cast<float>(viewport_.Width());
+		d3d_viewport.Height   = static_cast<float>(viewport_.Height());
 		d3d_viewport.MinDepth = 0.0f;//get info from frustum
 		d3d_viewport.MaxDepth = 1.0f;
 

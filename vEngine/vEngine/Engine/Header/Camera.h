@@ -26,9 +26,13 @@ namespace vEngine
 		void SetProjection(float fovy, float aspect, float zn, float zf);
 		float4x4 GetProjMatrix(){return proj_matrix_;};
 
-		float3 GetPos(){return eye_;};
+		float3 GetPos();
 		float3 GetLookAt();
 		float3 GetUp();
+
+		float  GetFovy();
+		float  GetAspect();
+		float2 GetNearFar();
 
 		// rotate on right vector
 		void Pitch(float angle);
@@ -36,6 +40,9 @@ namespace vEngine
 		void Yaw(float angle);   
 		// rotate on look vector
 		void Roll(float angle);  
+
+
+		virtual void AddToScene() override;
 
 	private:
 		Frustum	frustum_;

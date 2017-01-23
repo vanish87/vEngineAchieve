@@ -5,6 +5,7 @@
 
 #include "Common\Header\CommonPreDec.h"
 #include "Engine\Header\EnginePreDec.h"
+#include "Engine\Header\Camera.h"
 
 namespace vEngine
 {
@@ -20,8 +21,12 @@ namespace vEngine
 		int Width(){return width_;};
 		int Height(){return height_;};
 
-		Camera* GetCamera(){return camera_;};
-		void SetCamera(Camera* & camera);
+
+		void SetWidth(uint32_t width) { this->width_ = width_; };
+		void SetHeight(uint32_t height) { this->height_ = height_; };
+
+		Camera& GetCamera(){return camera_;};
+		void SetCamera(Camera* camera);
 
 
 	protected:
@@ -30,7 +35,7 @@ namespace vEngine
 		int width_;
 		int height_;
 
-		Camera* camera_;
+		Camera camera_;
 	};
 }
 

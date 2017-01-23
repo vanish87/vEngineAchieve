@@ -1,4 +1,5 @@
 #include "Engine\Header\Camera.h"
+#include "Engine\Header\Context.h"
 
 namespace vEngine
 {
@@ -40,6 +41,11 @@ namespace vEngine
 		proj_matrix_ = Math::PerspectiveFovLH(fovy_, aspect_, zn_, zf_);
 	}
 
+	float3 Camera::GetPos()
+	{
+		return eye_;
+	}
+
 	float3 Camera::GetLookAt()
 	{
 		return at_;
@@ -48,6 +54,19 @@ namespace vEngine
 	float3 Camera::GetUp()
 	{
 		return up_;
+	}
+
+	float Camera::GetFovy()
+	{
+		return fovy_;
+	}
+	float Camera::GetAspect()
+	{
+		return aspect_;
+	}
+	float2 Camera::GetNearFar()
+	{
+		return float2(zn_,zf_);
 	}
 
 	void Camera::Pitch( float angle )
@@ -93,5 +112,10 @@ namespace vEngine
 		view_matrix_ = Math::LookAtLH(eye_, at_, up_);
 	}
 
+
+	void Camera::AddToScene()
+	{
+		Context::Instance().GetSceneManager().AddCamera(this);
+	}
 
 }

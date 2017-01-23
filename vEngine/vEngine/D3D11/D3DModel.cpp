@@ -1,5 +1,6 @@
 #include "D3DModel.h"
 #include "DirectXTex.h"
+#include "D3DRenderEngine.h"
 
 namespace vEngine
 {
@@ -39,14 +40,14 @@ namespace vEngine
 		//D3DRenderBuffer* lights_buffer = static_cast<D3DRenderBuffer*>(Context::Instance().GetRenderFactory().GetRenderEngine().GetLightsBuufer());
 		//shader_object_->SetReource("gLight", lights_buffer, 0);
 
+		D3DRenderEngine* re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		//for each mesh 
 		for(size_t i =0; i < meshes_.size(); i++)
 		{
 			//set texture
 			//set material
 			shader_object_->SetRawData("gMaterial", materials_[i], sizeof(Material));		
-			Camera* camera = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetFrameCamera();
-			float4x4 view_mat = camera->GetViewMatirx();
+			float4x4 view_mat = re->CurrentFrameBuffer()->GetViewport().GetCamera().GetViewMatirx();
 			float4x4 world_inv_transpose = Math::InverTranspose( meshes_[i]->GetModelMatrix()* model_matrix_ * view_mat);
 			shader_object_->SetMatrixVariable("g_mwv_inv_transpose", world_inv_transpose);
 			//set mesh's parameter
@@ -166,14 +167,15 @@ namespace vEngine
 			if (FAILED(result))
 				PRINT("Cannot Load Texture File" + file_name);
 		}
-		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata,&texture);
+		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
 			PRINT("Cannot Load Texture File");
-		ID3D11Texture2D* texture_2d= static_cast<ID3D11Texture2D*>(texture);
-		D3D11_TEXTURE2D_DESC desc;
-		texture_2d->GetDesc(&desc);
-		//TODO: use unified routine to Create Texture
-		D3DTexture2D* d3d_tex = new D3DTexture2D(desc,texture_2d, TEXTURE2D);
+
+		D3D11_RESOURCE_DIMENSION dimension;
+		texture->GetType(&dimension);
+		assert(dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
+
+		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(texture);
 		
 		return d3d_tex;
 		

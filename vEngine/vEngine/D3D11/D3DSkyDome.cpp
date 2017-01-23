@@ -80,11 +80,12 @@ namespace vEngine
 		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
 			PRINT("Cannot Load Texture File");
-		ID3D11Texture2D* texture_2d= static_cast<ID3D11Texture2D*>(texture);
-		D3D11_TEXTURE2D_DESC desc;
-		texture_2d->GetDesc(&desc);
-		//TODO: use unified routine to Create Texture
-		D3DTexture2D* d3d_tex = new D3DTexture2D(desc,texture_2d, TEXTURECUBE);
+
+		D3D11_RESOURCE_DIMENSION dimension;
+		texture->GetType(&dimension);
+		assert(dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
+
+		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(texture);
 
 		return d3d_tex;
 	}
@@ -123,7 +124,7 @@ namespace vEngine
 
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		float3 cam_pos = d3d_re->CurrentFrameBuffer()->GetFrameCamera()->GetPos();
+		float3 cam_pos = d3d_re->CurrentFrameBuffer()->GetViewport().GetCamera().GetPos();
 		Math::Translate(model_matrix_, cam_pos.x(), cam_pos.y(), cam_pos.z());
 		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
 		d3d_re->TrunoffCull();
