@@ -34,6 +34,8 @@ namespace vEngine
 				break;
 			}
 		}
+		
+		DEBUG_CLASS_NAME("Light")
 
 		void SetType(LightType type);
 		LightType GetType(){return light_type_;};

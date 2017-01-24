@@ -23,8 +23,8 @@
 #define PRINT_AND_ASSERT(x) {std::cout<<x<<std::endl; assert(false);}
 #define COMPILE_PRINT_AND_ASSERT(exp, x) {static_assert(exp, x);}
 
-#define DEBUG_CLASS_FILE_NAME virtual std::string GetName() { return __FILE__; };
-#define DEBUG_CLASS_NAME(x) virtual std::string GetName() { return x; };
+#define DEBUG_CLASS_FILE_NAME virtual std::string GetName() override { return __FILE__; };
+#define DEBUG_CLASS_NAME(x) virtual std::string GetName() override { return x; };
 
 //try to add Init function to init class_name
 #define SINGLETON_PRAVATE(class_name)\
