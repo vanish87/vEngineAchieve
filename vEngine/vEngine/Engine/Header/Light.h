@@ -3,12 +3,13 @@
 
 #pragma once
 #include "Common\Header\CommonPreDec.h"
-#include "Camera.h"
-#include "TypeAndFormat.h"
+#include "Engine\Header\Camera.h"
+#include "Engine\Header\TypeAndFormat.h"
+#include "Engine\Header\SceneObject.h"
 
 namespace vEngine
 {
-	class Light
+	class Light : public SceneObject
 	{
 	public:
 		~Light(void);
@@ -47,7 +48,7 @@ namespace vEngine
 
 		Camera* GetCamera(){return &virtual_camera_;};
 
-		void AddToScene();
+		virtual void AddToScene() override;
 
 	private:
 		virtual void UpdateCamera() = 0;

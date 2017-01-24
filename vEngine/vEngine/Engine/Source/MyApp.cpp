@@ -7,7 +7,8 @@
 #include "D3D11\D3DSkyDome.h"
 
 using namespace vEngine;
-MyApp::MyApp(void) : App("The CentBebop Design")
+
+MyApp::MyApp(void) : App("vEngine")
 {
 
 }
@@ -81,6 +82,9 @@ void MyApp::InitObjects()
 	camera_->AddToScene(true);
 
 	DebugTracking::GetInstance().PrintALL();
+
+	MyState* newstate = new MyState(this);
+	Context::Instance().GetStateManager().ChangeState(newstate, SOP_PUSH);
 }
 
 void MyApp::ReleaseObjects()
@@ -109,120 +113,131 @@ void MyApp::Update()
     spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/10000.0f)),Math::Cos(timer_->Timef()/10000.0f)));
 }
 
-/*void MyApp::OnKeyDown( WPARAM key_para )
+
+
+void MyState::Update()
+{
+	//throw std::logic_error("The method or operation is not implemented.");
+}
+
+
+void MyState::OnKeyDown(WPARAM key_para)
 {
 	switch (key_para)
 	{
 	case 'F':
-		first_person_ = true;
+		app_->first_person_ = true;
 		break;
 	default:
 		break;
 	}
-	if(first_person_)
+	if (app_->first_person_)
 	{
-		Camera* camera = Context::Instance().AppInstance().GetCamera();
+		Camera* camera = app_->camera_;
 		float3 up_ = camera->GetUp();
 		float4x4 mat;
 
-		float3 dir =  cam_look_ - cam_pos_;
-		float3 left = Math::Cross(dir,up_);
+		float3 dir = app_->cam_look_ - app_->cam_pos_;
+		float3 left = Math::Cross(dir, up_);
 		switch (key_para)
 		{
 		case 'E':
 			left = Math::Normalize(left);
 
-			pitch_angle_ = -Math::PI/180;
+			app_->pitch_angle_ = -Math::PI / 180;
 			Math::Identity(mat);
-			Math::RotationAxis(mat, left, pitch_angle_);
+			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::TransformNormal(dir, mat);
 			dir = Math::Normalize(dir);
-			cam_look_ = dir + cam_pos_;
+			app_->cam_look_ = dir + app_->cam_pos_;
 			break;
 		case 'C':
 			left = Math::Normalize(left);
 
-			pitch_angle_ = Math::PI/180;
+			app_->pitch_angle_ = Math::PI / 180;
 			Math::Identity(mat);
-			Math::RotationAxis(mat, left, pitch_angle_);
+			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::TransformNormal(dir, mat);
 			dir = Math::Normalize(dir);
-			cam_look_ = dir + cam_pos_;
+			app_->cam_look_ = dir + app_->cam_pos_;
 			break;
 		case 'X':
-			left = float3(0,1,0);
+			left = float3(0, 1, 0);
 
-			pitch_angle_ = - Math::PI/180;
+			app_->pitch_angle_ = -Math::PI / 180;
 			Math::Identity(mat);
-			Math::RotationAxis(mat, left, pitch_angle_);
+			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::TransformNormal(dir, mat);
 			dir = Math::Normalize(dir);
-			cam_look_ = dir + cam_pos_;
+			app_->cam_look_ = dir + app_->cam_pos_;
 			break;
 		case 'Z':
-			left = float3(0,1,0);
+			left = float3(0, 1, 0);
 
-			pitch_angle_ = Math::PI/180;
+			app_->pitch_angle_ = Math::PI / 180;
 			Math::Identity(mat);
-			Math::RotationAxis(mat, left, pitch_angle_);
+			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::TransformNormal(dir, mat);
 			dir = Math::Normalize(dir);
-			cam_look_ = dir + cam_pos_;
+			app_->cam_look_ = dir + app_->cam_pos_;
 			break;
 		case 'W':
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::Normalize(dir);
-			dir = dir*speed_;
-			cam_look_ = cam_look_ + dir;
-			cam_pos_ = cam_pos_ + dir;
+			dir = dir*app_->speed_;
+			app_->cam_look_ = app_->cam_look_ + dir;
+			app_->cam_pos_ = app_->cam_pos_ + dir;
 			break;
 		case 'S':
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::Normalize(dir);
-			dir = dir*speed_;
-			cam_look_ = cam_look_ - dir;
-			cam_pos_ = cam_pos_ - dir;
+			dir = dir*app_->speed_;
+			app_->cam_look_ = app_->cam_look_ - dir;
+			app_->cam_pos_ = app_->cam_pos_ - dir;
 			break;
 
 		case 'A':
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::Normalize(left);
-			dir = dir*speed_;
-			cam_look_ = dir + cam_look_;
-			cam_pos_ = cam_pos_ + dir;
+			dir = dir*app_->speed_;
+			app_->cam_look_ = dir + app_->cam_look_;
+			app_->cam_pos_ = app_->cam_pos_ + dir;
 			break;
 		case 'D':
 
 			//up_ = Math::TransformNormal(up_, mat);
 			dir = Math::Normalize(left);
-			dir = dir*speed_;
-			cam_look_ = cam_look_ - dir;
-			cam_pos_ = cam_pos_ - dir;
+			dir = dir*app_->speed_;
+			app_->cam_look_ = app_->cam_look_ - dir;
+			app_->cam_pos_ = app_->cam_pos_ - dir;
 			break;
 		case 'P':
-			speed_ +=0.1;
-			break;		
+			app_->speed_ += 0.1f;
+			break;
 		case 'O':
-			speed_ -=0.1;
+			app_->speed_ -= 0.1f;
 			break;
 
 		default:
 			break;
 		}
 	}
-	
-}*/
+
+
+}
+
+
 
 
 #ifndef ENABLE_TEST

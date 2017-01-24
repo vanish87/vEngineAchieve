@@ -13,6 +13,7 @@
 class MyApp :
 	public vEngine:: App
 {
+	friend class MyState;
 public:
 	MyApp(void);
 	~MyApp(void);
@@ -35,7 +36,20 @@ private:
 
 	float pitch_angle_;
 	float speed_;
+};
 
+//state is used for change between different game scene
+//it is possible to implement a observer mode here
+class MyState : public vEngine::GameState
+{
+public:
+	MyState() {};
+	~MyState() {};
 
+	MyState(MyApp* app) { this->app_ = app; };
+
+	MyApp* app_;
+	virtual void Update() override;
+	virtual void OnKeyDown(WPARAM key_para) override;
 };
 
