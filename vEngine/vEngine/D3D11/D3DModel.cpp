@@ -136,7 +136,7 @@ namespace vEngine
 		//if I have a original texture file loader, remove it, do Texture loading on Model Class
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		ID3D11Resource* texture;
-		//TODO use a resource loader for search path
+		//TODO: use a resource loader for search path
 		std::ifstream ifs(file_name);
 		if (!ifs.good())
 		{
