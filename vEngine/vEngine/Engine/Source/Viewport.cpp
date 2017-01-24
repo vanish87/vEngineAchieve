@@ -7,10 +7,9 @@ namespace vEngine
 	}
 
 	Viewport::Viewport( uint32_t left, uint32_t top, uint32_t width, uint32_t height )
-		:left_(left),top_(top),width_(width),height_(height),
-		camera_(new Camera(width/(float)height))
+		:left_(left),top_(top),width_(width),height_(height)
 	{
-		
+		camera_.SetProjection(Math::PI / 4, 1.0f*width / height, 1, 1000);
 	}
 
 
@@ -18,10 +17,12 @@ namespace vEngine
 	{
 	}
 
-	void Viewport::SetCamera( Camera* & camera )
+	void Viewport::SetCamera(Camera* camera)
 	{
-		this->camera_ = camera;
+		assert(camera != nullptr && *camera != GameObject::NullObject());
+		this->camera_.SetView(camera->GetPos(), camera->GetLookAt(), camera->GetUp());
+		float2 NearFar = camera->GetNearFar();
+		this->camera_.SetProjection(camera->GetFovy(), camera->GetAspect(), NearFar.x(), NearFar.y());
 	}
-
 
 }

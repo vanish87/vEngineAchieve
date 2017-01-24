@@ -27,6 +27,7 @@ private:
 	vEngine::SceneObject* ship_;
 
 	vEngine::Timer* timer_;
+	vEngine::Camera* camera_;
 
 	bool first_person_;
 	vEngine::float3 cam_pos_;

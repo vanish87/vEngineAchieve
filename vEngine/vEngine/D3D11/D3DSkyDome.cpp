@@ -35,13 +35,13 @@ namespace vEngine
 		init_data.data = vb;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_VERTEX, (uint32_t)vertices.size() ,sizeof(VertexType));
+		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_VERTEX, (uint32_t)vertices.size() ,sizeof(VertexType));
 		//delete[] vb;
 		//call MakeRenderBuffer(Index)
 		init_data.data = ib;
 		init_data.row_pitch = 0;
 		init_data.slice_pitch = 0;
-		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_INDEX, (uint32_t)indices.size(), sizeof(uint32_t));
+		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_INDEX, (uint32_t)indices.size(), sizeof(uint32_t));
 		//delete[] ib;
 
 		//add VertexBuffer to renderlayout;
@@ -80,11 +80,12 @@ namespace vEngine
 		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
 			PRINT("Cannot Load Texture File");
-		ID3D11Texture2D* texture_2d= static_cast<ID3D11Texture2D*>(texture);
-		D3D11_TEXTURE2D_DESC desc;
-		texture_2d->GetDesc(&desc);
-		//TODO: use unified routine to Create Texture
-		D3DTexture2D* d3d_tex = new D3DTexture2D(desc,texture_2d, TEXTURECUBE);
+
+		D3D11_RESOURCE_DIMENSION dimension;
+		texture->GetType(&dimension);
+		assert(dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
+
+		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(texture);
 
 		return d3d_tex;
 	}
@@ -123,11 +124,11 @@ namespace vEngine
 
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		float3 cam_pos = d3d_re->CurrentFrameBuffer()->GetFrameCamera()->GetPos();
+		float3 cam_pos = d3d_re->CurrentFrameBuffer()->GetViewport().GetCamera().GetPos();
 		Math::Translate(model_matrix_, cam_pos.x(), cam_pos.y(), cam_pos.z());
 		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
 		d3d_re->TrunoffCull();
-		RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ, BU_SHADER_RES); 
+		RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
 		shader_object_->SetReource("background_tex", cude_srv , 1);
 		//throw std::exception("The method or operation is not implemented.");
 	}

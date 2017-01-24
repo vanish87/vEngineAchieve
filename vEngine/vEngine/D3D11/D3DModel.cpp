@@ -1,5 +1,6 @@
 #include "D3DModel.h"
 #include "DirectXTex.h"
+#include "D3DRenderEngine.h"
 
 namespace vEngine
 {
@@ -20,33 +21,22 @@ namespace vEngine
 
 	void D3DModel::SetRenderParameters()
 	{
-		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
-
+		shader_object_->SetMatrixVariable("g_world_matrix", model_matrix_);
 		//TODO : use texture array to store every pom texture of mesh
 		if(pom_enabled_)
-			d3d_shader_object->SetReource("normal_map_tex", pom_srv_, 1);
-		//if(deferred_rendering)
-			//set parameter here
-			//
+			shader_object_->SetReource("normal_map_tex", pom_srv_, 1);
 	}
 
 	void D3DModel::Render(int pass_index)
 	{
-		//TODO : After write a normal ShaderObject, move these to SceneManager->Flush(), because all Render_elenment shader the same lights.
-		//set light parameter
-		std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
-		//D3DRenderBuffer* lights_buffer = static_cast<D3DRenderBuffer*>(Context::Instance().GetRenderFactory().GetRenderEngine().GetLightsBuufer());
-		//shader_object_->SetReource("gLight", lights_buffer, 0);
-
+		D3DRenderEngine* re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		//for each mesh 
 		for(size_t i =0; i < meshes_.size(); i++)
 		{
 			//set texture
 			//set material
 			shader_object_->SetRawData("gMaterial", materials_[i], sizeof(Material));		
-			Camera* camera = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetFrameCamera();
-			float4x4 view_mat = camera->GetViewMatirx();
+			float4x4 view_mat = re->CurrentFrameBuffer()->GetViewport().GetCamera().GetViewMatirx();
 			float4x4 world_inv_transpose = Math::InverTranspose( meshes_[i]->GetModelMatrix()* model_matrix_ * view_mat);
 			shader_object_->SetMatrixVariable("g_mwv_inv_transpose", world_inv_transpose);
 			//set mesh's parameter
@@ -146,10 +136,19 @@ namespace vEngine
 		//if I have a original texture file loader, remove it, do Texture loading on Model Class
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		ID3D11Resource* texture;
+		//TODO use a resource loader for search path
 		std::ifstream ifs(file_name);
 		if (!ifs.good())
 		{
-			file_name = "Media/" + file_name;
+			std::ifstream ifs1("Media/textures/" + file_name);
+			if (ifs1.good())
+			{
+				file_name = "Media/textures/" + file_name;
+			}
+			else
+			{
+				file_name = "Media/" + file_name;
+			}
 		}
 		
 		DirectX::TexMetadata metadata;
@@ -166,15 +165,15 @@ namespace vEngine
 			if (FAILED(result))
 				PRINT("Cannot Load Texture File" + file_name);
 		}
-		std::wstring widestr = std::wstring(file_name.begin(), file_name.end());
-		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata,&texture);
+		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
 			PRINT("Cannot Load Texture File");
-		ID3D11Texture2D* texture_2d= static_cast<ID3D11Texture2D*>(texture);
-		D3D11_TEXTURE2D_DESC desc;
-		texture_2d->GetDesc(&desc);
-		//TODO: use unified routine to Create Texture
-		D3DTexture2D* d3d_tex = new D3DTexture2D(desc,texture_2d, TEXTURE2D);
+
+		D3D11_RESOURCE_DIMENSION dimension;
+		texture->GetType(&dimension);
+		assert(dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
+
+		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(texture);
 		
 		return d3d_tex;
 		
@@ -185,7 +184,7 @@ namespace vEngine
 		//TODO: write a add material fun to add pom texture
 		pom_enabled_ = true;
 		pom_texture_ = LoadTexture(file_name);
-		pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ,BU_SHADER_RES);
+		pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 	}
 
 

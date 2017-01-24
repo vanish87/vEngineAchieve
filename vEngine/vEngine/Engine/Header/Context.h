@@ -17,9 +17,6 @@ namespace vEngine
 	class Context
 	{
 	public:
-		//TODO : make constructor to be protected: because of singleton pattern
-		Context(void);
-		~Context(void);
 
 		static Context& Instance();
 		
@@ -34,11 +31,13 @@ namespace vEngine
 		//ResourceLoader& GetResourceLoader();
 
 	private:
+		SINGLETON_PRAVATE(Context)
+
 		Configure::ContextSetting context_config_;
 
 		RenderFactory*	render_factory_;
-		SceneManager* scene_manager_;
-		StateManager* state_manager_;
+		SceneManager scene_manager_;
+		StateManager state_manager_;
 		//ResourceLoader* resource_loader_;
 
 		App* app_instance_;

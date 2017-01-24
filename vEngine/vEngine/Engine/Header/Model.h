@@ -16,9 +16,9 @@
 #include "Common\Header\CommonPreDec.h"
 
 #include "Engine\Header\RenderElement.h"
-#include "RenderLayout.h"
-#include "TypeAndFormat.h"
-#include "Mesh.h"
+#include "Engine\Header\RenderLayout.h"
+#include "Engine\Header\TypeAndFormat.h"
+#include "Engine\Header\Mesh.h"
 #include "Engine\Header\Texture.h"
 
 

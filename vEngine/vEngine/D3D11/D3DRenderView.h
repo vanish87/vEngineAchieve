@@ -32,6 +32,8 @@ namespace vEngine
 		D3DDepthStencilRenderView(void);
 		~D3DDepthStencilRenderView(void);
 
+		D3DDepthStencilRenderView(Texture& texture, int array_size, int mip_level, DepthStencilUsage usage);
+
 		ID3D11DepthStencilView* const &D3DDSV(){return depth_stencil_view_;};
 		void SetD3DDSV( ID3D11DepthStencilView* depth_stencil_view );
 	private:

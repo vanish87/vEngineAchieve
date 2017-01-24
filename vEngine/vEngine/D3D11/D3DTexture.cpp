@@ -17,35 +17,38 @@ namespace vEngine
 		:Texture(access_type, array_size, format, mip_level, sample_count, sample_quality, usage, TEXTURE2D)
 		,width_(width), height_(height), d3d_rt_view_(nullptr), d3d_sr_view_(nullptr), d3d_ds_view_(nullptr)
 	{
-
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		desc_.Width = (UINT)width_;
 		desc_.Height = (UINT)height_;
 		desc_.ArraySize = array_size_;
-		desc_.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		desc_.CPUAccessFlags = 0;
 		desc_.Format = d3d_re->MapFormat(format_);
 		desc_.MipLevels = mip_level_;
 		desc_.MiscFlags = (mip_level_ != 1 ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0);
 		desc_.SampleDesc.Quality = sample_quality;
 		desc_.SampleDesc.Count = sample_count;
-		desc_.Usage = D3D11_USAGE_DEFAULT;
 		D3D11_SUBRESOURCE_DATA d3d_init_data;
+
 		switch (access_type_)
 		{
-		case AT_CPU_READ:
-			desc_.Usage = D3D11_USAGE_DYNAMIC;
-			desc_.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+		case AT_CPU_GPU_ALL:
+			desc_.Usage = D3D11_USAGE_STAGING;
+			desc_.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 			break;
-		case AT_CPU_WRITE:
+		case AT_CPU_WRITE_GPU_READ:
 			desc_.Usage = D3D11_USAGE_DYNAMIC;
 			desc_.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			break;
-		case AT_GPU_READ:
+		case AT_GPU_READ_ONLY:
+			desc_.Usage = D3D11_USAGE_IMMUTABLE;
+			desc_.CPUAccessFlags = 0;
 			break;
-		case AT_GPU_WRITE:
+		case AT_GPU_READ_WRITE:
+			desc_.Usage = D3D11_USAGE_DEFAULT;
+			desc_.CPUAccessFlags = 0;
 			break;
 		default:
+			desc_.Usage = D3D11_USAGE_DEFAULT;
+			desc_.CPUAccessFlags = 0;
 			break;
 		}
 		switch (usage_)
@@ -65,9 +68,14 @@ namespace vEngine
 		case TU_SR_RT:
 			desc_.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 			break;
+		case TU_DEPTH_SR:
+			desc_.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+			break;
 		default:
+			desc_.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 			break;
 		}
+
 		if(init_data)
 		{
 			d3d_init_data.pSysMem = init_data->data;
@@ -79,15 +87,46 @@ namespace vEngine
 			PRINT("Cannot create Texture 2D");
 	}
 
-	D3DTexture2D::D3DTexture2D( D3D11_TEXTURE2D_DESC desc, ID3D11Texture2D* & texture , TextureType type)
+	D3DTexture2D::D3DTexture2D( ID3D11Texture2D* & texture)
 		:d3d_rt_view_(nullptr), d3d_sr_view_(nullptr), d3d_ds_view_(nullptr)
 	{
-		//TODO : Use desc to Init
-		desc_ = desc;
-		usage_ = TU_SHADER_RES;
-		format_ = R8G8B8A8_U;
-		d3d_texture2D_ = texture;
-		type_ = type;
+		//this desc_ should be used to verify texture parameter only
+		assert(texture != nullptr);
+
+		texture->GetDesc(&this->desc_);
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		this->format_ = d3d_re->ReverseMapFormat(this->desc_.Format);
+
+		//TODO: TU_STRUCTURED_BUFFER is same resource type with TU_SHADER_RES
+		switch (this->desc_.BindFlags)
+		{
+		case D3D11_BIND_SHADER_RESOURCE:
+			this->usage_ = TU_SHADER_RES;
+			break;
+		case D3D11_BIND_RENDER_TARGET:
+			this->usage_ = TU_RENDER_TARGET;
+			break;
+		case D3D11_BIND_CONSTANT_BUFFER:
+			this->usage_ = TU_SHADER_CONST;
+			break;
+		case D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET:
+			this->usage_ = TU_SR_RT;
+			break;
+		case D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE:
+			this->usage_ = TU_DEPTH_SR;
+			break;
+		default:
+			{
+				this->usage_ = TU_SHADER_RES;
+			PRINT("Check Texture BindFlags here");
+			break;
+			}
+		}
+
+		this->type_ = TEXTURE2D;
+		this->width_ = desc_.Width;
+		this->height_ = desc_.Height;
+		this->d3d_texture2D_ = texture;
 	}
 
 
@@ -154,16 +193,14 @@ namespace vEngine
 			case TEXTURECUBE:
 				sr_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 				sr_desc.TextureCube.MipLevels = mip_level;
-				sr_desc.TextureCube.MostDetailedMip = 0;
-				
+				sr_desc.TextureCube.MostDetailedMip = 0;				
 				break;
 			default:
 				break;
 			}
 			
-			//TODO: init format
-			//sr_desc.Format = d3d_re->MapFormat(format_);
-			sr_desc.Format = desc_.Format;
+			sr_desc.Format = d3d_re->MapFormat(this->format_);
+
 			switch (usage_)
 			{
 			case TU_DEPTH_SR:
@@ -173,7 +210,8 @@ namespace vEngine
 				break;
 			}
 			
-			if(FAILED(d3d_re->D3DDevice()->CreateShaderResourceView(this->D3DTexture(), &sr_desc, &d3d_sr_view_)))
+			HRESULT res = d3d_re->D3DDevice()->CreateShaderResourceView(this->D3DTexture(), &sr_desc, &d3d_sr_view_);
+			if(FAILED(res))
 				PRINT("Cannot create Shader Resource View");
 		}
 		return d3d_sr_view_;

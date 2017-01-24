@@ -48,6 +48,9 @@
     <Xml Include="Configure\Config.xml">
       <Filter>Configure</Filter>
     </Xml>
+    <Xml Include="Configure\DefaultConfig.xml">
+      <Filter>Configure</Filter>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\Source\Configure.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="TestCase\ThreadTest.cpp">
       <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\RenderTools.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +363,9 @@
     </ClInclude>
     <ClInclude Include="Common\Header\ReturnCode.h">
       <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\RenderTools.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

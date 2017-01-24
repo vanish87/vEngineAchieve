@@ -3,13 +3,12 @@
 
 #pragma once
 #include <vector>
-#include <iterator>
 #include "Common\Header\CommonPreDec.h"
 
 
 #include "Engine\Header\RenderElement.h"
-#include "SceneObject.h"
-#include "Light.h"
+#include "Engine\Header\SceneObject.h"
+#include "Engine\Header\Light.h"
 
 namespace vEngine
 {
@@ -21,16 +20,21 @@ namespace vEngine
 
 		void AddSceneObject(SceneObject* scene_object);
 		void AddLight(Light* light);
+		void AddCamera(Camera* camera, bool as_main = false);
 
 		void Flush();
 		void Update();
 		std::vector<Light*> GetLights();
 		std::vector<RenderElement*> GetRenderList(){return render_list_;};
+
+		//first in the list is main camera
+		Camera* GetMainCamera();
 	protected:
 		std::vector<RenderElement*> render_list_;
 		std::vector<SceneObject*> scene_object_list;
 
 		std::vector<Light*> lights_;
+		std::vector<Camera*> cameras_;
 	};
 
 }

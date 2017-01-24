@@ -11,10 +11,9 @@ namespace vEngine
 	{
 	private:
 		explicit UUIDGenerator()
-		: currentid_(0)
-		{
-
-		};
+		: currentid_(0)	{};
+		UUIDGenerator(const UUIDGenerator& rhs) {};
+		UUIDGenerator& operator=(const UUIDGenerator& rhs) { return *this; };
 		~UUIDGenerator() {};
 
 		uint64_t currentid_;

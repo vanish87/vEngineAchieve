@@ -88,9 +88,32 @@ namespace vEngine
 		return lights_;
 	}
 
-	void SceneManager::AddLight( Light* light )
+	Camera* SceneManager::GetMainCamera()
+	{
+		if (this->cameras_.empty())
+		{
+			PRINT_AND_ASSERT("Add a camera first");
+			this->cameras_.push_back(new Camera());
+		}
+
+		return this->cameras_[0];
+	}
+
+	void SceneManager::AddLight(Light* light)
 	{
 		lights_.push_back(light);
+	}
+
+	void SceneManager::AddCamera(Camera* camera, bool as_main /*= false*/)
+	{
+		if (as_main)
+		{
+			this->cameras_.insert(this->cameras_.begin(), 1, camera);
+		}
+		else
+		{
+			this->cameras_.push_back(camera);
+		}
 	}
 
 }

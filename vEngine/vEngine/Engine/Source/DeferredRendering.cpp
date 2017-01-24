@@ -1,4 +1,5 @@
 #include "Engine\Header\DeferredRendering.h"
+#include "Engine\Header\RenderTools.h"
 #include "D3D11\D3DModel.h"
 
 
@@ -12,75 +13,32 @@ namespace vEngine
 		0.5f, 0.5f, 0.0f, 1.0f);
 	DeferredRendering::DeferredRendering( Configure::RenderSetting& render_setting )
 	{
-		gbuffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting);
-		lighting_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting);
+		gbuffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
+		lighting_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		//make a full screen qua for lighting pass
-		VertexType* vb = new VertexType[6];
-		uint32_t* ib = new uint32_t[6];
-		//clock wise
-		vb[0].position = float3(-1, +1, 1);
-		vb[1].position = float3(+1, +1, 1);
-		vb[2].position = float3(-1, -1, 1);
-		vb[3].position = float3(+1, -1, 1);
-		vb[4].position = float3(-1, -1, 1);
-		vb[5].position = float3(+1, +1, 1);
-
-		ib[0] = 0;
-		ib[1] = 1;
-		ib[2] = 2;
-		ib[3] = 3;
-		ib[4] = 4;
-		ib[5] = 5;
-
-		//call MakeRenderLayout
-		RenderLayout* render_layout = Context::Instance().GetRenderFactory().MakeRenderLayout();
-		//call MakeRenderBuffer(Vertex)
-		InitData init_data;
-		init_data.data = vb;
-		init_data.row_pitch = 0;
-		init_data.slice_pitch = 0;
-		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_VERTEX, 6 ,sizeof(VertexType));
-		//delete[] vb;
-		//call MakeRenderBuffer(Index)
-		init_data.data = ib;
-		init_data.row_pitch = 0;
-		init_data.slice_pitch = 0;
-		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ, BU_INDEX, 6, sizeof(uint32_t));
-		//delete[] ib;
-
-		//add VertexBuffer to renderlayout;
-		render_layout->AddBuffer(vertex_buffer, sizeof(VertexType));
-		//add IndexBuffer to renderlayout;
-		render_layout->AddBuffer(index_buffer, 6);
-		//set Primitivetype of renderlayout;
-		render_layout->SetPrimitive(PT_TRIANGLELIST);
-		//set Input layout Semi
-		std::vector<VertexUsage> inputlayout;
-		inputlayout.push_back(VU_POSITION);
-		render_layout->SetInputLayout(inputlayout);
-		float4x4 model_matrix;
-		Math::Identity(model_matrix);
-		fullscreen_mesh_ = new vEngine::Mesh("full screen quad", render_layout, model_matrix, vb, 6, ib);
+		fullscreen_mesh_ = RenderTools::GetInstance().MakeFullScreenMesh();
 
 		//According to config file
 		for(int i=0; i< render_setting.gbuffer_size; i++)
 		{
 			//create render target
 			Texture* texture_2d = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-				1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+				1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 			gbuffer_tex_.push_back(texture_2d);
 			//Add to gbuffer
 			RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(texture_2d, 1, 0);
-			RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ, BU_SHADER_RES);
-			AddGBuffer(render_view);
+			RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ_WRITE, BU_SHADER_RES);
+			//as render target
+			gbuffer_->AddRenderView(render_view);
+			//as shader resource
 			AddGBuffer(shader_resource);
 		}
 
 		//init shadow blur buffer
-		shadow_map_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting);
+		shadow_map_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		shadow_depth_ = shadow_map_buffer_->GetDepthTexture();
 		shadow_linear_depth_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 
 
 		linearize_shadow_map_so_ = new D3DShaderobject();
@@ -93,9 +51,9 @@ namespace vEngine
 		linearize_shadow_map_pp_->SetOutput(shadow_linear_depth_, 0);
 
 		shadow_blur_X_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		shadow_blur_Y_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 
 		shadow_map_blur_so_ = new D3DShaderobject();
 		shadow_map_blur_so_->LoadFxoFile("FxFiles/GaussianBlurXFilterPostProcess.cso");
@@ -114,37 +72,36 @@ namespace vEngine
 		shadow_map_yblur_pp_->SetInput(shadow_blur_X_, 0);
 		shadow_map_yblur_pp_->SetOutput(shadow_blur_Y_, 0);
 
-		shadow_blur_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadow_blur_Y_, AT_GPU_READ, BU_SHADER_RES);
+		shadow_blur_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadow_blur_Y_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 
 
 		shadow_blur_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, 512, 512,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		//shadow_blur_buffer_->AddRenderView(Context::Instance().GetRenderFactory().MakeRenderView(shadow_blur_, 1, 0));
 
 		//inti shadowing buffer
-		shadowing_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting);
+		//shadowing_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		Texture* shadowing_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(shadowing_texture_, 1, 0);
-		shadowing_buffer_->AddRenderView(render_view);
-		shadowing_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadowing_texture_, AT_GPU_READ, BU_SHADER_RES);
+		//shadowing_buffer_->AddRenderView(render_view);
+		shadowing_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadowing_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 
 		//init SSDO
 		ssdo_so_ = new D3DShaderobject();;
 		ssdo_so_->LoadFxoFile("FxFiles/SSDO.cso");
 		ssdo_so_->SetTechnique("PPTech");
 
-		D3DModel *random_tex_dummy = new D3DModel();
-		noise_tex_ = random_tex_dummy->LoadTexture("Media/noise.png");
-		delete random_tex_dummy;
+		D3DModel random_tex_dummy;
+		noise_tex_ = random_tex_dummy.LoadTexture("Media/noise.png");
 
 		occlusion_tex_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		occlusion_blur_tex_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		occlusion_blur_X_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
-		occlusion_blur_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(occlusion_blur_tex_, AT_GPU_READ, BU_SHADER_RES);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
+		occlusion_blur_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(occlusion_blur_tex_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 
 		ssdo_pp_ = new PostProcess();
 		ssdo_pp_->SetPPShader(ssdo_so_);
@@ -176,10 +133,10 @@ namespace vEngine
 		
 		//init lighting buffer
 		Texture* texture_2d = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		render_view = Context::Instance().GetRenderFactory().MakeRenderView(texture_2d, 1, 0);
-		RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ, BU_SHADER_RES);
-		AddLightingBuffer(render_view);
+		RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ_WRITE, BU_SHADER_RES);
+		lighting_buffer_->AddRenderView(render_view);
 		AddLightingBuffer(shader_resource);
 
 		linearize_depth_so_ = new D3DShaderobject();
@@ -191,16 +148,15 @@ namespace vEngine
 
 		depth_tex_ = gbuffer_->GetDepthTexture();
 		linear_depth_tex_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_WRITE, TU_SR_RT);
+			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 
 		linearize_depth_pp_->SetInput(depth_tex_, 0);
 		linearize_depth_pp_->SetOutput(linear_depth_tex_, 0);
 
-		depth_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(linear_depth_tex_, AT_GPU_READ, BU_SHADER_RES); 
+		depth_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(linear_depth_tex_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
 
 		//back camera
 		back_buffer_ = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer();
-		back_frame_camera_= back_buffer_->GetFrameCamera();
 
 	}
 
@@ -209,26 +165,11 @@ namespace vEngine
 	{
 	}
 
-	void DeferredRendering::AddGBuffer( RenderView* render_target_view )
-	{
-		gbuffer_->AddRenderView(render_target_view);
-	}
-
 	void DeferredRendering::AddGBuffer( RenderBuffer* shader_resource_view )
 	{
 		gbuffer_srv_.push_back(shader_resource_view);
 	}
-
-	Mesh* DeferredRendering::GetFullscreenQuad()
-	{
-		return fullscreen_mesh_;
-	}
-
-	void DeferredRendering::AddLightingBuffer( RenderView* render_view )
-	{
-		lighting_buffer_->AddRenderView(render_view);
-	}
-
+	
 	void DeferredRendering::AddLightingBuffer( RenderBuffer* shader_resource)
 	{
 		lighting_srv_ = shader_resource;
@@ -278,7 +219,7 @@ namespace vEngine
 			ShaderObject* shader_object = render_list_[0]->GetShaderObject();
 			std::vector<RenderBuffer*> gbuffer_srv = render_engine->GetGBufferSRV();	
 			FrameBuffer* gbuffer = render_engine->GetGBuffer();
-			RenderBuffer* depth_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(gbuffer->GetDepthTexture(), AT_GPU_READ, BU_SHADER_RES); 
+			RenderBuffer* depth_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(gbuffer->GetDepthTexture(), AT_GPU_READ_WRITE, BU_SHADER_RES); 
 			shader_object->SetReource("position_tex", gbuffer_srv[3], 1);
 			shader_object->SetReource("diffuse_tex", gbuffer_srv[1], 1);
 			shader_object->SetReource("specular_tex", gbuffer_srv[2], 1);
@@ -301,13 +242,16 @@ namespace vEngine
 
 		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
+		//ideally each render element should have its own shader object so that it can be rendered independently
+		//in deferred rendering, all render element should share same shader object, which is "DeferredLighting.fx"
 		ShaderObject* shader_object = render_list[0]->GetShaderObject();
-
+		
+		main_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
 		//Deferred Lighting
 			//pass 0
 			render_engine->SetNormalState();
 			//bind gbuffer
-			gbuffer_->SetFrameCamera(back_frame_camera_);
+			gbuffer_->GetViewport().SetCamera(main_camera_);
 			render_engine->BindFrameBuffer(gbuffer_);
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
@@ -316,22 +260,26 @@ namespace vEngine
 			{
 				(*re)->SetRenderParameters();
 				//Render to Gbuffer
-				//(*re)->GetShaderObject()->Apply(0);
 				(*re)->Render(0);
 				(*re)->EndRender();
 			}
+			//pass 0 end
+			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 
 			linearize_depth_pp_->Apply();
 
 			//pass 1
 			//bind lighting buffer
-			lighting_buffer_->SetFrameCamera(back_frame_camera_);
 			render_engine->BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
-			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
-			LightStruct* light_buffer = new LightStruct[lights.size()];
-			float4x4 view_mat = back_frame_camera_->GetViewMatirx();
+			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights(); 
+			LightStruct* light_buffer = nullptr;
+			if (lights.size() > 0)
+			{
+				light_buffer = new LightStruct[lights.size()];
+			}
+			float4x4 view_mat = lighting_buffer_->GetViewport().GetCamera().GetViewMatirx();
 			float4x4 invtrans_view_mat = Math::InverTranspose(view_mat);
 			float4x4 shadow_trans_mat;
 			float4x4 light_view_proj;
@@ -339,7 +287,7 @@ namespace vEngine
 
 			for (size_t i =0; i< lights.size(); i++)
 			{
-
+				assert(light_buffer != nullptr);
 				light_buffer[i].color = lights[i]->GetColor();
 				type = lights[i]->GetType();
 				light_buffer[i].falloff = lights[i]->GetAttrib();
@@ -366,7 +314,6 @@ namespace vEngine
 				default:
 					break;
 				}
-				//LightStruct* l = &light_buffer[i];
 				shader_object->SetRawData("light", &light_buffer[i], sizeof(LightStruct));
 				Camera* sm_camera = lights[i]->GetCamera();
 				float4x4 view_proj_mat = sm_camera->GetViewMatirx() * sm_camera->GetProjMatrix();
@@ -374,10 +321,7 @@ namespace vEngine
 				//Shadowing spot
 				if(type == LT_SPOT)
 				{
-
-					//std::cout<<static_cast<SpotLight*>(lights[i])->GetDir().x()<<" "<<static_cast<SpotLight*>(lights[i])->GetDir().y()<<" "<<static_cast<SpotLight*>(lights[i])->GetDir().z()<<"\r";
-					
-					shadow_map_buffer_->SetFrameCamera(sm_camera);
+					shadow_map_buffer_->GetViewport().SetCamera(sm_camera);
 					render_engine->BindFrameBuffer(shadow_map_buffer_);
 					render_engine->SetNormalState();
 
@@ -399,8 +343,7 @@ namespace vEngine
 					shadow_map_yblur_pp_->Apply();
 				}							
 
-
-				ssdo_pp_->SetCamera(back_frame_camera_);
+				//ssdo_pp_->SetCamera(back_frame_camera_);
 // 				ssdo_pp_->Apply();
 // 				occlusion_xblur_pp_->Apply();
 // 				occlusion_yblur_pp_->Apply();
@@ -411,21 +354,8 @@ namespace vEngine
 				shader_object->SetReource("normal_tex", gbuffer_srv_[0], 1);
 				shader_object->SetReource("shadow_map_tex", shadow_blur_srv_, 1);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_srv_, 1);
-
-				//shader_object->SetReource("lighting_tex", lighting_srv_, 1);
-				//do lighting
-				//Set Shader file for quad
-				//std::cout<<lights[i]->GetCamera()->GetPos().x()<<" "<<lights[i]->GetCamera()->GetPos().y()<<" "<<lights[i]->GetCamera()->GetPos().z()<<"\r";
-/*
-				std::cout<<view_proj_mat[0][0]<<" "<<view_proj_mat[0][1]<<" "<<view_proj_mat[0][2]<<"\n";
-				std::cout<<view_proj_mat[1][0]<<" "<<view_proj_mat[1][1]<<" "<<view_proj_mat[1][2]<<"\n";
-				std::cout<<view_proj_mat[2][0]<<" "<<view_proj_mat[2][1]<<" "<<view_proj_mat[2][2]<<"\n\n";*/
-				lighting_buffer_->SetFrameCamera(back_frame_camera_);
 				render_engine->BindFrameBuffer(lighting_buffer_);
-				//render_engine->RenderFrameBegin();
 				render_engine->SetDeferredRenderingState();
-				shader_object->SetMatrixVariable("g_shadow_transform", shadow_trans_mat);
-				shader_object->SetMatrixVariable("g_light_view_proj", view_proj_mat);
 
 				fullscreen_mesh_->SetShaderObject(shader_object);
 				fullscreen_mesh_->SetRenderParameters();
@@ -434,6 +364,8 @@ namespace vEngine
 			}
 
 			delete[] light_buffer;
+			//pass 1 end 
+			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 
 			//pass 2
 			render_engine->BindFrameBuffer(back_buffer_);
@@ -443,11 +375,8 @@ namespace vEngine
 			//Set Shader file for quad
 			fullscreen_mesh_->SetShaderObject(shader_object);
 			fullscreen_mesh_->SetRenderParameters();
-			//quad->GetShaderObject()->Apply(1);
 			fullscreen_mesh_->Render(2);
 			fullscreen_mesh_->EndRender();
-
-
 
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();

@@ -19,18 +19,32 @@
 
 #include <iostream>
 #define PRINT(x) std::cout<<x<<std::endl;
+#define PRINT_AND_RETURN(x, returnVal) {std::cout<<x<<std::endl;return returnVal;}
+#define PRINT_AND_ASSERT(x) {std::cout<<x<<std::endl; assert(false);}
+#define COMPILE_PRINT_AND_ASSERT(exp, x) {static_assert(exp, x);}
 
 #define DEBUG_CLASS_FILE_NAME virtual std::string GetName() { return __FILE__; };
 #define DEBUG_CLASS_NAME(x) virtual std::string GetName() { return x; };
+
+//try to add Init function to init class_name
+#define SINGLETON_PRAVATE(class_name)\
+private:\
+	class_name(){}; \
+	class_name(class_name const&){}; \
+	class_name& operator=(class_name const&){}; \
+	~class_name(){}; 
+
 
 //#define ENABLE_TEST
 
 namespace vEngine
 {
 	typedef __int8  int8_t;
+	typedef __int16 int16_t;
 	typedef __int32 int32_t;
 	typedef __int64 int64_t;
 	typedef unsigned __int8  uint8_t;
+	typedef unsigned __int16 uint16_t;
 	typedef unsigned __int32 uint32_t;
 	typedef unsigned __int64 uint64_t;
 

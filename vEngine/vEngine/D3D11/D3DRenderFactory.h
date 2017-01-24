@@ -23,7 +23,7 @@ namespace vEngine
 		D3DRenderFactory(void);
 		~D3DRenderFactory(void);		
 		
-		virtual FrameBuffer* MakeFrameBuffer( Configure::RenderSetting& render_setting );
+		virtual FrameBuffer* MakeFrameBuffer(uint32_t width, uint32_t height);
 
 	private:
 
@@ -36,9 +36,12 @@ namespace vEngine
 		virtual RenderBuffer* MakeRenderBuffer( Texture* texture, AccessType access_type, BufferUsage usage );
 
 		virtual Texture* MakeTexture2D( InitData const * init_data, uint32_t width, uint32_t height, uint32_t numMipMaps, uint32_t array_size, 
-										Format format, uint32_t sample_count, uint32_t sample_quality, AccessType access_type, TextureUsage texture_usage );
+			Format format, uint32_t sample_count, uint32_t sample_quality, AccessType access_type, TextureUsage texture_usage);
 
-		virtual RenderView* MakeRenderView( Texture* texture, int array_size, int mip_level  );
+		virtual Texture* MakeTexture2D(void* TextureData);
+
+		virtual RenderView* MakeRenderView(Texture* texture, int array_size, int mip_level);
+		virtual RenderView* MakeRenderView(Texture* texture, int array_size, int mip_level, DepthStencilUsage usage);
 
 
 	};

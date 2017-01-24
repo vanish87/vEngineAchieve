@@ -2,8 +2,7 @@
 
 namespace vEngine
 {
-	D3DRenderFactory::D3DRenderFactory(void)
-		
+	D3DRenderFactory::D3DRenderFactory(void)		
 	{
 		render_engine_ = nullptr;
 	}
@@ -18,9 +17,9 @@ namespace vEngine
 		return new D3DRenderEngine();
 	}
 	
-	FrameBuffer* D3DRenderFactory::MakeFrameBuffer( Configure::RenderSetting& render_setting )
+	FrameBuffer* D3DRenderFactory::MakeFrameBuffer(uint32_t width, uint32_t height)
 	{
-		return new D3DFrameBuffer(render_setting);
+		return new D3DFrameBuffer(width, height);
 	}
 
 	RenderLayout* D3DRenderFactory::MakeRenderLayout()
@@ -77,18 +76,25 @@ namespace vEngine
 
 		switch (access_type)
 		{
-		case AT_CPU_READ:
-			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+		case AT_CPU_GPU_ALL:
+			buffer_desc.Usage = D3D11_USAGE_STAGING;
+			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 			break;
-		case AT_CPU_WRITE:
-			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		case AT_CPU_WRITE_GPU_READ:
 			buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+			buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			break;
-		case AT_GPU_READ:
+		case AT_GPU_READ_ONLY:
+			buffer_desc.Usage = D3D11_USAGE_IMMUTABLE;
+			buffer_desc.CPUAccessFlags = 0;
 			break;
-		case AT_GPU_WRITE:
+		case AT_GPU_READ_WRITE:
+			buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+			buffer_desc.CPUAccessFlags = 0;
 			break;
 		default:
+			buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+			buffer_desc.CPUAccessFlags = 0;
 			break;
 		}
 		ID3D11Buffer* buffer;
@@ -108,16 +114,27 @@ namespace vEngine
 	}
 
 	Texture* D3DRenderFactory::MakeTexture2D( InitData const * init_data, uint32_t width, uint32_t height, uint32_t numMipMaps, uint32_t array_size, Format format, uint32_t sample_count, uint32_t sample_quality, AccessType access_type, TextureUsage texture_usage )
-	{
-		
+	{		
 		return new D3DTexture2D(width, height, access_type, array_size, 
 			format, numMipMaps, sample_count, sample_quality, texture_usage,
 			init_data);
 	}
 
-	RenderView* D3DRenderFactory::MakeRenderView( Texture* texture, int array_size, int mip_level  )
+	vEngine::Texture* D3DRenderFactory::MakeTexture2D(void* TextureData)
+	{
+		assert(TextureData != nullptr);
+		ID3D11Texture2D* ptr = static_cast<ID3D11Texture2D*>(TextureData);
+		return new D3DTexture2D(ptr);
+	}
+
+	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)
 	{
 		return new D3DRenderTargetView(*texture, array_size, mip_level );
+	}
+
+	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level, DepthStencilUsage usage)
+	{
+		return new D3DDepthStencilRenderView(*texture, array_size, mip_level, usage);
 	}
 
 }

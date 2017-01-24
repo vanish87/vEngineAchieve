@@ -19,16 +19,17 @@ namespace vEngine
 
 		HRESULT result;
 		UINT create_device_flags = 0;
-		#if defined(DEBUG) || defined(_DEBUG)  
+		#if defined(_DEBUG)  
 		create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;
 		#endif
+
 		D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
 		result = D3D11CreateDevice(
-				0,                 // default adapter
+				nullptr,                 // default adapter
 				md3dDriverType,
-				0,                 // no software device
+				nullptr,                 // no software device
 				create_device_flags, 
-				0, 0,              // default feature level array
+				nullptr, 0,				//  D11 feature level array
 				D3D11_SDK_VERSION,
 				&d3d_device_,
 				&d3d_feature_level_,
@@ -39,28 +40,31 @@ namespace vEngine
 			PRINT("D3D11CreateDevice Failed.");
 		}
 
-		if( d3d_feature_level_ != D3D_FEATURE_LEVEL_11_0 )
+		if( d3d_feature_level_ < D3D_FEATURE_LEVEL_11_0)
 		{
-			PRINT("Direct3D Feature Level 11 unsupported.");
+			PRINT_AND_RETURN("Direct3D Feature Level 11 unsupported.",);
 		}
-		UINT msaa_quality = 0;
-		result = d3d_device_->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaa_quality);
-		if(FAILED(result) )
-		{
-			PRINT("msaa_quality Failed.");
-		}
+		
 
 		DXGI_SWAP_CHAIN_DESC swap_chain_desc;
-		swap_chain_desc.BufferDesc.Width  = render_setting_.width;
-		swap_chain_desc.BufferDesc.Height = render_setting_.height;
+		ZeroMemory(&swap_chain_desc, sizeof(swap_chain_desc));
+		swap_chain_desc.BufferDesc.Width  = this->render_setting_.width;
+		swap_chain_desc.BufferDesc.Height = this->render_setting_.height;
 		swap_chain_desc.BufferDesc.RefreshRate.Numerator = 60;
 		swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
 		swap_chain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swap_chain_desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		swap_chain_desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
+		UINT msaa_quality = 0;
+		result = d3d_device_->CheckMultisampleQualityLevels(swap_chain_desc.BufferDesc.Format, 4, &msaa_quality);
+		if (FAILED(result) || msaa_quality == 0)
+		{
+			PRINT("msaa_quality Failed.");
+		}
+
 		// Use 4X MSAA? 
-		if( render_setting_.msaa4x )
+		if( this->render_setting_.msaa4x )
 		{
 			swap_chain_desc.SampleDesc.Count   = 4;
 			swap_chain_desc.SampleDesc.Quality = msaa_quality-1;
@@ -74,7 +78,7 @@ namespace vEngine
 		swap_chain_desc.BufferUsage  = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swap_chain_desc.BufferCount  = 1;
 		swap_chain_desc.OutputWindow = Context::Instance().GetAppInstance().GetWindow().GetWnd();
-		swap_chain_desc.Windowed     = true;
+		swap_chain_desc.Windowed     = !this->render_setting_.full_screen;
 		swap_chain_desc.SwapEffect   = DXGI_SWAP_EFFECT_DISCARD;
 		swap_chain_desc.Flags        = 0;
 
@@ -92,14 +96,18 @@ namespace vEngine
 			PRINT("dxgiAdapter Failed.");
 		}
 
-		IDXGIFactory* dxgiFactory = 0;
-		result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+		IDXGIFactory1* dxgiFactory = 0;
+		result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory1), (void**)&dxgiFactory);
 		if( FAILED(result) )
 		{
 			PRINT("dxgiFactory Failed.");
 		}
+		//optional IDXGIFactory2 not used until D3D11.1 or later feature
+		IDXGIFactory2* dxgiFactory2 = nullptr;
+		result = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
 
 		result = dxgiFactory->CreateSwapChain(d3d_device_, &swap_chain_desc, &d3d_swap_chain);
+
 		if( FAILED(result) )
 		{
 			PRINT("d3d_swap_chain Failed.");
@@ -108,11 +116,9 @@ namespace vEngine
 		dxgi_device->Release();
 		dxgi_adapter->Release();
 		dxgiFactory->Release();
-
+		if (dxgiFactory2 != nullptr) dxgiFactory2->Release();
 
 		this->OnResize();
-
-
 
 	}
 
@@ -123,10 +129,10 @@ namespace vEngine
 		//Get view and Projection Matrix
 		D3DFrameBuffer* d3d_frame_buffer;
 		d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
-		float4x4 view_mat = d3d_frame_buffer->GetFrameCamera()->GetViewMatirx();
-		float4x4 proj_mat = d3d_frame_buffer->GetFrameCamera()->GetProjMatrix();
-		float3 camera_pos = d3d_frame_buffer->GetFrameCamera()->GetPos();
-		float3 camera_at =  d3d_frame_buffer->GetFrameCamera()->GetLookAt();
+		float4x4 view_mat = d3d_frame_buffer->GetViewport().GetCamera().GetViewMatirx();
+		float4x4 proj_mat = d3d_frame_buffer->GetViewport().GetCamera().GetProjMatrix();
+		float3 camera_pos = d3d_frame_buffer->GetViewport().GetCamera().GetPos();
+		float3 camera_at =  d3d_frame_buffer->GetViewport().GetCamera().GetLookAt();
 
 		//Make sure every Shader has a constant named view_proj_matrix
 		shader_object->SetMatrixVariable("g_view_proj_matrix", view_mat*proj_mat);
@@ -137,8 +143,6 @@ namespace vEngine
 		
 
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object);
-		//size_t pass = d3d_shader_object->GetPass();
-
 		
 		//IASetInputLayout
 		D3DRenderLayout* d3d_rl = static_cast<D3DRenderLayout*>(render_layout);
@@ -176,7 +180,6 @@ namespace vEngine
 			case VU_COLOR:
 				input_layout_desc[i].SemanticName = "COLOR";
 				input_layout_desc[i].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-				input_layout_desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 				break;
 			default:
 				break;
@@ -189,7 +192,7 @@ namespace vEngine
 		result = d3d_shader_object->GetTechnique()->GetPassByIndex(pass_index)->GetDesc( &pass_desc );
 		if(FAILED(result))PRINT("Cannot Get Pass Desc");
 		ID3D11InputLayout* input_layout;
-		result = d3d_device_->CreateInputLayout(input_layout_desc, vertex_layout.size(), pass_desc.pIAInputSignature, 
+		result = d3d_device_->CreateInputLayout(input_layout_desc, (uint32_t)vertex_layout.size(), pass_desc.pIAInputSignature, 
 			pass_desc.IAInputSignatureSize, &input_layout);
 		if(FAILED(result))
 		{
@@ -204,13 +207,13 @@ namespace vEngine
 		PrimitiveType pri_type = d3d_rl->GetPrimitive();
 		switch (pri_type)
 		{
-		case vEngine::PT_POINTLIST:
+		case PT_POINTLIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 			break;
-		case vEngine::PT_TRIANGLELIST:
+		case PT_TRIANGLELIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			break;
-		case vEngine::PT_LINELIST:
+		case PT_LINELIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 			break;
 		default:
@@ -227,9 +230,8 @@ namespace vEngine
 			D3DRenderBuffer* d3d_index_buffer = static_cast<D3DRenderBuffer*>(d3d_rl->GetBuffer(VBU_INDEX));
 			d3d_imm_context_->IASetIndexBuffer(d3d_index_buffer->D3DBuffer(), DXGI_FORMAT_R32_UINT, 0);
 			
-			//SetShaderPara
 			//DrawIndexed
-			d3d_shader_object->Apply(pass_index);
+			shader_object->Apply(pass_index);
 			uint32_t index_count = d3d_rl->GetIndexCount();	
 			d3d_imm_context_->DrawIndexed(index_count, 0, 0);
 		}
@@ -252,7 +254,7 @@ namespace vEngine
 		D3DFrameBuffer* d3d_frame_buffer;
 		if(cur_frame_buffer_ == nullptr)
 		{
-			cur_frame_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting_);
+			cur_frame_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting_.width, render_setting_.height);
 		    d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
 		}
 		else
@@ -261,83 +263,30 @@ namespace vEngine
 			d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
 			d3d_frame_buffer->D3DRTView()->D3DRTV()->Release();
 			d3d_frame_buffer->D3DDSView()->D3DDSV()->Release();
+			//
+			PRINT_AND_ASSERT("This should be check and make a new MakeFrameBuffer here");
+			//then the rest of this function should only handle render targets
 		}
 
 		//TODO : Use new size of window to resize FrameBuffer
-		result = d3d_swap_chain->ResizeBuffers(1, render_setting_.width, render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+		result = d3d_swap_chain->ResizeBuffers(1, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 		if(FAILED(result))
 			PRINT("ResizeBuffer Failed!");
 
-		ID3D11Texture2D* back_buffer;
-		ID3D11RenderTargetView* render_target_view;// = d3d_frame_buffer->D3DRTView()->D3DRTV();
+		ID3D11Texture2D* back_buffer = nullptr;
+		ID3D11RenderTargetView* render_target_view = nullptr;
 		result = d3d_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&back_buffer));
 		if(FAILED(result))
-			PRINT("GetBuffer Failed!");
-		result = d3d_device_->CreateRenderTargetView(back_buffer, 0, &render_target_view);
-		if(FAILED(result))
-			PRINT("CreateRenderTargetView Failed!");
-		back_buffer->Release();
-
-		D3D11_TEXTURE2D_DESC depth_stencil_desc;
-	
-		depth_stencil_desc.Width     = render_setting_.width;
-		depth_stencil_desc.Height    = render_setting_.height;
-		depth_stencil_desc.MipLevels = 1;
-		depth_stencil_desc.ArraySize = 1;
-		depth_stencil_desc.Format    = DXGI_FORMAT_R24G8_TYPELESS;
-
-
-
-		if( render_setting_.msaa4x )
-		{
-			UINT msaa_quality = 0;
-			result = d3d_device_->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaa_quality);
-			if(FAILED(result) )
-			{
-				PRINT("msaa_quality Failed.");
-			}
-			depth_stencil_desc.SampleDesc.Count   = 4;
-			depth_stencil_desc.SampleDesc.Quality = msaa_quality-1;
-		}
-		// No MSAA
-		else
-		{
-			depth_stencil_desc.SampleDesc.Count   = 1;
-			depth_stencil_desc.SampleDesc.Quality = 0;
-		}
-
-		//TODO : Create Texture RTV through RenderFactory, as well as FrameBuffer->Onbind()
-		depth_stencil_desc.Usage          = D3D11_USAGE_DEFAULT;
-		depth_stencil_desc.BindFlags      = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-		depth_stencil_desc.CPUAccessFlags = 0; 
-		depth_stencil_desc.MiscFlags      = 0;
-
-		ID3D11Texture2D* depth_stencil_buffer;// = d3d_frame_buffer->D3DDSBuffer()->D3DTexture();
-		ID3D11DepthStencilView*	depth_stencil_view;// = d3d_frame_buffer->D3DDSView()->D3DDSV();
-
-		result = d3d_device_->CreateTexture2D(&depth_stencil_desc, 0, &depth_stencil_buffer);
-		if(FAILED(result))
-			PRINT("depth_stencil create Failed!");
-
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
-		ZeroMemory(&dsvd, sizeof(dsvd));
-		dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dsvd.Texture2D.MipSlice = 0;
-
-		result = d3d_device_->CreateDepthStencilView(depth_stencil_buffer, &dsvd, &depth_stencil_view);
-		if(FAILED(result))
-			PRINT("depth_stencil_view create Failed!");
-
-		D3DRenderTargetView* d3d_rtv = new D3DRenderTargetView();
-		d3d_rtv->SetD3DRTV(render_target_view);
-		d3d_frame_buffer->AddRenderView(d3d_rtv);
-		static_cast<D3DTexture2D*>(d3d_frame_buffer->GetDepthTexture())->SetD3DTexture(depth_stencil_buffer);
-		d3d_frame_buffer->GetDepthTexture()->SetUsage(TU_DEPTH_SR);
-		d3d_frame_buffer->D3DDSView()->SetD3DDSV(depth_stencil_view);
+			PRINT("Get back Buffer Failed!");
+		
+		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(back_buffer);
+		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(d3d_tex, 1, 0);
+		d3d_frame_buffer->AddRenderView(render_view);
 
 		this->BindFrameBuffer(d3d_frame_buffer);
 
+
+		//TODO have some good way to maintain varies of RenderState
 
 		// Set up the description of the stencil state.
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -417,9 +366,6 @@ namespace vEngine
 		cull_Desc.DepthClipEnable = true;
 		cull_Desc.DepthBias = 0;
 		cull_Desc.DepthBiasClamp = 0.0f;
-		cull_Desc.DepthClipEnable = true;
-		cull_Desc.FillMode = D3D11_FILL_SOLID;
-		cull_Desc.FrontCounterClockwise = false;
 		cull_Desc.MultisampleEnable = false;
 		cull_Desc.ScissorEnable = false;
 		cull_Desc.SlopeScaledDepthBias = 0.0f;
@@ -427,29 +373,50 @@ namespace vEngine
 
 	}
 
-	DXGI_FORMAT D3DRenderEngine::MapFormat( Format format )
+	DXGI_FORMAT D3DRenderEngine::MapFormat( Format format)
 	{
 		switch (format)
 		{
 		case A8_U:
 			return DXGI_FORMAT_A8_UNORM;
-			break;
 		case R8_U:
 			return DXGI_FORMAT_R8_UNORM;
-			break;
 		case R8G8B8A8_U:
 			return DXGI_FORMAT_R8G8B8A8_UNORM;
-			break;
 		case R32G32B32A32_F:
 			return DXGI_FORMAT_R32G32B32A32_FLOAT;
-			break;
+		case D24_U_S8_U:
+			return DXGI_FORMAT_D24_UNORM_S8_UINT;
+		case R24G8_TYPELESS:
+			return DXGI_FORMAT_R24G8_TYPELESS;
 		default:
 			return DXGI_FORMAT_R32G32B32A32_UINT;
-			break;
 		}
 	}
 
-	void D3DRenderEngine::BindFrameBuffer( FrameBuffer* const & fb )
+	Format D3DRenderEngine::ReverseMapFormat(DXGI_FORMAT format)
+	{
+		switch (format)
+		{
+		case DXGI_FORMAT_A8_UNORM:
+			return A8_U;
+		case DXGI_FORMAT_R8_UNORM:
+			return R8_U;
+		case DXGI_FORMAT_R8G8B8A8_UNORM:
+			return R8G8B8A8_U;
+		case DXGI_FORMAT_R32G32B32A32_FLOAT:
+			return R32G32B32A32_F;
+		case DXGI_FORMAT_D24_UNORM_S8_UINT:
+			return D24_U_S8_U;
+		case DXGI_FORMAT_R24G8_TYPELESS:
+			return R24G8_TYPELESS;
+		default:
+			PRINT_AND_ASSERT("Should handle this");
+			return R32G32B32A32_U;
+		}
+	}
+
+	void D3DRenderEngine::BindFrameBuffer(FrameBuffer* const & fb)
 	{
 		cur_frame_buffer_ = fb;
 		fb->OnBind();
@@ -458,19 +425,11 @@ namespace vEngine
 	void D3DRenderEngine::RenderFrameBegin()
 	{
 		//Clear Frame Buffer
-		float color[4] = {0.0f,0.0f,0.0f,1.0f};
-		D3DFrameBuffer* d3d_frame_buffer;
-		d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
-		for(size_t i = 0; i< d3d_frame_buffer->D3DRTViewSize(); i++)
-			d3d_imm_context_->ClearRenderTargetView(d3d_frame_buffer->D3DRTView(i)->D3DRTV(), color);
-		d3d_imm_context_->ClearDepthStencilView(d3d_frame_buffer->D3DDSView()->D3DDSV(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);	
-
-
+		cur_frame_buffer_->Clear(float4(0, 0, 0, 1), 1, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
 	}
 
 	void D3DRenderEngine::RenderFrameEnd()
 	{
-
 		// Cleanup (aka make the runtime happy)
 		d3d_imm_context_->VSSetShader(0, 0, 0);
 		d3d_imm_context_->GSSetShader(0, 0, 0);

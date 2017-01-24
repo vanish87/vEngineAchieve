@@ -4,12 +4,12 @@ namespace vEngine
 {
 	GameObject::GameObject(void)
 	{
-		DebugTracking::GetInstace().Track(this);
+		DebugTracking::GetInstance().Track(this);
 	}
 
 	GameObject::~GameObject(void)
 	{
-		DebugTracking::GetInstace().UnTrack(this);
+		DebugTracking::GetInstance().UnTrack(this);
 	}
 
 	void GameObject::Update()
@@ -20,12 +20,13 @@ namespace vEngine
 	std::string GameObject::GetName()
 	{
 		//should never call this
-		//assert(false);
+		assert(false);
 		return "ERROR";
 	}
 
 	void GameObject::AddComponent(GameObject* const GameObject_)
 	{
+		assert(GameObject_ != nullptr);
 		assert(GameObject_ != &GameObject::NullObject() && GameObject_ != this);
 		this->ConponentList_[GameObject_->id()] = GameObject_;
 		assert(this->ConponentList_[GameObject_->id()] == GameObject_);
@@ -34,7 +35,9 @@ namespace vEngine
 	GameObject& GameObject::FindComponentByUUID(const UUID& UUID_)
 	{
 		if(this->ConponentList_.find(UUID_) == this->ConponentList_.end()) return GameObject::NullObject();
-		return *this->ConponentList_[UUID_];
+		GameObject* Ret = this->ConponentList_[UUID_];
+		assert(Ret != nullptr);
+		return *Ret;
 	}
 
 

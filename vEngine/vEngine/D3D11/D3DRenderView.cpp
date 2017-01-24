@@ -1,4 +1,5 @@
 #include "D3DRenderView.h"
+#include "D3DRenderEngine.h"
 
 namespace vEngine
 {
@@ -35,8 +36,29 @@ namespace vEngine
 	{
 
 	}
+	
+	D3DDepthStencilRenderView::D3DDepthStencilRenderView(Texture& texture, int array_size, int mip_level, DepthStencilUsage usage)
+	{
+		assert(texture.GetType() == TEXTURE2D);
+		D3DTexture2D* d3d_texture = static_cast<D3DTexture2D*>(&texture);
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
+		ZeroMemory(&dsvd, sizeof(dsvd));
+		//TODO check format compatibility
+		dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//d3d_re->MapFormat(d3d_texture->GetFormat());
+		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvd.Texture2D.MipSlice = mip_level;
+		HRESULT result = d3d_re->D3DDevice()->CreateDepthStencilView(d3d_texture->D3DTexture(), &dsvd, &depth_stencil_view_);
+		if (FAILED(result))
+			PRINT("depth_stencil_view create Failed!");
+	}
 
-	void D3DDepthStencilRenderView::SetD3DDSV( ID3D11DepthStencilView* depth_stencil_view )
+	D3DDepthStencilRenderView::~D3DDepthStencilRenderView(void)
+	{
+
+	}
+
+	void D3DDepthStencilRenderView::SetD3DDSV(ID3D11DepthStencilView* depth_stencil_view)
 	{
 		this->depth_stencil_view_=depth_stencil_view;
 	}

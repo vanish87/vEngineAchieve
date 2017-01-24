@@ -21,7 +21,8 @@ namespace vEngine
 		R8G8B8A8_U,
 		R32G32B32A32_U,
 		R32G32B32A32_F,
-		R24G8_TYPELESS
+		R24G8_TYPELESS,
+		D24_U_S8_U,
 	};
 
 	enum TextureType
@@ -37,8 +38,7 @@ namespace vEngine
 		TU_SHADER_CONST,
 		TU_STRUCTURED_BUFFER,
 		TU_SR_RT,
-		TU_DEPTH_SR
-
+		TU_DEPTH_SR,
 	};
 
 	enum BufferUsage
@@ -52,12 +52,19 @@ namespace vEngine
 
 	};
 
+	enum DepthStencilUsage
+	{
+		DSU_DEPTH_ONLY,
+		DSU_STENCIL_ONLY,
+		DSU_BOTH,
+	};
+
 	enum AccessType
 	{
-		AT_CPU_READ,
-		AT_CPU_WRITE,
-		AT_GPU_READ,
-		AT_GPU_WRITE
+		AT_CPU_GPU_ALL,
+		AT_CPU_WRITE_GPU_READ,
+		AT_GPU_READ_ONLY,
+		AT_GPU_READ_WRITE
 	};
 	enum PrimitiveType
 	{
@@ -100,9 +107,9 @@ namespace vEngine
 		float shininess;
 
 		//texture id
-		float diffuse_tex;
-		float normalmap_tex;
-		float pom_tex;
+		uint32_t diffuse_tex;
+		uint32_t normalmap_tex;
+		uint32_t pom_tex;
 
 		Material()
 			:ambient(float4(0.1f,0.1f,0.1f,0.1f)),

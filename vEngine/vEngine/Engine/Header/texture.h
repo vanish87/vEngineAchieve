@@ -14,10 +14,12 @@ namespace vEngine
 		Texture(void);
 		Texture(AccessType access_type, uint32_t array_size, 
 				Format format, uint32_t mip_level, uint32_t sample_count, uint32_t sample_quality, TextureUsage usage, TextureType type);
-		~Texture(void);
+		virtual ~Texture(void);
 
 		void SetUsage(TextureUsage usage);
 		TextureType GetType();
+
+		static Texture& NullTexture();
 	protected:
 		AccessType access_type_;
 		uint32_t array_size_;
@@ -28,6 +30,14 @@ namespace vEngine
 		TextureUsage usage_;
 		TextureType type_;
 	};
+
+	class NTexture :public Texture
+	{
+	public:
+		NTexture();
+		~NTexture();
+	};
+
 }
 
 #endif

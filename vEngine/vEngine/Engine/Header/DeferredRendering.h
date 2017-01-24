@@ -26,16 +26,14 @@ namespace vEngine
 		DeferredRendering(Configure::RenderSetting& render_setting);
 		~DeferredRendering(void);
 
-		void AddGBuffer(RenderView* render_target_view);
 		void AddGBuffer(RenderBuffer* shader_resource_view);
 
 		FrameBuffer* & GetGBuffer(){return gbuffer_;};
 		std::vector<RenderBuffer*> GetGBufferSRV(){return gbuffer_srv_;};
 
-		Mesh* GetQuadMesh(){return fullscreen_mesh_;};
-		Mesh* GetFullscreenQuad();
+		//Mesh* GetQuadMesh(){return fullscreen_mesh_;};
+		//Mesh* GetFullscreenQuad();
 
-		void AddLightingBuffer( RenderView* render_view );
 		void AddLightingBuffer( RenderBuffer* shader_resource);
 
 		FrameBuffer* & GetLighingBuffer(){return lighting_buffer_;};
@@ -60,13 +58,13 @@ namespace vEngine
 		Texture* linear_depth_tex_;
 
 		//for shadowing
-		FrameBuffer* shadowing_buffer_;
+		//FrameBuffer* shadowing_buffer_;
 		RenderBuffer* shadowing_srv_;
 		Texture* shadowing_tex_;
 
 		//back camera and buffer
 		FrameBuffer* back_buffer_;
-		Camera* back_frame_camera_; 
+		Camera* main_camera_; 
 
 		Texture* shadow_blur_;
 

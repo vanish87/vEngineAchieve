@@ -5,8 +5,9 @@
 
 #include <string>
 
-#include "EnginePreDec.h"
+#include "Engine\Header\EnginePreDec.h"
 #include "Common\Header\Configure.h"
+#include "Engine\Header\Window.h"
 
 namespace vEngine
 {
@@ -26,7 +27,7 @@ namespace vEngine
 
 	private:
 		std::string app_name_;
-		Window* win_;
+		Window win_;
 		bool cursor_locked_;
 
 		static const int MAXIMUM_FRAME_RATE = 60;

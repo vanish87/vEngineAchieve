@@ -25,13 +25,15 @@ namespace vEngine
 		D3DRenderState();
 		state_type_ = RST_DEPTH;	
 		D3DRenderEngine* d3d_re =static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
-		d3d_re->D3DDevice()->CreateDepthStencilState(&desc, &depth_stencil_state_);
+		HRESULT res = d3d_re->D3DDevice()->CreateDepthStencilState(&desc, &depth_stencil_state_);
+		if (FAILED(res))PRINT("CreateDepthStencilState Failed");
 	}
 
 	D3DRenderState::D3DRenderState( D3D11_BLEND_DESC desc )
 	{
 		D3DRenderState();
 		state_type_ = RST_BLEND;	
+		PRINT_AND_ASSERT("not implemented");
 	}
 
 

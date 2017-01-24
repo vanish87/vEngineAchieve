@@ -78,7 +78,7 @@ namespace vEngine
 
 		std::unordered_map<UUID, GameObject*> ConponentList_;
 	public:
-		static DebugTracking& GetInstace()
+		static DebugTracking& GetInstance()
 		{
 			static DebugTracking Instance;
 			return Instance;
