@@ -21,25 +21,14 @@ namespace vEngine
 
 	void D3DModel::SetRenderParameters()
 	{
-		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
-
+		shader_object_->SetMatrixVariable("g_world_matrix", model_matrix_);
 		//TODO : use texture array to store every pom texture of mesh
 		if(pom_enabled_)
-			d3d_shader_object->SetReource("normal_map_tex", pom_srv_, 1);
-		//if(deferred_rendering)
-			//set parameter here
-			//
+			shader_object_->SetReource("normal_map_tex", pom_srv_, 1);
 	}
 
 	void D3DModel::Render(int pass_index)
 	{
-		//TODO : After write a normal ShaderObject, move these to SceneManager->Flush(), because all Render_elenment shader the same lights.
-		//set light parameter
-		//std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
-		//D3DRenderBuffer* lights_buffer = static_cast<D3DRenderBuffer*>(Context::Instance().GetRenderFactory().GetRenderEngine().GetLightsBuufer());
-		//shader_object_->SetReource("gLight", lights_buffer, 0);
-
 		D3DRenderEngine* re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		//for each mesh 
 		for(size_t i =0; i < meshes_.size(); i++)
@@ -147,10 +136,19 @@ namespace vEngine
 		//if I have a original texture file loader, remove it, do Texture loading on Model Class
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		ID3D11Resource* texture;
+		//TODO use a resource loader for search path
 		std::ifstream ifs(file_name);
 		if (!ifs.good())
 		{
-			file_name = "Media/" + file_name;
+			std::ifstream ifs1("Media/textures/" + file_name);
+			if (ifs1.good())
+			{
+				file_name = "Media/textures/" + file_name;
+			}
+			else
+			{
+				file_name = "Media/" + file_name;
+			}
 		}
 		
 		DirectX::TexMetadata metadata;

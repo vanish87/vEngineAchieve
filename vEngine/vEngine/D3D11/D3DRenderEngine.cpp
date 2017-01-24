@@ -143,8 +143,6 @@ namespace vEngine
 		
 
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object);
-		//size_t pass = d3d_shader_object->GetPass();
-
 		
 		//IASetInputLayout
 		D3DRenderLayout* d3d_rl = static_cast<D3DRenderLayout*>(render_layout);
@@ -182,7 +180,6 @@ namespace vEngine
 			case VU_COLOR:
 				input_layout_desc[i].SemanticName = "COLOR";
 				input_layout_desc[i].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-				input_layout_desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 				break;
 			default:
 				break;
@@ -195,7 +192,7 @@ namespace vEngine
 		result = d3d_shader_object->GetTechnique()->GetPassByIndex(pass_index)->GetDesc( &pass_desc );
 		if(FAILED(result))PRINT("Cannot Get Pass Desc");
 		ID3D11InputLayout* input_layout;
-		result = d3d_device_->CreateInputLayout(input_layout_desc, vertex_layout.size(), pass_desc.pIAInputSignature, 
+		result = d3d_device_->CreateInputLayout(input_layout_desc, (uint32_t)vertex_layout.size(), pass_desc.pIAInputSignature, 
 			pass_desc.IAInputSignatureSize, &input_layout);
 		if(FAILED(result))
 		{
@@ -210,13 +207,13 @@ namespace vEngine
 		PrimitiveType pri_type = d3d_rl->GetPrimitive();
 		switch (pri_type)
 		{
-		case vEngine::PT_POINTLIST:
+		case PT_POINTLIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 			break;
-		case vEngine::PT_TRIANGLELIST:
+		case PT_TRIANGLELIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			break;
-		case vEngine::PT_LINELIST:
+		case PT_LINELIST:
 			d3d_imm_context_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 			break;
 		default:
@@ -233,9 +230,8 @@ namespace vEngine
 			D3DRenderBuffer* d3d_index_buffer = static_cast<D3DRenderBuffer*>(d3d_rl->GetBuffer(VBU_INDEX));
 			d3d_imm_context_->IASetIndexBuffer(d3d_index_buffer->D3DBuffer(), DXGI_FORMAT_R32_UINT, 0);
 			
-			//SetShaderPara
 			//DrawIndexed
-			d3d_shader_object->Apply(pass_index);
+			shader_object->Apply(pass_index);
 			uint32_t index_count = d3d_rl->GetIndexCount();	
 			d3d_imm_context_->DrawIndexed(index_count, 0, 0);
 		}
@@ -370,9 +366,6 @@ namespace vEngine
 		cull_Desc.DepthClipEnable = true;
 		cull_Desc.DepthBias = 0;
 		cull_Desc.DepthBiasClamp = 0.0f;
-		cull_Desc.DepthClipEnable = true;
-		cull_Desc.FillMode = D3D11_FILL_SOLID;
-		cull_Desc.FrontCounterClockwise = false;
 		cull_Desc.MultisampleEnable = false;
 		cull_Desc.ScissorEnable = false;
 		cull_Desc.SlopeScaledDepthBias = 0.0f;
@@ -432,19 +425,11 @@ namespace vEngine
 	void D3DRenderEngine::RenderFrameBegin()
 	{
 		//Clear Frame Buffer
-		float color[4] = {0.0f,0.0f,0.0f,1.0f};
-		D3DFrameBuffer* d3d_frame_buffer;
-		d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
-		for(size_t i = 0; i< d3d_frame_buffer->D3DRTViewSize(); i++)
-			d3d_imm_context_->ClearRenderTargetView(d3d_frame_buffer->D3DRTView(i)->D3DRTV(), color);
-		d3d_imm_context_->ClearDepthStencilView(d3d_frame_buffer->D3DDSView()->D3DDSV(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);	
-
-
+		cur_frame_buffer_->Clear(float4(0, 0, 0, 1), 1, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
 	}
 
 	void D3DRenderEngine::RenderFrameEnd()
 	{
-
 		// Cleanup (aka make the runtime happy)
 		d3d_imm_context_->VSSetShader(0, 0, 0);
 		d3d_imm_context_->GSSetShader(0, 0, 0);

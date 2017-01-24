@@ -107,9 +107,9 @@ namespace vEngine
 		float shininess;
 
 		//texture id
-		float diffuse_tex;
-		float normalmap_tex;
-		float pom_tex;
+		uint32_t diffuse_tex;
+		uint32_t normalmap_tex;
+		uint32_t pom_tex;
 
 		Material()
 			:ambient(float4(0.1f,0.1f,0.1f,0.1f)),

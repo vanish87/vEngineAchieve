@@ -17,7 +17,7 @@ namespace vEngine
 			:light_type_(light_type)
 		{
 			light_color_ = float4(1, 1, 1, 1);
-			virtual_camera_ = new Camera(1280/800.0f);
+			//virtual_camera_ = new Camera();
 
 			switch (light_type)
 			{
@@ -45,8 +45,7 @@ namespace vEngine
 		float GetRange();;
 		void SetRange(float range);
 
-		Camera* GetCamera(){return virtual_camera_;};
-		void SetCamera(Camera* camera);
+		Camera* GetCamera(){return &virtual_camera_;};
 
 		void AddToScene();
 
@@ -59,7 +58,7 @@ namespace vEngine
 
 		float4 light_attrib_;
 
-		Camera* virtual_camera_;
+		Camera virtual_camera_;
 	};
 
 	class PointLight : public Light

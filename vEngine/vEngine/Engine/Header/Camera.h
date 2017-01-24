@@ -42,7 +42,7 @@ namespace vEngine
 		void Roll(float angle);  
 
 
-		virtual void AddToScene() override;
+		void AddToScene(bool as_main = false);
 
 	private:
 		Frustum	frustum_;

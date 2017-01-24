@@ -47,7 +47,7 @@ cbuffer cbPerObject
 	Material gMaterial;
 
 	//not use
-	float4x4 g_shadow_transform; 
+	//float4x4 g_shadow_transform; 
 
 	float4x4 g_light_view_proj; 
 

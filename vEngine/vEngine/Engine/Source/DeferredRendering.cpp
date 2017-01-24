@@ -80,11 +80,11 @@ namespace vEngine
 		//shadow_blur_buffer_->AddRenderView(Context::Instance().GetRenderFactory().MakeRenderView(shadow_blur_, 1, 0));
 
 		//inti shadowing buffer
-		shadowing_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
+		//shadowing_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		Texture* shadowing_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
 			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(shadowing_texture_, 1, 0);
-		shadowing_buffer_->AddRenderView(render_view);
+		//shadowing_buffer_->AddRenderView(render_view);
 		shadowing_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadowing_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 
 		//init SSDO
@@ -242,14 +242,16 @@ namespace vEngine
 
 		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
+		//ideally each render element should have its own shader object so that it can be rendered independently
+		//in deferred rendering, all render element should share same shader object, which is "DeferredLighting.fx"
 		ShaderObject* shader_object = render_list[0]->GetShaderObject();
 		
-		back_frame_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
+		main_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
 		//Deferred Lighting
 			//pass 0
 			render_engine->SetNormalState();
 			//bind gbuffer
-			gbuffer_->GetViewport().SetCamera(back_frame_camera_);
+			gbuffer_->GetViewport().SetCamera(main_camera_);
 			render_engine->BindFrameBuffer(gbuffer_);
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
@@ -258,21 +260,25 @@ namespace vEngine
 			{
 				(*re)->SetRenderParameters();
 				//Render to Gbuffer
-				//(*re)->GetShaderObject()->Apply(0);
 				(*re)->Render(0);
 				(*re)->EndRender();
 			}
+			//pass 0 end
+			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 
 			linearize_depth_pp_->Apply();
 
 			//pass 1
 			//bind lighting buffer
-			//lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
 			render_engine->BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
-			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
-			LightStruct* light_buffer = new LightStruct[lights.size()];
+			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights(); 
+			LightStruct* light_buffer = nullptr;
+			if (lights.size() > 0)
+			{
+				light_buffer = new LightStruct[lights.size()];
+			}
 			float4x4 view_mat = lighting_buffer_->GetViewport().GetCamera().GetViewMatirx();
 			float4x4 invtrans_view_mat = Math::InverTranspose(view_mat);
 			float4x4 shadow_trans_mat;
@@ -281,7 +287,7 @@ namespace vEngine
 
 			for (size_t i =0; i< lights.size(); i++)
 			{
-
+				assert(light_buffer != nullptr);
 				light_buffer[i].color = lights[i]->GetColor();
 				type = lights[i]->GetType();
 				light_buffer[i].falloff = lights[i]->GetAttrib();
@@ -308,7 +314,6 @@ namespace vEngine
 				default:
 					break;
 				}
-				//LightStruct* l = &light_buffer[i];
 				shader_object->SetRawData("light", &light_buffer[i], sizeof(LightStruct));
 				Camera* sm_camera = lights[i]->GetCamera();
 				float4x4 view_proj_mat = sm_camera->GetViewMatirx() * sm_camera->GetProjMatrix();
@@ -316,9 +321,6 @@ namespace vEngine
 				//Shadowing spot
 				if(type == LT_SPOT)
 				{
-
-					//std::cout<<static_cast<SpotLight*>(lights[i])->GetDir().x()<<" "<<static_cast<SpotLight*>(lights[i])->GetDir().y()<<" "<<static_cast<SpotLight*>(lights[i])->GetDir().z()<<"\r";
-					
 					shadow_map_buffer_->GetViewport().SetCamera(sm_camera);
 					render_engine->BindFrameBuffer(shadow_map_buffer_);
 					render_engine->SetNormalState();
@@ -341,7 +343,6 @@ namespace vEngine
 					shadow_map_yblur_pp_->Apply();
 				}							
 
-
 				//ssdo_pp_->SetCamera(back_frame_camera_);
 // 				ssdo_pp_->Apply();
 // 				occlusion_xblur_pp_->Apply();
@@ -353,21 +354,8 @@ namespace vEngine
 				shader_object->SetReource("normal_tex", gbuffer_srv_[0], 1);
 				shader_object->SetReource("shadow_map_tex", shadow_blur_srv_, 1);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_srv_, 1);
-
-				//shader_object->SetReource("lighting_tex", lighting_srv_, 1);
-				//do lighting
-				//Set Shader file for quad
-				//std::cout<<lights[i]->GetCamera()->GetPos().x()<<" "<<lights[i]->GetCamera()->GetPos().y()<<" "<<lights[i]->GetCamera()->GetPos().z()<<"\r";
-/*
-				std::cout<<view_proj_mat[0][0]<<" "<<view_proj_mat[0][1]<<" "<<view_proj_mat[0][2]<<"\n";
-				std::cout<<view_proj_mat[1][0]<<" "<<view_proj_mat[1][1]<<" "<<view_proj_mat[1][2]<<"\n";
-				std::cout<<view_proj_mat[2][0]<<" "<<view_proj_mat[2][1]<<" "<<view_proj_mat[2][2]<<"\n\n";*/
-				//lighting_buffer_->GetViewport().SetCamera(back_frame_camera_);
 				render_engine->BindFrameBuffer(lighting_buffer_);
-				//render_engine->RenderFrameBegin();
 				render_engine->SetDeferredRenderingState();
-				shader_object->SetMatrixVariable("g_shadow_transform", shadow_trans_mat);
-				//shader_object->SetMatrixVariable("g_light_view_proj", Math::Identity(view_proj_mat));
 
 				fullscreen_mesh_->SetShaderObject(shader_object);
 				fullscreen_mesh_->SetRenderParameters();
@@ -376,6 +364,8 @@ namespace vEngine
 			}
 
 			delete[] light_buffer;
+			//pass 1 end 
+			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 
 			//pass 2
 			render_engine->BindFrameBuffer(back_buffer_);
@@ -385,11 +375,8 @@ namespace vEngine
 			//Set Shader file for quad
 			fullscreen_mesh_->SetShaderObject(shader_object);
 			fullscreen_mesh_->SetRenderParameters();
-			//quad->GetShaderObject()->Apply(1);
 			fullscreen_mesh_->Render(2);
 			fullscreen_mesh_->EndRender();
-
-
 
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();

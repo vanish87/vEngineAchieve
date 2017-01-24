@@ -113,9 +113,9 @@ namespace vEngine
 	}
 
 
-	void Camera::AddToScene()
+	void Camera::AddToScene(bool as_main /*= false*/)
 	{
-		Context::Instance().GetSceneManager().AddCamera(this);
+		Context::Instance().GetSceneManager().AddCamera(this, as_main);
 	}
 
 }

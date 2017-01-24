@@ -58,13 +58,13 @@ namespace vEngine
 		Texture* linear_depth_tex_;
 
 		//for shadowing
-		FrameBuffer* shadowing_buffer_;
+		//FrameBuffer* shadowing_buffer_;
 		RenderBuffer* shadowing_srv_;
 		Texture* shadowing_tex_;
 
 		//back camera and buffer
 		FrameBuffer* back_buffer_;
-		Camera* back_frame_camera_; 
+		Camera* main_camera_; 
 
 		Texture* shadow_blur_;
 

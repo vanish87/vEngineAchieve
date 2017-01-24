@@ -50,7 +50,8 @@ void MyApp::InitObjects()
 
 	float4x4 mat,trans;
 	D3DModel *model = new D3DModel();
-	model->LoadFile("Media/sponza/sponza.sobj");
+	//model->LoadFile("Media/sponza/sponza.sobj");
+	model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	Math::Scale(mat, 0.5);
 	model->SetModelMatrix(mat);
@@ -77,7 +78,7 @@ void MyApp::InitObjects()
 	cam_look_ = float3(81.78f,270.16f,-66.94f);
 	camera_->SetView(cam_pos_, cam_look_, float3(0,1,0));
 	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
-	camera_->AddToScene();
+	camera_->AddToScene(true);
 
 	DebugTracking::GetInstance().PrintALL();
 }
