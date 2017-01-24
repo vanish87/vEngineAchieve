@@ -21,16 +21,23 @@ namespace vEngine
 
 	void StateManager::ChangeState( GameState* game_state, StateOP op )
 	{
-		if(op == SOP_PUSH)
+		switch (op)
+		{
+		case SOP_PUSH:
 		{
 			game_state->SetParent(current_state_);
 			current_state_ = game_state;
+			break;
 		}
-		else if (op == SOP_POP && current_state_ == game_state)
+		case SOP_POP:
 		{
 			assert(current_state_ == game_state);
 			//TODO: memory leak
 			current_state_ = current_state_->GetParent();
+			break;
+		}
+		default:
+			break;
 		}
 	}
 
