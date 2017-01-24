@@ -79,8 +79,8 @@ namespace vEngine
 		Math::Identity(mat);
 		Math::RotationAxis(mat, left, angle);
 
-		up_ = Math::TransformNormal(up_, mat);
-		dir = Math::Transform(dir, mat);
+		up_ = Math::TransformVector(up_, mat);
+		dir = Math::TransformPoint(dir, mat);
 		dir = Math::Normalize(dir);
 
 		view_matrix_ = Math::LookAtLH(eye_, dir, up_);
@@ -93,7 +93,7 @@ namespace vEngine
 		Math::Identity(mat);
 		Math::RotationAxis(mat, up_, angle);
 
-		dir = Math::TransformNormal(dir, mat);
+		dir = Math::TransformVector(dir, mat);
 		dir = Math::Normalize(dir);
 		at_ = eye_ + dir;
 
@@ -107,7 +107,7 @@ namespace vEngine
 		Math::Identity(mat);
 		Math::RotationAxis(mat, dir, angle);
 
-		up_ = Math::TransformNormal(up_, mat);
+		up_ = Math::TransformVector(up_, mat);
 
 		view_matrix_ = Math::LookAtLH(eye_, at_, up_);
 	}

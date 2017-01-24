@@ -149,7 +149,7 @@ void MyState::OnKeyDown(WPARAM key_para)
 			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
-			dir = Math::TransformNormal(dir, mat);
+			dir = Math::TransformVector(dir, mat);
 			dir = Math::Normalize(dir);
 			app_->cam_look_ = dir + app_->cam_pos_;
 			break;
@@ -161,7 +161,7 @@ void MyState::OnKeyDown(WPARAM key_para)
 			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
-			dir = Math::TransformNormal(dir, mat);
+			dir = Math::TransformVector(dir, mat);
 			dir = Math::Normalize(dir);
 			app_->cam_look_ = dir + app_->cam_pos_;
 			break;
@@ -173,7 +173,7 @@ void MyState::OnKeyDown(WPARAM key_para)
 			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
-			dir = Math::TransformNormal(dir, mat);
+			dir = Math::TransformVector(dir, mat);
 			dir = Math::Normalize(dir);
 			app_->cam_look_ = dir + app_->cam_pos_;
 			break;
@@ -185,7 +185,7 @@ void MyState::OnKeyDown(WPARAM key_para)
 			Math::RotationAxis(mat, left, app_->pitch_angle_);
 
 			//up_ = Math::TransformNormal(up_, mat);
-			dir = Math::TransformNormal(dir, mat);
+			dir = Math::TransformVector(dir, mat);
 			dir = Math::Normalize(dir);
 			app_->cam_look_ = dir + app_->cam_pos_;
 			break;

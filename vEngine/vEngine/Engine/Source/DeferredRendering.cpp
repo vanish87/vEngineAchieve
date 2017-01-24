@@ -296,7 +296,7 @@ namespace vEngine
 				case LT_POINT:
 					{
 						light_buffer[i].type = LT_POINT;
-						light_buffer[i].position = Math::Transform(static_cast<PointLight*>(lights[i])->GetPos(), view_mat);
+						light_buffer[i].position = Math::TransformPoint(static_cast<PointLight*>(lights[i])->GetPos(), view_mat);
 						light_buffer[i].direction = float3(0, 0, 0);
 						light_buffer[i].inner_outer = float2(0, 0);
 						break;
@@ -304,8 +304,8 @@ namespace vEngine
 				case LT_SPOT:
 					{
 						light_buffer[i].type = LT_SPOT;
-						light_buffer[i].position = Math::Transform(static_cast<SpotLight*>(lights[i])->GetPos(), view_mat);
-						light_buffer[i].direction = Math::TransformNormal(static_cast<SpotLight*>(lights[i])->GetDir(), invtrans_view_mat);
+						light_buffer[i].position = Math::TransformPoint(static_cast<SpotLight*>(lights[i])->GetPos(), view_mat);
+						light_buffer[i].direction = Math::TransformVector(static_cast<SpotLight*>(lights[i])->GetDir(), invtrans_view_mat);
 						float outer = static_cast<SpotLight*>(lights[i])->GetOuterAngle();
 						float inner = static_cast<SpotLight*>(lights[i])->GetInnerAngle();
 						light_buffer[i].inner_outer = float2(Math::Cos(inner), Math::Cos(outer));
