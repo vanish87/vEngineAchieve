@@ -4,6 +4,7 @@
 namespace vEngine
 {
 	SceneObject::SceneObject(void)
+		:render_element_(nullptr)
 	{
 	}
 
@@ -14,7 +15,10 @@ namespace vEngine
 
 	void SceneObject::Update()
 	{
-		 this->model_matrix_ = render_element_->model_matrix_;
+		if (this->render_element_ != nullptr)
+		{
+			this->model_matrix_ = render_element_->model_matrix_;
+		}
 	}
 
 	RenderElement* & SceneObject::GetRenderElement()

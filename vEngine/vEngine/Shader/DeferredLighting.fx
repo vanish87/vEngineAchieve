@@ -220,9 +220,6 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 
 	//view space normal + mat.Shininess
 	output.Normal = float4(pin.normalVS, gMaterial.Shininess);
-	output.Normal.x = output.Normal.x;
-	output.Normal.y = output.Normal.y;
-	output.Normal.z = output.Normal.z;
 	//combines Mat with Tex color
 	output.Diffuse  = float4( mat_diffuse* gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
 
@@ -331,9 +328,6 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float4 normal_t = normal_tex.Load( samplelndices );
 
 	float3 normal = normal_t.xyz;
-	normal.x = normal.x;
-	normal.y = normal.y;
-	normal.z = normal.z;
 	//set for those mesh that do not want to do lighting
 	if(normal.x ==0 && normal.y ==0&& normal.z ==0)
 		return float4(0,0,0,1);
@@ -349,6 +343,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 		return occlusion;
 	//float4 pre_color = lighting_tex.Load( samplelndices );
 
+	shadow = 1;
 	//cal lighting
 	return CalPreLighting( normal, positionVS, shininess, shadow, occlusion);
 	}
