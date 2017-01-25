@@ -68,7 +68,7 @@ struct VertexIn
 struct VertexOut
 {
 	float4 pos				 : SV_POSITION;
-   // float3 normalVS			 : NORMAL;     //view space
+    float3 normalVS			 : TEXCOORD3;     //view space
 	float3 posWS             : Position;
 	float2 tex_cood			 : TEXCOORD0;
 
@@ -80,15 +80,25 @@ struct VertexOut
 
 };
 
+//set value to normalize color value
+float encodeToColorSpace(float value)
+{
+	return (value + 1)* 0.5;
+}
+float decodeFromColorSpace(float value)
+{
+	return (value - 0.5) * 2;
+}
+
 VertexOut GbufferVS(VertexIn vin)
 {
 	float g_fHeightMapScale = 1.0f;
 	VertexOut vout;
-	
+
 	float4x4 world_matrix = mul(g_model_matrix, g_world_matrix);
 	float4x4 mvp_matrix = mul(world_matrix ,g_view_proj_matrix);
 	vout.pos = mul(float4(vin.pos, 1.0f), mvp_matrix);
-// 	vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
+ 	vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
 // 	vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_mwv_inv_transpose));
 // 	//trust model input come with orthorch
 // 	vout.binormalVS = normalize(mul(vin.binormal, (float3x3)g_mwv_inv_transpose));
@@ -206,10 +216,13 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 
 	}
 	
-	float3 normalVS = mul(normalWS, (float3x3)g_view_matrix);
+	//float3 normalVS = mul(normalWS, (float3x3)g_view_matrix);
 
 	//view space normal + mat.Shininess
-	output.Normal = float4(normalVS, gMaterial.Shininess);	
+	output.Normal = float4(pin.normalVS, gMaterial.Shininess);
+	output.Normal.x = output.Normal.x;
+	output.Normal.y = output.Normal.y;
+	output.Normal.z = output.Normal.z;
 	//combines Mat with Tex color
 	output.Diffuse  = float4( mat_diffuse* gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
 
@@ -220,7 +233,7 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 }
 struct LightingVin
 {
-	float4 Position : POSITION;
+	float3 Position : POSITION;
 };
 
 struct LightingVout
@@ -232,10 +245,8 @@ struct LightingVout
 LightingVout LightingVS(in LightingVin vin)
 {
 	LightingVout vout;
-	vout.pos = vin.Position;
-	float4 pos = mul(vin.Position, g_inv_proj_matrix);
-
-	float3 positionVS = mul( vin.Position, g_inv_proj_matrix ).xyz;
+	vout.pos = float4(vin.Position, 1.0f);
+	float3 positionVS = mul( float4(vin.Position,1.0f), g_inv_proj_matrix ).xyz;
 	vout.view_ray = float3( positionVS.xy / positionVS.z, 1.0f );
 	return vout;
 }
@@ -251,7 +262,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 	int3 samplelndices = int3( pin.pos.xy, 0 );
 	float3 world_pos = normal_tex.Load( samplelndices ).xyz;
-	return float4(world_pos.xyz/10000,1.0f);
+	return float4(world_pos.xyz,1.0f);
 	}
 	else{
 		
@@ -261,6 +272,9 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float depth = depth_tex.Load( samplelndices ).r;
 
 	float3 positionVS = view_ray_vec * depth;
+
+	//if (depth < 1) depth = 0;
+	//return float4(view_ray_vec, 1.0f);
 
 	//shadowing
 	float4 world_pos = mul(float4(positionVS, 1.0f) , g_inv_view_matrix);
@@ -275,7 +289,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	pos_light.x = pos_light.x / 2 + 0.5f;
 	pos_light.y = -pos_light.y / 2 + 0.5f;
 	
-	float zf = 1000.0f;
+	float zf = 100.0f;
 	float zn = 1.0f;
 	float q = zf/ (zf-zn);
 	float pos_depth = pos_light.z;
@@ -315,16 +329,22 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	//Get Infor from g-buffer
 	//vs normal
 	float4 normal_t = normal_tex.Load( samplelndices );
+
 	float3 normal = normal_t.xyz;
+	normal.x = normal.x;
+	normal.y = normal.y;
+	normal.z = normal.z;
 	//set for those mesh that do not want to do lighting
 	if(normal.x ==0 && normal.y ==0&& normal.z ==0)
 		return float4(0,0,0,1);
+
+	//return float4(normal.xyz, 1);
 
 	//normal = mul(normal, (float3x3)g_view_matrix);
 	float shininess = normal_t.w;
 
 	float4 occlusion = blur_occlusion_tex.Load( samplelndices );
-	//occlusion = float4(0,0,0,0);
+	occlusion = float4(0,0,0,0);
 	if(0)
 		return occlusion;
 	//float4 pre_color = lighting_tex.Load( samplelndices );

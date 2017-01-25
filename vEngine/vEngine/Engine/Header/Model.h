@@ -21,6 +21,7 @@
 #include "Engine\Header\Mesh.h"
 #include "Engine\Header\Texture.h"
 
+/*
 
 #ifdef _DEBUG
 #define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
@@ -32,6 +33,7 @@
 #ifdef _DEBUG
 #define new DEBUG_CLIENTBLOCK
 #endif
+*/
 
 namespace vEngine
 {

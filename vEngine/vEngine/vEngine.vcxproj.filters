@@ -390,5 +390,8 @@
     <FxCompile Include="Shader\GaussianBlurYFilterPostProcess.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Shader\DebugShader.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

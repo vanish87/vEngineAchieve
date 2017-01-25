@@ -25,8 +25,11 @@ namespace vEngine
 		//TODO : Check if the render_view is exist.
 		for (size_t i =0; i< render_views_.size(); i++)
 		{
-			if(render_views_[i]->GetTexture() == render_view->GetTexture())
+			if (render_views_[i]->GetTexture() == render_view->GetTexture())
+			{
+				delete render_view;
 				return;
+			}
 		}
 		render_views_.push_back(render_view);
 	}

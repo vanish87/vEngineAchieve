@@ -23,6 +23,7 @@ namespace vEngine
 		};
 
 		Mesh* MakeFullScreenMesh();
+		Mesh* MakeSphereMesh();
 		Texture* LoadTexture(std::string file_name);//TODO a independent texture loader
 	};
 }

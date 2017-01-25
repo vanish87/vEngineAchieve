@@ -34,7 +34,7 @@ struct PSOutput
 	float4 color		: SV_Target0;
 };
 
-SamplerState ShadowMapSampler
+SamplerState OutTextureSampler
 {
 	Filter = MIN_MAG_MIP_LINEAR;
     AddressU = CLAMP;
@@ -51,16 +51,9 @@ VertexOut VS(VertexIn vin)
 
 PSOutput PS(VertexOut pin) 
 {
-	float zf = 100.0f;
-	float zn = 1.0f;
-	float q = zf/ (zf-zn);
-	PSOutput output;
-	float dis = input_tex_0.Sample(ShadowMapSampler,pin.tex).x;
-	dis = zn * q / (q - dis);
-	float2 dxdy = float2(ddx(dis), ddy(dis));
-	// G chanel for vsm
-	output.color = float4(dis, dis * dis + 0.25f * dot(dxdy, dxdy), 0, 1);
-	return output;
+	PSOutput ret;
+	ret.color = input_tex_0.Sample(OutTextureSampler, pin.tex);
+	return ret;
 }
 
 technique11 PPTech

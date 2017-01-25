@@ -27,10 +27,6 @@ namespace vEngine
 
 		virtual void EndRender();
 	private:
-		typedef std::vector<VertexType> VertexList;
-		typedef std::vector<int> IndexList;
-		void BuildGeoSphere( int numSubdivisions, float radius, VertexList& vertices, IndexList& indices);
-		void Subdivide(VertexList& vertices, IndexList& indices);
 
 		//no pom for sky dome
 		virtual void LoadPomTexture( std::string file_name_ ){};

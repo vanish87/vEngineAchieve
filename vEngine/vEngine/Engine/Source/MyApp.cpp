@@ -34,7 +34,7 @@ void MyApp::InitObjects()
 	DebugTracking::GetInstance().PrintALL();
 
 	//set up lights
-	for(int i = -30; i < 30 ; ++i)
+	for(int i = 0; i < 1 ; ++i)
 	{
 		point_light_ = new PointLight();
 		point_light_->SetPos(float3(50.f + i*20 ,10.f, 0.f));	
@@ -43,8 +43,8 @@ void MyApp::InitObjects()
 	}
 
 	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(50, 200, 0));
-	spot_light_->SetDir(float3(0,10,0) - float3(50, 500, 0));
+	spot_light_->SetPos(float3(0, 1, 0));
+	spot_light_->SetDir(float3(0,0,0) - float3(0, 10, 0));
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);
 	spot_light_->AddToScene();
@@ -52,19 +52,19 @@ void MyApp::InitObjects()
 	float4x4 mat,trans;
 	D3DModel *model = new D3DModel();
 	//model->LoadFile("Media/sponza/sponza.sobj");
-	model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
+	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
+	model->LoadFile("Media/spacecraft_new.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
-	Math::Scale(mat, 0.5);
+	Math::Scale(mat, 10);
 	model->SetModelMatrix(mat);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
 
 	model = new D3DModel();
-	//model->LoadFile("Media/spacecraft_new.dae");
+	//model->LoadFile("Media/plane_ssdo.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	Math::Scale(mat, 10);
-	Math::Translate(trans,0,10,0);
-	model->SetModelMatrix(trans * mat);
+	model->SetModelMatrix(mat);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
 	
@@ -74,9 +74,11 @@ void MyApp::InitObjects()
 	first_person_ = false;
 	pitch_angle_ = 0;
 	speed_ = 2.5;
-	camera_ = new Camera(1280/800.0f);// Context::Instance().GetSceneManager().GetMainCamera();
-	cam_pos_ = float3(82.2f,270.87f,-67.49f);
-	cam_look_ = float3(81.78f,270.16f,-66.94f);
+	camera_ = new Camera(1280 / 800.0f);// Context::Instance().GetSceneManager().GetMainCamera();
+	cam_pos_ = float3(82.2f, 270.87f, -67.49f);
+	cam_look_ = float3(81.78f, 270.16f, -66.94f);
+	cam_pos_ = float3(0, 1, 1);
+	cam_look_ = float3(0, 0, 0);
 	camera_->SetView(cam_pos_, cam_look_, float3(0,1,0));
 	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
 	camera_->AddToScene(true);

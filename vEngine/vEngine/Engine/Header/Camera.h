@@ -19,7 +19,7 @@ namespace vEngine
 		Camera(float aspect);
 		~Camera(void);
 
-		DEBUG_CLASS_FILE_NAME
+		DEBUG_CLASS_NAME("Camera")
 
 		void SetView(float3 eye, float3 at, float3 up);
 		float4x4 GetViewMatirx(){return view_matrix_;};

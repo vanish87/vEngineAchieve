@@ -110,6 +110,7 @@ namespace vEngine
 
 	RenderBuffer* D3DRenderFactory::MakeRenderBuffer( Texture* texture, AccessType access_type, BufferUsage usage )
 	{
+		//TODO init AccessType access_type, BufferUsage usage and other render buffer varibles
 		return new D3DShaderResourceView(*texture, 1, 1);
 	}
 
