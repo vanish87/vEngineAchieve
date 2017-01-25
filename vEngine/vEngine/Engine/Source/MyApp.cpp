@@ -112,7 +112,7 @@ void MyApp::Update()
 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/10000.0f)),Math::Cos(timer_->Timef()/10000.0f)));
+    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/10000.0f)),Math::Cos(timer_->Timef()/10000.0f)));
 }
 
 

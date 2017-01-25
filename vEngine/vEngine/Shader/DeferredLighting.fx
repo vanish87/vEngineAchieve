@@ -343,7 +343,6 @@ float4 LightingPS( in LightingVout pin): SV_Target
 		return occlusion;
 	//float4 pre_color = lighting_tex.Load( samplelndices );
 
-	shadow = 1;
 	//cal lighting
 	return CalPreLighting( normal, positionVS, shininess, shadow, occlusion);
 	}

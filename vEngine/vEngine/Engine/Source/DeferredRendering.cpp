@@ -335,7 +335,6 @@ namespace vEngine
 				}
 				shader_object->SetRawData("light", &light_buffer[i], sizeof(LightStruct));
 				Camera* sm_camera = lights[i]->GetCamera();
-				float4x4 view_proj_mat = sm_camera->GetViewMatirx() * sm_camera->GetProjMatrix();
 				//TODO : handle point light
 				//Shadowing spot
 				if(type == LT_SPOT)
@@ -368,6 +367,8 @@ namespace vEngine
 // 				occlusion_yblur_pp_->Apply();
 
 
+				float4x4 view_proj_mat = sm_camera->GetViewMatirx() * sm_camera->GetProjMatrix();
+				shader_object->SetMatrixVariable("g_light_view_proj", view_proj_mat);
 				//set gbuffer as input textures		
 				shader_object->SetReource("depth_tex", depth_srv_, 1);
 				shader_object->SetReource("normal_tex", gbuffer_srv_[0], 1);
