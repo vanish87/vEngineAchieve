@@ -417,7 +417,7 @@ namespace vEngine
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
 		render_engine->BindFrameBuffer(back_buffer_);
 		output_to_tex_pp_->SetInput(GBuffer->GetRenderView(GBufferIndex)->GetTexture(), 0);
-		//output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
+		output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
 		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
 		output_to_tex_pp_->SetOutput(OutBuffer->GetRenderView(0)->GetTexture(), 0);
 		output_to_tex_pp_->Apply();

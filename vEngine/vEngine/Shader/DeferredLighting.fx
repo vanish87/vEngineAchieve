@@ -314,7 +314,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float shadow = max(p, p_max);
 	//no shadow for point light
 	if(light.type == 0)
-		shadow = 0;
+		shadow = 1;
 	if(0)
 	{
 		return float4(moments.x/1000 ,moments.x/1000,moments.x/1000 ,1);

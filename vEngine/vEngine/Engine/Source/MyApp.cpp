@@ -1,6 +1,7 @@
 #include "Engine\Header\MyApp.h"
 #include "Engine\Header\Context.h"
 #include "Common\Header\Timer.h"
+#include "Engine\Header\RenderTools.h"
 
 //#include "StartMenu.h"
 
@@ -44,7 +45,7 @@ void MyApp::InitObjects()
 
 	spot_light_ = new SpotLight();
 	spot_light_->SetPos(float3(0, 2, 0));
-	spot_light_->SetDir(float3(0,-1, 0));
+	spot_light_->SetDir(float3(0,0, 0)- float3(0, 1, 0));
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);
 	spot_light_->AddToScene();
@@ -56,7 +57,8 @@ void MyApp::InitObjects()
 	model->LoadFile("Media/spacecraft_new.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	Math::Scale(mat, 10);
-	model->SetModelMatrix(mat);
+	Math::Translate(trans, 0, -0.05f, 0);
+	model->SetModelMatrix(trans * mat);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
 
@@ -67,7 +69,28 @@ void MyApp::InitObjects()
 	model->SetModelMatrix(mat);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
-	
+
+	Mesh* newMesh = RenderTools::GetInstance().MakeFullScreenMesh();
+	float4x4 rotaiton;
+	Math::XRotation(rotaiton, Math::PI * 0.5);
+	//newMesh->SetModelMatrix(rotaiton);
+	newMesh->SetShaderObject(model->GetShaderObject());
+
+	Material* meshMat = new Material();
+	meshMat->diffuse = float4(0.2f, 0.5f, 0.5f, 1.0f);
+	meshMat->specular = float4(0.2f, 0.5f, 0.5f, 1.0f);
+	meshMat->shininess = 10;
+
+	D3DModel* meshModel = new D3DModel();
+	meshModel->SetModelMatrix(rotaiton);
+	meshModel->AddMesh(newMesh);
+	meshModel->AddMaterial(meshMat);
+	meshModel->SetShaderObject(model->GetShaderObject());
+
+	SceneObject* newModel = new SceneObject(meshModel);
+	newModel->AddToScene();
+
+
 	timer_ = new Timer();
 	timer_->Retart();
 	
@@ -112,7 +135,7 @@ void MyApp::Update()
 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/10000.0f)),Math::Cos(timer_->Timef()/10000.0f)));
+    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/10000.0f)),Math::Cos(timer_->Timef()/10000.0f)));
 }
 
 

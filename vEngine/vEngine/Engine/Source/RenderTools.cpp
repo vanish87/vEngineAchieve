@@ -21,6 +21,38 @@ namespace vEngine
 		vb[4].position = float3(-1, -1, 1);
 		vb[5].position = float3(+1, +1, 1);
 
+
+		vb[0].uv = float2(-1, +1);
+		vb[1].uv = float2(+1, +1);
+		vb[2].uv = float2(-1, -1);
+		vb[3].uv = float2(+1, -1);
+		vb[4].uv = float2(-1, -1);
+		vb[5].uv = float2(+1, +1);
+
+
+		vb[0].normal = float3(0, 0, -1);
+		vb[1].normal = float3(0, 0, -1);
+		vb[2].normal = float3(0, 0, -1);
+		vb[3].normal = float3(0, 0, -1);
+		vb[4].normal = float3(0, 0, -1);
+		vb[5].normal = float3(0, 0, -1);
+
+
+		vb[0].tangent = float3(0, 1, 0);
+		vb[1].tangent = float3(0, 1, 0);
+		vb[2].tangent = float3(0, 1, 0);
+		vb[3].tangent = float3(0, 1, 0);
+		vb[4].tangent = float3(0, 1, 0);
+		vb[5].tangent = float3(0, 1, 0);
+
+
+		vb[0].bitangent = float3(1, 0, 0);
+		vb[1].bitangent = float3(1, 0, 0);
+		vb[2].bitangent = float3(1, 0, 0);
+		vb[3].bitangent = float3(1, 0, 0);
+		vb[4].bitangent = float3(1, 0, 0);
+		vb[5].bitangent = float3(1, 0, 0);
+
 		ib[0] = 0;
 		ib[1] = 1;
 		ib[2] = 2;
@@ -53,6 +85,11 @@ namespace vEngine
 		//set Input layout Semi
 		std::vector<VertexUsage> inputlayout;
 		inputlayout.push_back(VU_POSITION);
+
+		inputlayout.push_back(VU_NORMAL);
+		inputlayout.push_back(VU_TEXCOORD);
+		inputlayout.push_back(VU_TANGENT);
+		inputlayout.push_back(VU_BINORMAL);
 		render_layout->SetInputLayout(inputlayout);
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
