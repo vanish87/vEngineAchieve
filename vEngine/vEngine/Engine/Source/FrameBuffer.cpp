@@ -13,7 +13,7 @@ namespace vEngine
 	{
 		viewport_.SetWidth(width);
 		viewport_.SetHeight(height);
-		viewport_.GetCamera().SetProjection(Math::PI / 4, (float)width / height, 1.0f, 100.0f);
+		viewport_.GetCamera().SetProjection(Math::PI / 4, (float)width / height, 1.0f, 1000.0f);
 	}
 
 	FrameBuffer::~FrameBuffer( void )

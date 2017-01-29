@@ -51,7 +51,7 @@ VertexOut VS(VertexIn vin)
 
 PSOutput PS(VertexOut pin) 
 {
-	float zf = 100.0f;
+	float zf = 1000.0f;
 	float zn = 1.0f;
 	float q = zf/ (zf-zn);
 	PSOutput output;

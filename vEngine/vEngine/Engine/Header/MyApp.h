@@ -21,6 +21,8 @@ public:
 	void ReleaseObjects();
 	void Update();
 
+	void MakePlane();
+
 private:
 	vEngine::PointLight* point_light_;
 	vEngine::SpotLight* spot_light_;
@@ -29,7 +31,7 @@ private:
 
 	vEngine::Timer* timer_;
 	vEngine::Camera* camera_;
-
+	
 	bool first_person_;
 	vEngine::float3 cam_pos_;
 	vEngine::float3 cam_look_;

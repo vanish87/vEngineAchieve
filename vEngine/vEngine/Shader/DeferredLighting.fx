@@ -278,7 +278,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	pos_light.x = pos_light.x / 2 + 0.5f;
 	pos_light.y = -pos_light.y / 2 + 0.5f;
 	
-	float zf = 100.0f;
+	float zf = 1000.0f;
 	float zn = 1.0f;
 	float q = zf/ (zf-zn);
 	float pos_depth = pos_light.z;
