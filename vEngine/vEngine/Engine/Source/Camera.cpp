@@ -6,7 +6,7 @@ namespace vEngine
 	Camera::Camera(void)
 	{
 		this->SetView(float3(0,0,-1), float3(0,0,0), float3(0,1,0));
-		this->SetProjection(Math::PI/4, 1 , 1, 1000);
+		this->SetProjection(Math::PI/4, 1 , 1, 1000.0f);
 		//TODO : Init frustum here
 		frustum_;
 	}
@@ -14,7 +14,7 @@ namespace vEngine
 	Camera::Camera(float aspect)
 	{
 		this->SetView(float3(0,0,-1), float3(0,0,0), float3(0,1,0));
-		this->SetProjection(Math::PI/4, aspect , 1, 1000);
+		this->SetProjection(Math::PI/4, aspect , 1, 1000.0f);
 		frustum_;
 	}
 
@@ -79,8 +79,8 @@ namespace vEngine
 		Math::Identity(mat);
 		Math::RotationAxis(mat, left, angle);
 
-		up_ = Math::TransformNormal(up_, mat);
-		dir = Math::Transform(dir, mat);
+		up_ = Math::TransformVector(up_, mat);
+		dir = Math::TransformVector(dir, mat);
 		dir = Math::Normalize(dir);
 
 		view_matrix_ = Math::LookAtLH(eye_, dir, up_);
@@ -93,7 +93,7 @@ namespace vEngine
 		Math::Identity(mat);
 		Math::RotationAxis(mat, up_, angle);
 
-		dir = Math::TransformNormal(dir, mat);
+		dir = Math::TransformVector(dir, mat);
 		dir = Math::Normalize(dir);
 		at_ = eye_ + dir;
 
@@ -107,7 +107,7 @@ namespace vEngine
 		Math::Identity(mat);
 		Math::RotationAxis(mat, dir, angle);
 
-		up_ = Math::TransformNormal(up_, mat);
+		up_ = Math::TransformVector(up_, mat);
 
 		view_matrix_ = Math::LookAtLH(eye_, at_, up_);
 	}

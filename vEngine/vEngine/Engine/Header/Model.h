@@ -21,6 +21,7 @@
 #include "Engine\Header\Mesh.h"
 #include "Engine\Header\Texture.h"
 
+/*
 
 #ifdef _DEBUG
 #define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
@@ -32,6 +33,7 @@
 #ifdef _DEBUG
 #define new DEBUG_CLIENTBLOCK
 #endif
+*/
 
 namespace vEngine
 {
@@ -42,6 +44,7 @@ namespace vEngine
 		Model(void);
 		~Model(void);
 
+		DEBUG_CLASS_NAME("Model")
 		//virtual void AddToScene();
 
 		virtual RenderLayout* GetRenderLayout();
@@ -55,10 +58,10 @@ namespace vEngine
 		void AddMaterial( Material* mat );
 		virtual void LoadShaderFile(std::string file_name);
 
-		virtual Texture* LoadTexture(std::string file_name) = 0;
+		virtual Texture* LoadTexture(std::string file_name) { return nullptr; };
 
 		void POM(bool enable);
-		virtual void LoadPomTexture(std::string file_name_) = 0;
+		virtual void LoadPomTexture(std::string file_name_) {};
 
 		std::vector<Mesh*> GetMesh(){return meshes_;};
 		void ProcessMeshes( const aiNode* const & node , aiMatrix4x4 parent_mat);

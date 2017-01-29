@@ -41,6 +41,10 @@ namespace vEngine
 
 		void Update();
 
+
+		//debug functions
+		void OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer);
+
 	private:
 		//for Render Target
 		FrameBuffer* gbuffer_;
@@ -99,6 +103,10 @@ namespace vEngine
 
 
 		Mesh* fullscreen_mesh_;
+
+		//debug
+		PostProcess* output_to_tex_pp_;
+		D3DShaderobject* output_to_tex_so_;
 
 	};
 }

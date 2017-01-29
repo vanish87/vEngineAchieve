@@ -7,6 +7,21 @@ namespace vEngine
 {
 	namespace Math
 	{
+
+		template <typename T>
+		bool IsNAN(T& x)
+		{
+			return (std::isnan)(x);
+		}
+
+		template <typename T>
+		bool IsINF(T& x)
+		{
+			return (std::isinf)(x);
+		}				
+
+		bool IsFloatEqual(float& lhs, float& rhs);
+
 		template <typename T>
 		T Clamp(const T& value, const T& min,const T& max )
 		{
@@ -60,7 +75,7 @@ namespace vEngine
 			return rhs * InvSqrt(Dot(rhs , rhs));
 		}
 		template <typename T>
-		Vec3<T> Transform(const Vec3<T> & lhs, const Matrix<T> & rhs)
+		Vec3<T> TransformPoint(const Vec3<T> & lhs, const Matrix<T> & rhs)
 		{
 			Vec3<T> ret;
 			ret.x() = lhs.x() * rhs[0][0] + lhs.y() * rhs[1][0] + lhs.z() * rhs[2][0] + 1 * rhs[3][0];
@@ -73,7 +88,7 @@ namespace vEngine
 			return ret;
 		}
 		template <typename T>
-		Vec3<T> TransformNormal(const Vec3<T> & lhs, const Matrix<T> & rhs)
+		Vec3<T> TransformVector(const Vec3<T> & lhs, const Matrix<T> & rhs)
 		{
 			Vec3<T> ret;
 			ret.x() = lhs.x() * rhs[0][0] + lhs.y() * rhs[1][0] + lhs.z() * rhs[2][0] ;
@@ -86,10 +101,10 @@ namespace vEngine
 		Vec4<T>	Transform( const Vec4<T> & lhs, const Matrix<T> & rhs )
 		{
 			Vec4<T> ret;
-			ret.x() = lhs.x() * rhs[0][0] + lhs.y() * rhs[1][0] + lhs.z() * rhs[2][0] + 1 * rhs[3][0];
-			ret.y() = lhs.x() * rhs[0][1] + lhs.y() * rhs[1][1] + lhs.z() * rhs[2][1] + 1 * rhs[3][1];
-			ret.z() = lhs.x() * rhs[0][2] + lhs.y() * rhs[1][2] + lhs.z() * rhs[2][2] + 1 * rhs[3][2];
-			ret.w()	= lhs.x() * rhs[0][3] + lhs.y() * rhs[1][3] + lhs.z() * rhs[2][3] + 1 * rhs[3][3];
+			ret.x() = lhs.x() * rhs[0][0] + lhs.y() * rhs[1][0] + lhs.z() * rhs[2][0] + lhs.w() * rhs[3][0];
+			ret.y() = lhs.x() * rhs[0][1] + lhs.y() * rhs[1][1] + lhs.z() * rhs[2][1] + lhs.w() * rhs[3][1];
+			ret.z() = lhs.x() * rhs[0][2] + lhs.y() * rhs[1][2] + lhs.z() * rhs[2][2] + lhs.w() * rhs[3][2];
+			ret.w()	= lhs.x() * rhs[0][3] + lhs.y() * rhs[1][3] + lhs.z() * rhs[2][3] + lhs.w() * rhs[3][3];
 			return ret;
 		}
 		template <typename T>
@@ -129,35 +144,6 @@ namespace vEngine
 		template <typename T>
 		Matrix<T>  Inverse(Matrix<T> & rhs)
 		{
-			/*Matrix<T> dst;
-			// COMPUTE ADJOINT COFACTOR MATRIX FOR THE ROTATION/SCALE 3x3 SUBMATRIX
-
-			for (int i = 0 ; i < 3 ; i++)
-				for (int j = 0 ; j < 3 ; j++) {
-					int iu = (i + 1) % 3, iv = (i + 2) % 3;
-					int ju = (j + 1) % 3, jv = (j + 2) % 3;
-					dst[j][i] = lhs[iu][ju] * lhs[iv][jv] - lhs[iu][jv] * lhs[iv][ju];
-				}
-
-				// RENORMALIZE BY DETERMINANT TO INVERT ROTATION/SCALE SUBMATRIX
-
-				double det = lhs[0][0]*dst[0][0] + lhs[1][0]*dst[0][1] + lhs[2][0]*dst[0][2];
-				for (int i = 0 ; i < 3 ; i++)
-					for (int j = 0 ; j < 3 ; j++)
-						dst[i][j] /= det;
-
-				// INVERT TRANSLATION
-
-				for (int i = 0 ; i < 3 ; i++)
-					dst[i][3] = -dst[i][0]*lhs[0][3] - dst[i][1]*lhs[1][3] - dst[i][2]*lhs[2][3];
-
-				// NO PERSPECTIVE
-
-				for (int i = 0 ; i < 4 ; i++)
-					dst[3][i] = i < 3 ? 0 : 1;
-
-				return dst;*/
-
 			//from KlayGE
 			T const _2132_2231(rhs(1, 0) * rhs(2, 1) - rhs(1, 1) * rhs(2, 0));
 			T const _2133_2331(rhs(1, 0) * rhs(2, 2) - rhs(1, 2) * rhs(2, 0));
@@ -178,7 +164,6 @@ namespace vEngine
 			T const _3244_3442(rhs(2, 1) * rhs(3, 3) - rhs(2, 3) * rhs(3, 1));
 			T const _3344_3443(rhs(2, 2) * rhs(3, 3) - rhs(2, 3) * rhs(3, 2));
 
-			// 行列式的值
 			T const det(determinant(rhs));
 			if (!det==0)
 			{
@@ -331,7 +316,6 @@ namespace vEngine
 			ret.z() = std::min(lhs.z(), rhs.z());
 			return ret;
 		}
-		float Abs( float num );
 	}
 }
 

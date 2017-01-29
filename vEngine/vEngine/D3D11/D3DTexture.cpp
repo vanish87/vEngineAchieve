@@ -155,12 +155,12 @@ namespace vEngine
 		return d3d_rt_view_;
 	}
 
-	size_t D3DTexture2D::GetWidth()
+	uint32_t D3DTexture2D::GetWidth()
 	{
 		return width_;
 	}
 
-	size_t D3DTexture2D::GetHeight()
+	uint32_t D3DTexture2D::GetHeight()
 	{
 		return height_;
 	}

@@ -294,7 +294,7 @@ namespace vEngine
 		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
-		depthStencilDesc.StencilEnable = true;
+		depthStencilDesc.StencilEnable = false;
 		depthStencilDesc.StencilReadMask = 0xFF;
 		depthStencilDesc.StencilWriteMask = 0xFF;
 
@@ -316,7 +316,7 @@ namespace vEngine
 		depthDisabledStencilDesc.DepthEnable = false;
 		depthDisabledStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		depthDisabledStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		depthDisabledStencilDesc.StencilEnable = true;
+		depthDisabledStencilDesc.StencilEnable = false;
 		depthDisabledStencilDesc.StencilReadMask = 0xFF;
 		depthDisabledStencilDesc.StencilWriteMask = 0xFF;
 		depthDisabledStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
@@ -344,7 +344,7 @@ namespace vEngine
 		depthDisabledStencilDesc.DepthEnable = false;
 		depthDisabledStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		depthDisabledStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-		depthDisabledStencilDesc.StencilEnable = true;
+		depthDisabledStencilDesc.StencilEnable = false;
 		depthDisabledStencilDesc.StencilReadMask = 0xFF;
 		depthDisabledStencilDesc.StencilWriteMask = 0xFF;
 		depthDisabledStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;

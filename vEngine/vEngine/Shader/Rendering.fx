@@ -5,9 +5,9 @@ struct Material
 	float4 Specular; //it will be only float
 	float  Shininess;
 
-	float diffuse_tex_index;
-	float normalmap_tex_index;
-	float pom_tex_index;
+	int diffuse_tex_index;
+	int normalmap_tex_index;
+	int pom_tex_index;
 };
 
 struct Light
@@ -38,7 +38,7 @@ float4 CalLighting( in float3 normal,
 	
 	// Start with a sum of zero. 
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 litColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	//uint lights_size, dummy;
     //gLight.GetDimensions(lights_size, dummy);
 
@@ -89,9 +89,6 @@ float4 CalPreLighting(	 in float3 normal,
 	// Default ambeint color = (0.2, 0.2 0.2)
 	float4 litColor = float4(0.1f, 0.1f, 0.1f, 0.0f);
 
-	//float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	//uint lights_size, dummy;
-    //gLight.GetDimensions(lights_size, dummy);
 
 	//for(uint i = 0; i < lights_size; i++)
 	{
@@ -103,8 +100,10 @@ float4 CalPreLighting(	 in float3 normal,
 		// The vector from the surface to the light.
 		float3 pos_light = light_position - position;//Lc
 		float d = length(pos_light);
-		if(d > light.falloff.w) 
-			return float4(0.0f, 0.0f, 0.0f, 0.0f);
+		if (d > light.falloff.w)
+		{
+			return litColor;
+		}
 
 		float3 light_dir = light.direction;				
 		int type = light.type;

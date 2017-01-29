@@ -47,7 +47,7 @@ namespace vEngine
 		D3D11_VIEWPORT d3d_viewport;
 		d3d_viewport.TopLeftX = static_cast<float>(viewport_.Top());
 		d3d_viewport.TopLeftY = static_cast<float>(viewport_.Left());
-		d3d_viewport.Width    = static_cast<float>(viewport_.Width());
+		d3d_viewport.Width    = static_cast<float>(viewport_.Width()); 
 		d3d_viewport.Height   = static_cast<float>(viewport_.Height());
 		d3d_viewport.MinDepth = 0.0f;//get info from frustum
 		d3d_viewport.MaxDepth = 1.0f;

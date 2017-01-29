@@ -42,6 +42,7 @@ cbuffer cbPerObject
 	float4x4 g_view_matrix;
 	float4x4 g_view_proj_matrix;
 	float4x4 g_mwv_inv_transpose;
+	float4x4 g_mw_inv_transpose;
 	float4x4 g_inv_proj_matrix;
 	float4x4 g_inv_view_matrix;
 	Material gMaterial;
@@ -50,6 +51,8 @@ cbuffer cbPerObject
 	//float4x4 g_shadow_transform; 
 
 	float4x4 g_light_view_proj; 
+	float4x4 main_camera_inv_view;
+	float4x4 main_camera_inv_proj;
 
 	bool g_pom_enable;
 	bool g_normal_map;
@@ -68,7 +71,6 @@ struct VertexIn
 struct VertexOut
 {
 	float4 pos				 : SV_POSITION;
-   // float3 normalVS			 : NORMAL;     //view space
 	float3 posWS             : Position;
 	float2 tex_cood			 : TEXCOORD0;
 
@@ -80,6 +82,16 @@ struct VertexOut
 
 };
 
+//set value to normalize color value
+float encodeToColorSpace(float value)
+{
+	return (value + 1)* 0.5;
+}
+float decodeFromColorSpace(float value)
+{
+	return (value - 0.5) * 2;
+}
+
 VertexOut GbufferVS(VertexIn vin)
 {
 	float g_fHeightMapScale = 1.0f;
@@ -88,15 +100,15 @@ VertexOut GbufferVS(VertexIn vin)
 	float4x4 world_matrix = mul(g_model_matrix, g_world_matrix);
 	float4x4 mvp_matrix = mul(world_matrix ,g_view_proj_matrix);
 	vout.pos = mul(float4(vin.pos, 1.0f), mvp_matrix);
-// 	vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
-// 	vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_mwv_inv_transpose));
+ 	//vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
+ 	//vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_mwv_inv_transpose));
 // 	//trust model input come with orthorch
 // 	vout.binormalVS = normalize(mul(vin.binormal, (float3x3)g_mwv_inv_transpose));
 	vout.tex_cood = vin.tex_cood;    
 
-	float3 normalWS = mul(vin.normal, (float3x3)world_matrix);
-	float3 tangentWS = mul(vin.tangent_cood, (float3x3)world_matrix);
-	float3 binormalWS =  mul(vin.binormal, (float3x3)world_matrix);
+	float3 normalWS = mul(vin.normal, (float3x3)g_mw_inv_transpose);
+	float3 tangentWS = mul(vin.tangent_cood, (float3x3)g_mw_inv_transpose);
+	float3 binormalWS =  mul(vin.binormal, (float3x3)g_mw_inv_transpose);
 
 	float4 positionWS =  mul(float4(vin.pos, 1.0f), world_matrix);
 	float3 viewWS = g_eye_pos - positionWS.xyz;
@@ -115,8 +127,7 @@ VertexOut GbufferVS(VertexIn vin)
 
 
 struct GbufferPSOutput
-{
-	
+{	
 	float4 Normal			: SV_Target0;
 	float4 Diffuse			: SV_Target1;
 	float4 PositionWS       : SV_Target2;
@@ -206,10 +217,10 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 
 	}
 	
-	float3 normalVS = mul(normalWS, (float3x3)g_view_matrix);
+	float3 normalVS = mul((float3x3)g_inv_view_matrix, normalWS);
 
 	//view space normal + mat.Shininess
-	output.Normal = float4(normalVS, gMaterial.Shininess);	
+	output.Normal = float4(normalVS, gMaterial.Shininess);
 	//combines Mat with Tex color
 	output.Diffuse  = float4( mat_diffuse* gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
 
@@ -220,22 +231,20 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 }
 struct LightingVin
 {
-	float4 Position : POSITION;
+	float3 Position : POSITION;
 };
 
 struct LightingVout
 {
-	float4 pos		: SV_POSITION;
+	float4 pos		: SV_POSITION;//screen coordinates
 	float3 view_ray    : VIEWRAY;
 };
 
 LightingVout LightingVS(in LightingVin vin)
 {
 	LightingVout vout;
-	vout.pos = vin.Position;
-	float4 pos = mul(vin.Position, g_inv_proj_matrix);
-
-	float3 positionVS = mul( vin.Position, g_inv_proj_matrix ).xyz;
+	vout.pos = float4(vin.Position, 1.0f);
+	float3 positionVS = mul( float4(vin.Position,1.0f), main_camera_inv_proj).xyz;
 	vout.view_ray = float3( positionVS.xy / positionVS.z, 1.0f );
 	return vout;
 }
@@ -245,31 +254,17 @@ float linstep(float min, float max, float v)
 }
 
 float4 LightingPS( in LightingVout pin): SV_Target
-{
-	if(0)//for debugging
-	{
-
-	int3 samplelndices = int3( pin.pos.xy, 0 );
-	float3 world_pos = normal_tex.Load( samplelndices ).xyz;
-	return float4(world_pos.xyz/10000,1.0f);
-	}
-	else{
-		
+{	
 	
 	int3 samplelndices = int3( pin.pos.xy, 0 );
-	float3 view_ray_vec = pin.view_ray;
 	float depth = depth_tex.Load( samplelndices ).r;
-
-	float3 positionVS = view_ray_vec * depth;
+	float3 positionVS = pin.view_ray;
+	positionVS *= depth;
 
 	//shadowing
-	float4 world_pos = mul(float4(positionVS, 1.0f) , g_inv_view_matrix);
-	//world_pos /= world_pos.w;
-	//float2 shadow_tex_cood = mul(world_pos , g_shadow_transform);
-	//float shadow_depth = shadow_map_tex.Sample(ShadowMapSampler, shadow_tex_cood).r;
-	//shadow_depth = zn * q / (q - shadow_depth);
+	float4 world_pos = mul(float4(positionVS, 1.0f) , main_camera_inv_view);
 
-	//
+	//world_pos.y = 0;
 	float4 pos_light = mul(world_pos, g_light_view_proj);
 	pos_light /= pos_light.w;
 	pos_light.x = pos_light.x / 2 + 0.5f;
@@ -297,41 +292,26 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float p_max = variance / (variance + m_d * m_d);
 	p_max = linstep(bleeding_reduce, 1, p_max);
 
-	
-
-
 	float shadow = max(p, p_max);
 	//no shadow for point light
 	if(light.type == 0)
-		shadow = 0;
-	if(0)
-	{
-		return float4(moments.x/1000 ,moments.x/1000,moments.x/1000 ,1);
-		return world_pos;
-		//return float4(shadow_map_tex.Load( samplelndices ).rrr/1000.0f, 1.0f);
-		//return float4(shadow_depth,shadow_depth,shadow_depth,1.0f);
-	}
+		shadow = 1;
 
 	//Get Infor from g-buffer
 	//vs normal
 	float4 normal_t = normal_tex.Load( samplelndices );
+
 	float3 normal = normal_t.xyz;
 	//set for those mesh that do not want to do lighting
 	if(normal.x ==0 && normal.y ==0&& normal.z ==0)
 		return float4(0,0,0,1);
 
-	//normal = mul(normal, (float3x3)g_view_matrix);
 	float shininess = normal_t.w;
 
 	float4 occlusion = blur_occlusion_tex.Load( samplelndices );
-	//occlusion = float4(0,0,0,0);
-	if(0)
-		return occlusion;
-	//float4 pre_color = lighting_tex.Load( samplelndices );
-
 	//cal lighting
 	return CalPreLighting( normal, positionVS, shininess, shadow, occlusion);
-	}
+	
 }
 
 struct FinalVin
@@ -372,10 +352,10 @@ float4 FinalPS( in FinalVout pin): SV_Target
 	
 	float3 diffuse = lighting.xyz* DiffuseAlbedo;
 	float3 specular = lighting.w *  float3(material.w,material.w,material.w);
-	if(lighting.w == 1.0f)
+	//if(lighting.w == 1.0f)
 	{
-		diffuse = DiffuseAlbedo;
-		specular = float3(0,0,0);
+		//diffuse = DiffuseAlbedo;
+		//specular = float3(0,0,0);
 	}
 	//float4 DiffuseAlbedo = gMaterial.Diffuse;
 		

@@ -11,6 +11,13 @@ namespace vEngine
 		0.0f, -0.5f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.5f, 0.5f, 0.0f, 1.0f);
+
+
+	static bool EnableGbufferDebug = false;
+	static bool EnableLightingDebug = false;
+
+	static const int2 ShadowMapSize = int2(1024, 1024);
+
 	DeferredRendering::DeferredRendering( Configure::RenderSetting& render_setting )
 	{
 		gbuffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
@@ -35,10 +42,10 @@ namespace vEngine
 		}
 
 		//init shadow blur buffer
-		shadow_map_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
+		shadow_map_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(ShadowMapSize.x(), ShadowMapSize.y());
 		shadow_depth_ = shadow_map_buffer_->GetDepthTexture();
-		shadow_linear_depth_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
+		shadow_linear_depth_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, ShadowMapSize.x(), ShadowMapSize.y(),
+			1, 1, R32G32B32A32_F,  1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 
 
 		linearize_shadow_map_so_ = new D3DShaderobject();
@@ -50,10 +57,10 @@ namespace vEngine
 		linearize_shadow_map_pp_->SetInput(shadow_depth_, 0);
 		linearize_shadow_map_pp_->SetOutput(shadow_linear_depth_, 0);
 
-		shadow_blur_X_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
-		shadow_blur_Y_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
+		shadow_blur_X_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, ShadowMapSize.x(), ShadowMapSize.y(),
+			1, 1, R32G32B32A32_F, 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
+		shadow_blur_Y_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, ShadowMapSize.x(), ShadowMapSize.y(),
+			1, 1, R32G32B32A32_F, 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 
 		shadow_map_blur_so_ = new D3DShaderobject();
 		shadow_map_blur_so_->LoadFxoFile("FxFiles/GaussianBlurXFilterPostProcess.cso");
@@ -75,14 +82,13 @@ namespace vEngine
 		shadow_blur_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadow_blur_Y_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 
 
-		shadow_blur_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, 512, 512,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
+		//shadow_blur_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, 512, 512, 1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		//shadow_blur_buffer_->AddRenderView(Context::Instance().GetRenderFactory().MakeRenderView(shadow_blur_, 1, 0));
 
 		//inti shadowing buffer
-		//shadowing_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
-		Texture* shadowing_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
-			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
+		//shadowing_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(ShadowMapSize.x(), ShadowMapSize.y());
+		Texture* shadowing_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, ShadowMapSize.x(), ShadowMapSize.y(),
+			1, 1, R32G32B32A32_F, 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(shadowing_texture_, 1, 0);
 		//shadowing_buffer_->AddRenderView(render_view);
 		shadowing_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadowing_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
@@ -157,6 +163,14 @@ namespace vEngine
 
 		//back camera
 		back_buffer_ = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer();
+
+
+		output_to_tex_so_ = new D3DShaderobject();
+		output_to_tex_so_->LoadFxoFile("FxFiles/DebugShader.cso");
+		output_to_tex_so_->SetTechnique("PPTech");
+
+		output_to_tex_pp_ = new PostProcess();
+		output_to_tex_pp_->SetPPShader(output_to_tex_so_);
 
 	}
 
@@ -247,6 +261,7 @@ namespace vEngine
 		ShaderObject* shader_object = render_list[0]->GetShaderObject();
 		
 		main_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
+		//main_camera_ = Context::Instance().GetSceneManager().GetLights()[0]->GetCamera();
 		//Deferred Lighting
 			//pass 0
 			render_engine->SetNormalState();
@@ -268,6 +283,13 @@ namespace vEngine
 
 			linearize_depth_pp_->Apply();
 
+			if (EnableGbufferDebug)
+			{
+				this->OutputGBufferToFrame(gbuffer_, 0, back_buffer_);
+				Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
+				return;
+			}
+
 			//pass 1
 			//bind lighting buffer
 			render_engine->BindFrameBuffer(lighting_buffer_);
@@ -279,7 +301,7 @@ namespace vEngine
 			{
 				light_buffer = new LightStruct[lights.size()];
 			}
-			float4x4 view_mat = lighting_buffer_->GetViewport().GetCamera().GetViewMatirx();
+			float4x4 view_mat = main_camera_->GetViewMatirx();
 			float4x4 invtrans_view_mat = Math::InverTranspose(view_mat);
 			float4x4 shadow_trans_mat;
 			float4x4 light_view_proj;
@@ -296,7 +318,7 @@ namespace vEngine
 				case LT_POINT:
 					{
 						light_buffer[i].type = LT_POINT;
-						light_buffer[i].position = Math::Transform(static_cast<PointLight*>(lights[i])->GetPos(), view_mat);
+						light_buffer[i].position = Math::TransformPoint(static_cast<PointLight*>(lights[i])->GetPos(), view_mat);
 						light_buffer[i].direction = float3(0, 0, 0);
 						light_buffer[i].inner_outer = float2(0, 0);
 						break;
@@ -304,8 +326,8 @@ namespace vEngine
 				case LT_SPOT:
 					{
 						light_buffer[i].type = LT_SPOT;
-						light_buffer[i].position = Math::Transform(static_cast<SpotLight*>(lights[i])->GetPos(), view_mat);
-						light_buffer[i].direction = Math::TransformNormal(static_cast<SpotLight*>(lights[i])->GetDir(), invtrans_view_mat);
+						light_buffer[i].position = Math::TransformPoint(static_cast<SpotLight*>(lights[i])->GetPos(), view_mat);
+						light_buffer[i].direction = Math::TransformVector(static_cast<SpotLight*>(lights[i])->GetDir(), invtrans_view_mat);
 						float outer = static_cast<SpotLight*>(lights[i])->GetOuterAngle();
 						float inner = static_cast<SpotLight*>(lights[i])->GetInnerAngle();
 						light_buffer[i].inner_outer = float2(Math::Cos(inner), Math::Cos(outer));
@@ -316,7 +338,6 @@ namespace vEngine
 				}
 				shader_object->SetRawData("light", &light_buffer[i], sizeof(LightStruct));
 				Camera* sm_camera = lights[i]->GetCamera();
-				float4x4 view_proj_mat = sm_camera->GetViewMatirx() * sm_camera->GetProjMatrix();
 				//TODO : handle point light
 				//Shadowing spot
 				if(type == LT_SPOT)
@@ -343,17 +364,25 @@ namespace vEngine
 					shadow_map_yblur_pp_->Apply();
 				}							
 
-				//ssdo_pp_->SetCamera(back_frame_camera_);
-// 				ssdo_pp_->Apply();
-// 				occlusion_xblur_pp_->Apply();
-// 				occlusion_yblur_pp_->Apply();
+				//ssdo_pp_->SetCamera(main_camera_);
+ 				//ssdo_pp_->Apply();
+ 				//occlusion_xblur_pp_->Apply();
+ 				//occlusion_yblur_pp_->Apply();
 
+				float4x4 main_view = main_camera_->GetViewMatirx();
+				float4x4 main_proj = main_camera_->GetProjMatrix();
+
+				float4x4 view_proj_mat = sm_camera->GetViewMatirx() * sm_camera->GetProjMatrix();
+				shader_object->SetMatrixVariable("g_light_view_proj", view_proj_mat);
+				shader_object->SetMatrixVariable("main_camera_inv_view", Math::Inverse(main_view));
+				shader_object->SetMatrixVariable("main_camera_inv_proj", Math::Inverse(main_proj));
 
 				//set gbuffer as input textures		
 				shader_object->SetReource("depth_tex", depth_srv_, 1);
 				shader_object->SetReource("normal_tex", gbuffer_srv_[0], 1);
 				shader_object->SetReource("shadow_map_tex", shadow_blur_srv_, 1);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_srv_, 1);
+
 				render_engine->BindFrameBuffer(lighting_buffer_);
 				render_engine->SetDeferredRenderingState();
 
@@ -366,6 +395,13 @@ namespace vEngine
 			delete[] light_buffer;
 			//pass 1 end 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
+
+			if (EnableLightingDebug)
+			{
+				this->OutputGBufferToFrame(lighting_buffer_, 0, back_buffer_);
+				Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
+				return;
+			}
 
 			//pass 2
 			render_engine->BindFrameBuffer(back_buffer_);
@@ -383,5 +419,19 @@ namespace vEngine
 			Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 	}
 
+
+	void DeferredRendering::OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer)
+	{
+		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
+		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
+		render_engine->BindFrameBuffer(back_buffer_);
+		output_to_tex_pp_->SetInput(GBuffer->GetRenderView(GBufferIndex)->GetTexture(), 0);
+		//output_to_tex_pp_->SetInput(shadow_depth_, 0);
+		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
+		//output_to_tex_pp_->SetInput(depth_tex_, 0);
+
+		output_to_tex_pp_->SetOutput(OutBuffer->GetRenderView(0)->GetTexture(), 0);
+		output_to_tex_pp_->Apply();
+	}
 
 }

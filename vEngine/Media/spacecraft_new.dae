@@ -132,7 +132,7 @@
   </library_effects>
   <library_images>
     <image id="MapFBXASC032FBXASC0356" name="MapFBXASC032FBXASC0356">
-      <init_from>file:///E:/12Fall/Independent%20Study/IS-Deferred%20Rendering/Media/space_frigate_6_color.jpg</init_from>
+      <init_from>space_frigate_6_color.jpg</init_from>
       <extra>
         <technique profile="OpenCOLLADAMaya">
           <dgnode_type>kFile</dgnode_type>
@@ -142,7 +142,7 @@
       </extra>
     </image>
     <image id="MapFBXASC032FBXASC0358" name="MapFBXASC032FBXASC0358">
-      <init_from>file:///E:/12Fall/Independent%20Study/IS-Deferred%20Rendering/Media/space_frigate_6_illumination.jpg</init_from>
+      <init_from>space_frigate_6_illumination.jpg</init_from>
       <extra>
         <technique profile="OpenCOLLADAMaya">
           <dgnode_type>kFile</dgnode_type>

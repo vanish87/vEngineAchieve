@@ -16,7 +16,17 @@ namespace vEngine
 	namespace Math
 	{
 		//constant
-		float const PI		= 3.141592653f;
+		float const PI = 3.141592653f;
+		float const E  = 2.718281828f;
+
+		template <typename T>
+		bool IsNAN(T& x);
+
+		template <typename T>
+		bool IsINF(T& x);
+
+		float Abs(float num);
+		bool IsFloatEqual(float& lhs, float& rhs);
 
 		template <typename T>
 		Matrix<T> Multiply(const Matrix<T> & lhs, const Matrix<T> & rhs);
@@ -45,9 +55,9 @@ namespace vEngine
 		T Normalize(T const & rhs);
 
 		template <typename T> 
-		Vec3<T> Transform(const Vec3<T> & lhs, const Matrix<T> & rhs);
+		Vec3<T> TransformPoint(const Vec3<T> & lhs, const Matrix<T> & rhs);
 		template <typename T>
-		Vec3<T> TransformNormal(const Vec3<T> & lhs, const Matrix<T> & rhs);
+		Vec3<T> TransformVector(const Vec3<T> & lhs, const Matrix<T> & rhs);
 
 		template <typename T>
 		Vec4<T> Transform(const Vec4<T> & lhs, const Matrix<T> & rhs);
