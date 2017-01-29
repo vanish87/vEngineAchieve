@@ -285,7 +285,7 @@ namespace vEngine
 
 			if (EnableGbufferDebug)
 			{
-				this->OutputGBufferToFrame(gbuffer_, 1, back_buffer_);
+				this->OutputGBufferToFrame(gbuffer_, 0, back_buffer_);
 				Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 				return;
 			}
