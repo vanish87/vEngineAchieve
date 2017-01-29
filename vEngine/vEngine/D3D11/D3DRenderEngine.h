@@ -57,7 +57,7 @@ namespace vEngine
 		ID3D11Device*		d3d_device_;
 		ID3D11DeviceContext* d3d_imm_context_;
 		D3D_FEATURE_LEVEL d3d_feature_level_;
-		IDXGISwapChain* d3d_swap_chain;	
+		IDXGISwapChain* d3d_swap_chain_;	
 
 		D3DRenderState* depth_on_;
 		D3DRenderState* depth_off_;

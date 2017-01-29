@@ -15,15 +15,16 @@ namespace vEngine
 		if(usage_ == BU_SHADER_RES || usage_ == BU_SR_SB)
 		{
 			D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+			//optional
 			//D3D11_SHADER_RESOURCE_VIEW_DESC sr_desc;
-			//sr_desc.Buffer = TEXTURE2D;
+			//sr_desc.Format = TEXTURE2D;
 			if(FAILED(d3d_re->D3DDevice()->CreateShaderResourceView(d3d_buffer_, 0, &d3d_shader_resource_view_)))
 				PRINT("Cannot create Shader Resource View");
 		}
 		else
 			if(usage_ == BU_SHADER_CONST)
 			{
-
+				PRINT_AND_ASSERT("Not implemented");
 			}
 	}
 
