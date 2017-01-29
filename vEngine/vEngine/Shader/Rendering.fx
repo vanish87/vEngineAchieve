@@ -100,8 +100,10 @@ float4 CalPreLighting(	 in float3 normal,
 		// The vector from the surface to the light.
 		float3 pos_light = light_position - position;//Lc
 		float d = length(pos_light);
-		if(d > light.falloff.w) 
-			return float4(0.0f, 0.0f, 0.0f, 0.0f);
+		if (d > light.falloff.w)
+		{
+			return litColor;
+		}
 
 		float3 light_dir = light.direction;				
 		int type = light.type;
