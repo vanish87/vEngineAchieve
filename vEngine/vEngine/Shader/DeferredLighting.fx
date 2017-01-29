@@ -42,6 +42,7 @@ cbuffer cbPerObject
 	float4x4 g_view_matrix;
 	float4x4 g_view_proj_matrix;
 	float4x4 g_mwv_inv_transpose;
+	float4x4 g_mw_inv_transpose;
 	float4x4 g_inv_proj_matrix;
 	float4x4 g_inv_view_matrix;
 	Material gMaterial;
@@ -70,7 +71,6 @@ struct VertexIn
 struct VertexOut
 {
 	float4 pos				 : SV_POSITION;
-    float3 normalVS			 : TEXCOORD3;     //view space
 	float3 posWS             : Position;
 	float2 tex_cood			 : TEXCOORD0;
 
@@ -96,19 +96,19 @@ VertexOut GbufferVS(VertexIn vin)
 {
 	float g_fHeightMapScale = 1.0f;
 	VertexOut vout;
-
+	
 	float4x4 world_matrix = mul(g_model_matrix, g_world_matrix);
 	float4x4 mvp_matrix = mul(world_matrix ,g_view_proj_matrix);
 	vout.pos = mul(float4(vin.pos, 1.0f), mvp_matrix);
- 	vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
-// 	vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_mwv_inv_transpose));
+ 	//vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
+ 	//vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_mwv_inv_transpose));
 // 	//trust model input come with orthorch
 // 	vout.binormalVS = normalize(mul(vin.binormal, (float3x3)g_mwv_inv_transpose));
 	vout.tex_cood = vin.tex_cood;    
 
-	float3 normalWS = mul(vin.normal, (float3x3)world_matrix);
-	float3 tangentWS = mul(vin.tangent_cood, (float3x3)world_matrix);
-	float3 binormalWS =  mul(vin.binormal, (float3x3)world_matrix);
+	float3 normalWS = mul(vin.normal, (float3x3)g_mw_inv_transpose);
+	float3 tangentWS = mul(vin.tangent_cood, (float3x3)g_mw_inv_transpose);
+	float3 binormalWS =  mul(vin.binormal, (float3x3)g_mw_inv_transpose);
 
 	float4 positionWS =  mul(float4(vin.pos, 1.0f), world_matrix);
 	float3 viewWS = g_eye_pos - positionWS.xyz;
@@ -127,8 +127,7 @@ VertexOut GbufferVS(VertexIn vin)
 
 
 struct GbufferPSOutput
-{
-	
+{	
 	float4 Normal			: SV_Target0;
 	float4 Diffuse			: SV_Target1;
 	float4 PositionWS       : SV_Target2;
@@ -218,10 +217,10 @@ GbufferPSOutput GbufferPS(VertexOut pin)
 
 	}
 	
-	//float3 normalVS = mul(normalWS, (float3x3)g_view_matrix);
+	float3 normalVS = mul((float3x3)g_inv_view_matrix, normalWS);
 
 	//view space normal + mat.Shininess
-	output.Normal = float4(pin.normalVS, gMaterial.Shininess);
+	output.Normal = float4(normalVS, gMaterial.Shininess);
 	//combines Mat with Tex color
 	output.Diffuse  = float4( mat_diffuse* gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
 
@@ -262,15 +261,8 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float3 positionVS = pin.view_ray;
 	positionVS *= depth;
 
-	//if (depth < 1) depth = 0;
-	//return float4(positionVS, 1.0f);
-
 	//shadowing
 	float4 world_pos = mul(float4(positionVS, 1.0f) , main_camera_inv_view);
-	//world_pos /= world_pos.w;
-	//float2 shadow_tex_cood = mul(world_pos , g_shadow_transform);
-	//float shadow_depth = shadow_map_tex.Sample(ShadowMapSampler, shadow_tex_cood).r;
-	//shadow_depth = zn * q / (q - shadow_depth);
 
 	//world_pos.y = 0;
 	float4 pos_light = mul(world_pos, g_light_view_proj);
@@ -303,15 +295,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float shadow = max(p, p_max);
 	//no shadow for point light
 	if(light.type == 0)
-		shadow = 0;
-	if(0)
-	{
-		//return float4(moments.x/100 ,moments.x/100,moments.x/100 ,1);
-		//if(world_pos += 1;
-		return world_pos;
-		//return float4(shadow_map_tex.Load( samplelndices ).rrr/1000.0f, 1.0f);
-		//return float4(shadow_depth,shadow_depth,shadow_depth,1.0f);
-	}
+		shadow = 1;
 
 	//Get Infor from g-buffer
 	//vs normal
@@ -322,18 +306,9 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	if(normal.x ==0 && normal.y ==0&& normal.z ==0)
 		return float4(0,0,0,1);
 
-	//return float4(normal.xyz, 1);
-
-	//normal = mul(normal, (float3x3)g_view_matrix);
 	float shininess = normal_t.w;
 
 	float4 occlusion = blur_occlusion_tex.Load( samplelndices );
-	occlusion = float4(0,0,0,0);
-	if(0)
-		return occlusion;
-	//float4 pre_color = lighting_tex.Load( samplelndices );
-	//shadow = 1;
-
 	//cal lighting
 	return CalPreLighting( normal, positionVS, shininess, shadow, occlusion);
 	
@@ -377,10 +352,10 @@ float4 FinalPS( in FinalVout pin): SV_Target
 	
 	float3 diffuse = lighting.xyz* DiffuseAlbedo;
 	float3 specular = lighting.w *  float3(material.w,material.w,material.w);
-	if(lighting.w == 1.0f)
+	//if(lighting.w == 1.0f)
 	{
-		diffuse = DiffuseAlbedo;
-		specular = float3(0,0,0);
+		//diffuse = DiffuseAlbedo;
+		//specular = float3(0,0,0);
 	}
 	//float4 DiffuseAlbedo = gMaterial.Diffuse;
 		

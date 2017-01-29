@@ -62,6 +62,7 @@
     <ClCompile Include="Engine\Source\RenderState.cpp" />
     <ClCompile Include="Engine\Source\RenderTools.cpp" />
     <ClCompile Include="Engine\Source\RenderView.cpp" />
+    <ClCompile Include="Engine\Source\ResourceLoader.cpp" />
     <ClCompile Include="Engine\Source\SceneManager.cpp" />
     <ClCompile Include="Engine\Source\SceneObject.cpp" />
     <ClCompile Include="Engine\Source\ShaderObject.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Engine\Header\RenderState.h" />
     <ClInclude Include="Engine\Header\RenderTools.h" />
     <ClInclude Include="Engine\Header\RenderView.h" />
+    <ClInclude Include="Engine\Header\ResourceLoader.h" />
     <ClInclude Include="Engine\Header\SceneManager.h" />
     <ClInclude Include="Engine\Header\SceneObject.h" />
     <ClInclude Include="Engine\Header\ShaderObject.h" />

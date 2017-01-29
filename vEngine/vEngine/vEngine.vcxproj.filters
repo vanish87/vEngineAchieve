@@ -194,6 +194,9 @@
     <ClCompile Include="Engine\Source\RenderTools.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\ResourceLoader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -365,6 +368,9 @@
       <Filter>Common\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Header\RenderTools.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\ResourceLoader.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

@@ -364,10 +364,10 @@ namespace vEngine
 					shadow_map_yblur_pp_->Apply();
 				}							
 
-				//ssdo_pp_->SetCamera(back_frame_camera_);
-// 				ssdo_pp_->Apply();
-// 				occlusion_xblur_pp_->Apply();
-// 				occlusion_yblur_pp_->Apply();
+				//ssdo_pp_->SetCamera(main_camera_);
+ 				//ssdo_pp_->Apply();
+ 				//occlusion_xblur_pp_->Apply();
+ 				//occlusion_yblur_pp_->Apply();
 
 				float4x4 main_view = main_camera_->GetViewMatirx();
 				float4x4 main_proj = main_camera_->GetProjMatrix();

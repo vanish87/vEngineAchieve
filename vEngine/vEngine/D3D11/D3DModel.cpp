@@ -37,8 +37,10 @@ namespace vEngine
 			//set material
 			shader_object_->SetRawData("gMaterial", materials_[i], sizeof(Material));		
 			float4x4 view_mat = re->CurrentFrameBuffer()->GetViewport().GetCamera().GetViewMatirx();
-			float4x4 world_inv_transpose = Math::InverTranspose( meshes_[i]->GetModelMatrix()* model_matrix_ * view_mat);
-			shader_object_->SetMatrixVariable("g_mwv_inv_transpose", world_inv_transpose);
+			float4x4 world_view_inv_transpose = Math::InverTranspose(meshes_[i]->GetModelMatrix()* model_matrix_ * view_mat);
+			float4x4 world_inv_transpose = Math::InverTranspose(meshes_[i]->GetModelMatrix()* model_matrix_);
+			shader_object_->SetMatrixVariable("g_mwv_inv_transpose", world_view_inv_transpose);
+			shader_object_->SetMatrixVariable("g_mw_inv_transpose", world_inv_transpose);
 			//set mesh's parameter
 			meshes_[i]->SetRenderParameters();
 			//set mesh's texture
@@ -89,6 +91,7 @@ namespace vEngine
 			d3d_shader_object->SetTechnique("GbufferTech");
 		d3d_shader_object->SetMatrixVariable("g_world_matrix");
 		d3d_shader_object->SetMatrixVariable("g_mwv_inv_transpose");
+		d3d_shader_object->SetMatrixVariable("g_mw_inv_transpose");
 		d3d_shader_object->SetMatrixVariable("g_view_proj_matrix");
 		d3d_shader_object->SetMatrixVariable("g_view_matrix");
 		d3d_shader_object->SetMatrixVariable("g_inv_proj_matrix");

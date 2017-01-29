@@ -39,6 +39,15 @@ namespace vEngine
         
         static void* ThreadMain(void* ThreadData);
     };
+
+	class ThreadJob
+	{
+	public:
+		ThreadJob() {};
+		virtual ~ThreadJob() {};
+
+		virtual void Run() = 0;
+	};
 }
 
 #endif /* Thread_hpp */
