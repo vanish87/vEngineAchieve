@@ -80,7 +80,7 @@ namespace vEngine
 		Math::RotationAxis(mat, left, angle);
 
 		up_ = Math::TransformVector(up_, mat);
-		dir = Math::TransformPoint(dir, mat);
+		dir = Math::TransformVector(dir, mat);
 		dir = Math::Normalize(dir);
 
 		view_matrix_ = Math::LookAtLH(eye_, dir, up_);

@@ -52,8 +52,8 @@ VertexOut VS(VertexIn vin)
 PSOutput PS(VertexOut pin) 
 {
 	PSOutput ret;
-	ret.color = input_tex_0.Sample(OutTextureSampler, pin.tex).r/100;
-	ret.color = ret.color.r > 0 && ret.color.r < 1 ? 1 : 0;
+	ret.color = input_tex_0.Sample(OutTextureSampler, pin.tex);
+	//ret.color = ret.color.r > 0 && ret.color.r < 0.02 ? 1 : 0;
 	return ret;
 }
 

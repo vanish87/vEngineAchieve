@@ -44,6 +44,13 @@ namespace vEngine
 	void PostProcess::SetOutput( Texture* tex, size_t index )
 	{
 		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(tex, 1, 0);
+		if (output_buffer_->GetViewport().Height() != render_view->Height()
+			|| output_buffer_->GetViewport().Width() != render_view->Width()
+			)
+		{
+			delete this->output_buffer_;
+			output_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_view->Width(), render_view->Height());
+		}
 		output_buffer_->AddRenderView(render_view);
 	}
 

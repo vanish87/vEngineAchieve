@@ -44,8 +44,8 @@ void MyApp::InitObjects()
 	}
 
 	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(0, 2, 0));
-	spot_light_->SetDir(float3(0,0, 0)- float3(0, 1, 0));
+	spot_light_->SetPos(float3(0, 1, 1));
+	spot_light_->SetDir(float3(0, 0, 0)- float3(0, 1, 1));
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);
 	spot_light_->AddToScene();
@@ -57,8 +57,8 @@ void MyApp::InitObjects()
 	model->LoadFile("Media/spacecraft_new.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	Math::Scale(mat, 10);
-	Math::Translate(trans, 0, -0.05f, 0);
-	model->SetModelMatrix(trans * mat);
+	Math::Translate(trans, 0, 0.5f, 0);
+	model->SetModelMatrix(mat*trans);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
 
@@ -73,16 +73,17 @@ void MyApp::InitObjects()
 	Mesh* newMesh = RenderTools::GetInstance().MakeFullScreenMesh();
 	float4x4 rotaiton;
 	Math::XRotation(rotaiton, Math::PI * 0.5);
+	Math::Translate(trans, 0, 0, -1.0f);
 	//newMesh->SetModelMatrix(rotaiton);
 	newMesh->SetShaderObject(model->GetShaderObject());
 
 	Material* meshMat = new Material();
-	meshMat->diffuse = float4(0.2f, 0.5f, 0.5f, 1.0f);
+	meshMat->diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	meshMat->specular = float4(0.2f, 0.5f, 0.5f, 1.0f);
 	meshMat->shininess = 10;
 
 	D3DModel* meshModel = new D3DModel();
-	meshModel->SetModelMatrix(rotaiton);
+	meshModel->SetModelMatrix(trans * rotaiton);
 	meshModel->AddMesh(newMesh);
 	meshModel->AddMaterial(meshMat);
 	meshModel->SetShaderObject(model->GetShaderObject());
@@ -96,11 +97,11 @@ void MyApp::InitObjects()
 	
 	first_person_ = false;
 	pitch_angle_ = 0;
-	speed_ = 2.5;
+	speed_ = 0.5;
 	camera_ = new Camera(1280 / 800.0f);// Context::Instance().GetSceneManager().GetMainCamera();
 	cam_pos_ = float3(82.2f, 270.87f, -67.49f);
 	cam_look_ = float3(81.78f, 270.16f, -66.94f);
-	cam_pos_ = float3(0, 1, 1);
+	cam_pos_ = float3(0, 2, -2);
 	cam_look_ = float3(0, 0, 0);
 	camera_->SetView(cam_pos_, cam_look_, float3(0,1,0));
 	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
@@ -135,7 +136,7 @@ void MyApp::Update()
 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/10000.0f)),Math::Cos(timer_->Timef()/10000.0f)));
+    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 }
 
 

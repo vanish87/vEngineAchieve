@@ -50,6 +50,8 @@ cbuffer cbPerObject
 	//float4x4 g_shadow_transform; 
 
 	float4x4 g_light_view_proj; 
+	float4x4 main_camera_inv_view;
+	float4x4 main_camera_inv_proj;
 
 	bool g_pom_enable;
 	bool g_normal_map;
@@ -235,7 +237,7 @@ struct LightingVin
 
 struct LightingVout
 {
-	float4 pos		: SV_POSITION;
+	float4 pos		: SV_POSITION;//screen coordinates
 	float3 view_ray    : VIEWRAY;
 };
 
@@ -243,7 +245,7 @@ LightingVout LightingVS(in LightingVin vin)
 {
 	LightingVout vout;
 	vout.pos = float4(vin.Position, 1.0f);
-	float3 positionVS = mul( float4(vin.Position,1.0f), g_inv_proj_matrix ).xyz;
+	float3 positionVS = mul( float4(vin.Position,1.0f), main_camera_inv_proj).xyz;
 	vout.view_ray = float3( positionVS.xy / positionVS.z, 1.0f );
 	return vout;
 }
@@ -253,34 +255,24 @@ float linstep(float min, float max, float v)
 }
 
 float4 LightingPS( in LightingVout pin): SV_Target
-{
-	if(0)//for debugging
-	{
-
-	int3 samplelndices = int3( pin.pos.xy, 0 );
-	float3 world_pos = normal_tex.Load( samplelndices ).xyz;
-	return float4(world_pos.xyz,1.0f);
-	}
-	else{
-		
+{	
 	
 	int3 samplelndices = int3( pin.pos.xy, 0 );
-	float3 view_ray_vec = pin.view_ray;
 	float depth = depth_tex.Load( samplelndices ).r;
-
-	float3 positionVS = view_ray_vec * depth;
+	float3 positionVS = pin.view_ray;
+	positionVS *= depth;
 
 	//if (depth < 1) depth = 0;
-	//return float4(view_ray_vec, 1.0f);
+	//return float4(positionVS, 1.0f);
 
 	//shadowing
-	float4 world_pos = mul(float4(positionVS, 1.0f) , g_inv_view_matrix);
+	float4 world_pos = mul(float4(positionVS, 1.0f) , main_camera_inv_view);
 	//world_pos /= world_pos.w;
 	//float2 shadow_tex_cood = mul(world_pos , g_shadow_transform);
 	//float shadow_depth = shadow_map_tex.Sample(ShadowMapSampler, shadow_tex_cood).r;
 	//shadow_depth = zn * q / (q - shadow_depth);
 
-	//
+	//world_pos.y = 0;
 	float4 pos_light = mul(world_pos, g_light_view_proj);
 	pos_light /= pos_light.w;
 	pos_light.x = pos_light.x / 2 + 0.5f;
@@ -308,16 +300,14 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float p_max = variance / (variance + m_d * m_d);
 	p_max = linstep(bleeding_reduce, 1, p_max);
 
-	
-
-
 	float shadow = max(p, p_max);
 	//no shadow for point light
 	if(light.type == 0)
-		shadow = 1;
+		shadow = 0;
 	if(0)
 	{
-		return float4(moments.x/1000 ,moments.x/1000,moments.x/1000 ,1);
+		//return float4(moments.x/100 ,moments.x/100,moments.x/100 ,1);
+		//if(world_pos += 1;
 		return world_pos;
 		//return float4(shadow_map_tex.Load( samplelndices ).rrr/1000.0f, 1.0f);
 		//return float4(shadow_depth,shadow_depth,shadow_depth,1.0f);
@@ -342,10 +332,11 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	if(0)
 		return occlusion;
 	//float4 pre_color = lighting_tex.Load( samplelndices );
+	//shadow = 1;
 
 	//cal lighting
 	return CalPreLighting( normal, positionVS, shininess, shadow, occlusion);
-	}
+	
 }
 
 struct FinalVin

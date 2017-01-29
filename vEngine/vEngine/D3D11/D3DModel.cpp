@@ -110,6 +110,9 @@ namespace vEngine
 		d3d_shader_object->SetVariable("light");
 		d3d_shader_object->SetMatrixVariable("g_shadow_transform");
 		d3d_shader_object->SetMatrixVariable("g_light_view_proj");
+		d3d_shader_object->SetMatrixVariable("main_camera_inv_view");
+		d3d_shader_object->SetMatrixVariable("main_camera_inv_proj");
+		
 		
 		if(render_engine->GetRenderSetting().deferred_rendering)
 		{

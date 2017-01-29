@@ -14,15 +14,15 @@ namespace vEngine
 		RenderView(void);
 		virtual ~RenderView(void);
 
-		size_t Width(){return width_;};
-		size_t Height(){return height_;};
+		uint32_t Width(){return width_;};
+		uint32_t Height(){return height_;};
 
 		Texture* GetTexture(){return texture_;};
 
 	protected:
 		Format format_;
-		size_t height_;
-		size_t width_;
+		uint32_t height_;
+		uint32_t width_;
 
 		size_t dimension_; 
 

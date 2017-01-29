@@ -27,8 +27,8 @@ namespace vEngine
 
 		ID3D11RenderTargetView* GetRenderTargetView( int array_size, int mip_level , TextureType type);
 		ID3D11ShaderResourceView* GetShaderResourceView( int array_size, int mip_level , TextureType type);
-		size_t GetWidth();
-		size_t GetHeight();
+		uint32_t GetWidth();
+		uint32_t GetHeight();
 		Format GetFormat();
 		void SetD3DTexture( ID3D11Texture2D* texture );
 	private:
@@ -39,8 +39,8 @@ namespace vEngine
 		ID3D11ShaderResourceView* d3d_sr_view_;
 		ID3D11DepthStencilView*   d3d_ds_view_;
 
-		size_t	width_;
-		size_t	height_;
+		uint32_t	width_;
+		uint32_t	height_;
 	};
 }
 
