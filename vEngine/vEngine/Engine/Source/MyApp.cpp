@@ -64,10 +64,12 @@ void MyApp::InitObjects()
 	ship_->AddToScene();
 
 	model = new D3DModel();
-	//model->LoadFile("Media/plane_ssdo.dae");
+	//model->LoadFile("Media/spacecraft_new.dae");
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+
+	Math::Translate(trans, 0, 0.2f, 0);
 	Math::Scale(mat, 10);
-	model->SetModelMatrix(mat);
+	model->SetModelMatrix( mat* trans);
 	ship_ = new SceneObject(model);
 	ship_->AddToScene();
 
