@@ -27,7 +27,7 @@ namespace vEngine
 		DEBUG_CLASS_FILE_NAME
 
 		//Load .dae file
-		virtual void LoadFile(std::string file_name);
+		virtual void LoadFile(std::string file_name, CompleteCallBack callback = nullptr) override;
 		//use this to load .fxo file only
 		virtual void LoadShaderFile(std::string file_name);
 

@@ -16,7 +16,7 @@ namespace vEngine
 	static bool EnableGbufferDebug = false;
 	static bool EnableLightingDebug = false;
 
-	static const int2 ShadowMapSize = int2(1024, 1024);
+	static const int2 ShadowMapSize = int2(2048, 2048);
 
 	DeferredRendering::DeferredRendering( Configure::RenderSetting& render_setting )
 	{

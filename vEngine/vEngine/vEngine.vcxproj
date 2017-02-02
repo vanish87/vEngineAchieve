@@ -47,6 +47,7 @@
     <ClCompile Include="Engine\Source\Context.cpp" />
     <ClCompile Include="Engine\Source\DeferredRendering.cpp" />
     <ClCompile Include="Engine\Source\FrameBuffer.cpp" />
+    <ClCompile Include="Engine\Source\GameEventHandler.cpp" />
     <ClCompile Include="Engine\Source\GameObject.cpp" />
     <ClCompile Include="Engine\Source\GameState.cpp" />
     <ClCompile Include="Engine\Source\Light.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Engine\Header\DeferredRendering.h" />
     <ClInclude Include="Engine\Header\EnginePreDec.h" />
     <ClInclude Include="Engine\Header\FrameBuffer.h" />
+    <ClInclude Include="Engine\Header\GameEventHandler.h" />
     <ClInclude Include="Engine\Header\GameObject.h" />
     <ClInclude Include="Engine\Header\GameState.h" />
     <ClInclude Include="Engine\Header\Light.h" />

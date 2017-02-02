@@ -24,6 +24,8 @@ public:
 	void MakePlane();
 
 private:
+
+	static void SacleCallBack(void* UserData);
 	vEngine::PointLight* point_light_;
 	vEngine::SpotLight* spot_light_;
 

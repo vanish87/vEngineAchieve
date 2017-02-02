@@ -1,5 +1,6 @@
 #include "Engine\Header\Model.h"
 #include "Engine\Header\Context.h"
+#include "Engine\Header\ResourceLoader.h"
 #include <assimp/Importer.hpp>
 
 namespace vEngine
@@ -41,32 +42,38 @@ namespace vEngine
 		throw std::exception("The method or operation is not implemented.");
 	}
 
-	void Model::LoadFile( std::string file_name )
+	void Model::Load()
 	{
 		Assimp::Importer importer;
-		unsigned int flags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate | 
+		unsigned int flags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate |
 			aiProcess_ConvertToLeftHanded |
 			aiProcess_ImproveCacheLocality | aiProcess_OptimizeGraph |
 			aiProcess_OptimizeMeshes | aiProcess_JoinIdenticalVertices |
 			aiProcess_RemoveRedundantMaterials;
-		ai_scene_ = importer.ReadFile(file_name, flags);
-		if(!ai_scene_)
+		ai_scene_ = importer.ReadFile(file_name_, flags);
+		if (!ai_scene_)
 		{
 			PRINT(importer.GetErrorString());
 			return;
 		}
 
-		if(ai_scene_->HasMeshes())
+		if (ai_scene_->HasMeshes())
 		{
-			aiMatrix4x4 id;			
+			aiMatrix4x4 id;
 			ProcessMeshes(ai_scene_->mRootNode, id);
 		}
-		if(ai_scene_->HasMaterials())
+		if (ai_scene_->HasMaterials())
 		{
 			ProcessMaterials(ai_scene_->mMaterials);
 		}
 
 		Math::Identity(model_matrix_);
+	}
+
+	void Model::LoadFile( std::string file_name, CompleteCallBack callback /*= nullptr*/ )
+	{
+		this->file_name_ = file_name;
+		ResourceLoader::GetInstance().AddAsync(this, callback);
 	}
 
 	void Model::AddMesh( Mesh* mesh )
@@ -99,11 +106,15 @@ namespace vEngine
 
 			if(!mesh->HasPositions())continue;
 
-			if(!mesh->HasNormals())
+			bool hasNormals = mesh->HasNormals();
+			bool hasTangents = mesh->HasTangentsAndBitangents();
+			bool hasTexCoords = mesh->HasTextureCoords(0);
+
+			if(!hasNormals)
 				GenerateNormals(mesh);
-			if(!mesh->HasTangentsAndBitangents())
+			if(!hasTangents)
 				GenerateTangentsAndBitangents(mesh);
-			if(!mesh->HasTextureCoords(0))
+			if(!hasTexCoords)
 				GenerateTexCoord(mesh);
 
 			uint32_t v_size = mesh->mNumVertices;
@@ -115,9 +126,9 @@ namespace vEngine
 			{
 				aiVector3D pos = mesh->mVertices[j];
 				aiVector3D normal = mesh->mNormals[j];
-				aiVector3D tex = mesh->mTextureCoords[0][j];
-				aiVector3D tangent = mesh->mTangents[j];
-				aiVector3D bitangent = mesh->mBitangents[j];
+				aiVector3D tex = hasTexCoords?mesh->mTextureCoords[0][j]: aiVector3D(0,0,0);
+				aiVector3D tangent = hasTangents? mesh->mTangents[j]:aiVector3D(0,0,0);
+				aiVector3D bitangent = hasTangents? mesh->mBitangents[j]:aiVector3D(0,0,0);
 
 				vb[j].position.x()  =  pos.x;		 vb[j].position.y()  = pos.y;		vb[j].position.z()	= pos.z;
 				vb[j].normal.x()    =  normal.x;	 vb[j].normal.y()	 = normal.y;	vb[j].normal.z()	= normal.z;
@@ -183,17 +194,17 @@ namespace vEngine
 
 	void Model::GenerateNormals( const aiMesh* const & mesh )
 	{
-		throw std::exception("The method or operation is not implemented.");
+		//throw std::exception("The method or operation is not implemented.");
 	}
 
 	void Model::GenerateTangentsAndBitangents( const aiMesh* const & mesh )
 	{
-		throw std::exception("The method or operation is not implemented.");
+		//throw std::exception("The method or operation is not implemented.");
 	}
 
 	void Model::GenerateTexCoord( const aiMesh* const & mesh )
 	{
-		throw std::exception("The method or operation is not implemented.");
+		//throw std::exception("The method or operation is not implemented.");
 	}
 
 	void Model::ProcessMaterials(aiMaterial** const materials )
@@ -266,7 +277,7 @@ namespace vEngine
 			{
 
 				Texture *tex = LoadTexture(szPath.C_Str());
-				tex = LoadTexture(szPath.C_Str());
+				//tex = LoadTexture(szPath.C_Str());
 				if(tex)
 				{
 					textures_.push_back(tex);

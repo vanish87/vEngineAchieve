@@ -29,7 +29,7 @@
 //try to add Init function to init class_name
 #define SINGLETON_PRAVATE(class_name)\
 private:\
-	class_name(){}; \
+	class_name(); \
 	class_name(class_name const&){}; \
 	class_name& operator=(class_name const&){}; \
 	~class_name(){}; 

@@ -3,11 +3,16 @@
 
 namespace vEngine
 {
+	Context::Context()
+	{
+
+	}
 	Context& Context::Instance()
 	{
 		static Context context;
 		return context;
 	}	
+	
 
 	Configure::ContextSetting const & Context::GetConfigure() const
 	{

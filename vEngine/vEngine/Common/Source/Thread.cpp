@@ -17,7 +17,7 @@ namespace vEngine
     
     Thread::~Thread()
     {
-        
+		this->ThreadInstance.detach();
     };
         
     ReturnCode Thread::Create(void* Parameter_,std::string Name_)
@@ -61,4 +61,7 @@ namespace vEngine
 		//return value is ignored by std::thread
 		return ThreadData;
     };
+
+
+
 }
