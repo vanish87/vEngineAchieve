@@ -11,6 +11,7 @@ namespace vEngine
 
 	D3DRenderEngine::~D3DRenderEngine(void)
 	{
+
 	}
 
 	void D3DRenderEngine::InitRenderWindow( std::string const & name, Configure::RenderSetting const & render_setting )
@@ -106,7 +107,7 @@ namespace vEngine
 		IDXGIFactory2* dxgiFactory2 = nullptr;
 		result = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
 
-		result = dxgiFactory->CreateSwapChain(d3d_device_, &swap_chain_desc, &d3d_swap_chain);
+		result = dxgiFactory->CreateSwapChain(d3d_device_, &swap_chain_desc, &d3d_swap_chain_);
 
 		if( FAILED(result) )
 		{
@@ -240,7 +241,7 @@ namespace vEngine
 
 	void D3DRenderEngine::SwapBuffers()
 	{
-		HRESULT result = d3d_swap_chain->Present(0, 0);
+		HRESULT result = d3d_swap_chain_->Present(0, 0);
 		if(FAILED(result))
 		{
 			result = d3d_device_->GetDeviceRemovedReason();
@@ -269,19 +270,21 @@ namespace vEngine
 		}
 
 		//TODO : Use new size of window to resize FrameBuffer
-		result = d3d_swap_chain->ResizeBuffers(1, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+		result = d3d_swap_chain_->ResizeBuffers(1, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 		if(FAILED(result))
 			PRINT("ResizeBuffer Failed!");
 
 		ID3D11Texture2D* back_buffer = nullptr;
 		ID3D11RenderTargetView* render_target_view = nullptr;
-		result = d3d_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&back_buffer));
+		result = d3d_swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&back_buffer));
 		if(FAILED(result))
 			PRINT("Get back Buffer Failed!");
 		
 		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(back_buffer);
 		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(d3d_tex, 1, 0);
 		d3d_frame_buffer->AddRenderView(render_view);
+		//it could be used later
+		//back_buffer->Release();
 
 		this->BindFrameBuffer(d3d_frame_buffer);
 

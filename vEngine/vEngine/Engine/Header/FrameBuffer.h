@@ -43,6 +43,7 @@ namespace vEngine
 
 		std::vector<RenderView*> render_views_;
 		Texture* depth_texture_;
+		RenderView* depth_stencil_view_;
 	};
 }
 

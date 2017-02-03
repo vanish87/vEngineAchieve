@@ -17,6 +17,11 @@ namespace vEngine
 
 	}
 
+	void GameObject::Load()
+	{
+
+	}
+
 	std::string GameObject::GetName()
 	{
 		//should never call this

@@ -53,7 +53,8 @@ namespace vEngine
 		virtual void SetRenderParameters();
 		virtual void EndRender();
 
-		virtual void LoadFile(std::string file_name);
+		virtual void LoadFile(std::string file_name, CompleteCallBack callback = nullptr);
+		virtual void Load();
 		void AddMesh( Mesh* mesh );
 		void AddMaterial( Material* mat );
 		virtual void LoadShaderFile(std::string file_name);
@@ -81,6 +82,8 @@ namespace vEngine
 		bool pom_enabled_;
 		Texture* pom_texture_;
 		RenderBuffer* pom_srv_;
+
+		std::string file_name_;
 
 // 		float4x4 processMatrix(daeElement* node);
 // 		void processSource( DaeMesh* mesh, daeElement* sources );

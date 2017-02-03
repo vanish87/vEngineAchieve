@@ -4,8 +4,9 @@
 // <summary>Picking and Assembling gameplay</summary>
 
 #pragma once
-#include "App.h"
+#include "Engine\Header\App.h"
 #include "Common\Header\Vector.h"
+#include "Engine\Header\EnginePreDec.h"
 #include "D3D11\D3DModel.h"
 #include <vector>
 
@@ -23,11 +24,15 @@ public:
 
 	void MakePlane();
 
+	void SetSceneObject(vEngine::SceneObject* scene_object);
+
 private:
+
+	static void SacleCallBack(void* UserData);
 	vEngine::PointLight* point_light_;
 	vEngine::SpotLight* spot_light_;
 
-	vEngine::SceneObject* ship_;
+	vEngine::SceneObject* test_scene_;
 
 	vEngine::Timer* timer_;
 	vEngine::Camera* camera_;
@@ -38,6 +43,8 @@ private:
 
 	float pitch_angle_;
 	float speed_;
+
+	MyState* newstate_;
 };
 
 //state is used for change between different game scene

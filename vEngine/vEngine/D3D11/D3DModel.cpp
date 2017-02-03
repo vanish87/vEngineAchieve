@@ -13,9 +13,9 @@ namespace vEngine
 	{
 	}
 
-	void D3DModel::LoadFile( std::string file_name )
+	void D3DModel::LoadFile( std::string file_name, CompleteCallBack callback /*= nullptr*/)
 	{
-		Model::LoadFile(file_name);
+		Model::LoadFile(file_name, callback);
 		PRINT(file_name + " loaded");
 	}
 

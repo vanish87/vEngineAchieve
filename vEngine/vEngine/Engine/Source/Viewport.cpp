@@ -9,7 +9,7 @@ namespace vEngine
 	Viewport::Viewport( uint32_t left, uint32_t top, uint32_t width, uint32_t height )
 		:left_(left),top_(top),width_(width),height_(height)
 	{
-		camera_.SetProjection(Math::PI / 4, 1.0f*width / height, 1, 100);
+		camera_.SetProjection(Math::PI / 4, 1.0f*width / height, 1, 1000.0f);
 	}
 
 

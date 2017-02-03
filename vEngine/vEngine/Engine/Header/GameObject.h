@@ -16,6 +16,7 @@ namespace vEngine
 		virtual ~GameObject(void);
 
 		virtual void Update();
+		virtual void Load();
 		virtual void AddComponent(GameObject* const GameObject_);
 		virtual GameObject& FindComponentByUUID(const UUID& UUID_);
 

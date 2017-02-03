@@ -2,12 +2,16 @@
 #include "Engine\Header\Context.h"
 #include "Common\Header\Timer.h"
 #include "Engine\Header\RenderTools.h"
+#include "Engine\Header\ResourceLoader.h"
 
 //#include "StartMenu.h"
 
 #include "D3D11\D3DSkyDome.h"
 
 using namespace vEngine;
+
+MyApp app;
+
 
 MyApp::MyApp(void) : App("vEngine")
 {
@@ -21,6 +25,7 @@ MyApp::~MyApp(void)
 
 void MyApp::InitObjects()
 {
+
 	SceneObject testoject, testoject1;
 	testoject.AddComponent(&testoject1);
 
@@ -52,24 +57,30 @@ void MyApp::InitObjects()
 	spot_light_->AddToScene();
 
 	float4x4 mat,trans;
-	D3DModel *model = new D3DModel();
-	model->LoadFile("Media/sponza/sponza.sobj");
+
+	D3DModel* model = new D3DModel();
+	//model->LoadFile("Media/suitcase_obj/suitcase_02.obj");
+	//model->LoadFile("Media/mitsuba/mitsuba.obj");
+	//model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+
+	//Math::Translate(trans, 0, 0.2f, 0);
+	//Math::Scale(mat, 10);
+	//model->SetModelMatrix( mat* trans);
+	//ship_ = new SceneObject(model);
+	//ship_->AddToScene();
+
+
+	//model = new D3DModel();
+	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::SacleCallBack);
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
-	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
-	Math::Scale(mat, 0.5);
+	//model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	//Math::Scale(mat, 0.5);
 	//Math::Translate(trans, 0, 0.2f, 0);
-	model->SetModelMatrix(mat);
-	ship_ = new SceneObject(model);
-	ship_->AddToScene();
+	//model->SetModelMatrix(mat);
+	//ship_ = new SceneObject(model);
+	//ship_->AddToScene();
 
-	model = new D3DModel();
-	//model->LoadFile("Media/plane_ssdo.dae");
-	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
-	Math::Scale(mat, 10);
-	model->SetModelMatrix(mat);
-	ship_ = new SceneObject(model);
-	ship_->AddToScene();
 
 
 	timer_ = new Timer();
@@ -89,8 +100,23 @@ void MyApp::InitObjects()
 
 	DebugTracking::GetInstance().PrintALL();
 
-	MyState* newstate = new MyState(this);
-	Context::Instance().GetStateManager().ChangeState(newstate, SOP_PUSH);
+
+	newstate_ = new MyState(this);
+	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
+}
+
+
+void MyApp::SacleCallBack(void* UserData)
+{
+	D3DModel* model = static_cast<D3DModel*>(UserData);
+	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	float4x4 mat;
+	Math::Scale(mat, 0.5);
+	//Math::Translate(trans, 0, 0.2f, 0);
+	model->SetModelMatrix(mat);
+	SceneObject* s = new SceneObject(model);
+	app.SetSceneObject(s);
+	s->AddToScene();
 }
 
 void MyApp::ReleaseObjects()
@@ -146,6 +172,12 @@ void MyApp::MakePlane()
 	newModel->AddToScene();
 }
 
+
+void MyApp::SetSceneObject(SceneObject* scene_object)
+{
+	this->test_scene_ = scene_object;
+}
+
 void MyState::Update()
 {
 	//throw std::logic_error("The method or operation is not implemented.");
@@ -158,6 +190,15 @@ void MyState::OnKeyDown(WPARAM key_para)
 	{
 	case 'F':
 		app_->first_person_ = true;
+		break;
+	case '1':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleGbuffer(0);
+		break;
+	case '2':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleGbuffer(1);
+		break;
+	case '3':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleLighting();
 		break;
 	default:
 		break;
@@ -259,7 +300,6 @@ void MyState::OnKeyDown(WPARAM key_para)
 		case 'O':
 			app_->speed_ -= 0.1f;
 			break;
-
 		default:
 			break;
 		}
@@ -280,7 +320,6 @@ int main()
 	MyConfig.LoadConfig("Configure/Config.xml");
 	Context::Instance().Setup(MyConfig.GetContextSetting());
 
-	MyApp app;
 	app.Initialize();
 	app.Run();
 

@@ -8,10 +8,18 @@
 
 namespace vEngine
 {
+
+	typedef void(*CompleteCallBack)(void* UserData);
+
 	enum StateOP
 	{
 		SOP_PUSH,
 		SOP_POP,
+	};
+
+	enum GameEventType
+	{
+		GE_RESOURCE_LOADED,
 	};
 
 	enum Format

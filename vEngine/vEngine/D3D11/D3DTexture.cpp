@@ -118,8 +118,8 @@ namespace vEngine
 		default:
 			{
 				this->usage_ = TU_SHADER_RES;
-			PRINT("Check Texture BindFlags here");
-			break;
+				PRINT("Check Texture BindFlags here");
+				break;
 			}
 		}
 

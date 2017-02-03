@@ -28,7 +28,6 @@ namespace vEngine
 
 	private:
 		D3DFrameBuffer(void);
-		RenderView* depth_stencil_view_;
 	};
 }
 

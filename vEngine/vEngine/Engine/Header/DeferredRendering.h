@@ -45,6 +45,9 @@ namespace vEngine
 		//debug functions
 		void OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer);
 
+		void ToggleGbuffer(uint32_t gbuffer_index);
+		void ToggleLighting();
+
 	private:
 		//for Render Target
 		FrameBuffer* gbuffer_;
