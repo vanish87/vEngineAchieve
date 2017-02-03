@@ -10,6 +10,7 @@
 
 using namespace vEngine;
 
+MyApp app;
 
 
 MyApp::MyApp(void) : App("vEngine")
@@ -69,7 +70,7 @@ void MyApp::InitObjects()
 	//ship_->AddToScene();
 
 
-	model = new D3DModel();
+	//model = new D3DModel();
 	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::SacleCallBack);
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
@@ -100,8 +101,8 @@ void MyApp::InitObjects()
 	DebugTracking::GetInstance().PrintALL();
 
 
-	MyState* newstate = new MyState(this);
-	Context::Instance().GetStateManager().ChangeState(newstate, SOP_PUSH);
+	newstate_ = new MyState(this);
+	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
 
 
@@ -114,6 +115,7 @@ void MyApp::SacleCallBack(void* UserData)
 	//Math::Translate(trans, 0, 0.2f, 0);
 	model->SetModelMatrix(mat);
 	SceneObject* s = new SceneObject(model);
+	app.SetSceneObject(s);
 	s->AddToScene();
 }
 
@@ -171,6 +173,11 @@ void MyApp::MakePlane()
 }
 
 
+void MyApp::SetSceneObject(SceneObject* scene_object)
+{
+	this->test_scene_ = scene_object;
+}
+
 void MyState::Update()
 {
 	//throw std::logic_error("The method or operation is not implemented.");
@@ -183,6 +190,15 @@ void MyState::OnKeyDown(WPARAM key_para)
 	{
 	case 'F':
 		app_->first_person_ = true;
+		break;
+	case '1':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleGbuffer(0);
+		break;
+	case '2':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleGbuffer(1);
+		break;
+	case '3':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleLighting();
 		break;
 	default:
 		break;
@@ -284,7 +300,6 @@ void MyState::OnKeyDown(WPARAM key_para)
 		case 'O':
 			app_->speed_ -= 0.1f;
 			break;
-
 		default:
 			break;
 		}
@@ -305,7 +320,6 @@ int main()
 	MyConfig.LoadConfig("Configure/Config.xml");
 	Context::Instance().Setup(MyConfig.GetContextSetting());
 
-	MyApp app;
 	app.Initialize();
 	app.Run();
 

@@ -15,6 +15,7 @@ namespace vEngine
 
 	static bool EnableGbufferDebug = false;
 	static bool EnableLightingDebug = false;
+	static uint32_t GbufferIndex = 0;
 
 	static const int2 ShadowMapSize = int2(2048, 2048);
 
@@ -285,7 +286,7 @@ namespace vEngine
 
 			if (EnableGbufferDebug)
 			{
-				this->OutputGBufferToFrame(gbuffer_, 0, back_buffer_);
+				this->OutputGBufferToFrame(gbuffer_, GbufferIndex, back_buffer_);
 				Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 				return;
 			}
@@ -432,6 +433,19 @@ namespace vEngine
 
 		output_to_tex_pp_->SetOutput(OutBuffer->GetRenderView(0)->GetTexture(), 0);
 		output_to_tex_pp_->Apply();
+	}
+
+	void DeferredRendering::ToggleGbuffer(uint32_t gbuffer_index)
+	{
+		EnableGbufferDebug = true;
+		GbufferIndex = gbuffer_index;
+		EnableLightingDebug = false;
+	}
+
+	void DeferredRendering::ToggleLighting()
+	{
+		EnableGbufferDebug = false;
+		EnableLightingDebug = !EnableLightingDebug;
 	}
 
 }

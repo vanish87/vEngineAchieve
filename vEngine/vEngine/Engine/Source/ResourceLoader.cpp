@@ -27,6 +27,7 @@ namespace vEngine
 			loading_queue_.pop();
 			lk.unlock();
 			job->Run();
+			delete job;
 			std::this_thread::sleep_for(std::chrono::microseconds(10));
 		}
 
