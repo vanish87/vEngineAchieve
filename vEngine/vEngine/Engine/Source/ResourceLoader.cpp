@@ -57,6 +57,11 @@ namespace vEngine
 		this->complete_call_back_ = callback;
 	}
 
+	ResourceLoadingJob::~ResourceLoadingJob()
+	{
+
+	}
+
 	void ResourceLoadingJob::Run()
 	{
 		this->object_to_load_->Load();
