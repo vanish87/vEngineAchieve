@@ -43,6 +43,12 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{f24f750e-8593-43a9-bf87-d0869794e460}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Script">
+      <UniqueIdentifier>{0b5b15df-95a0-4742-8013-5f7fb194d8e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LuaScript">
+      <UniqueIdentifier>{d73cd002-1549-4f1b-b15b-93fcad3ee5bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Configure\Config.xml">
@@ -199,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Source\GameEventHandler.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Script\ScriptTest.cpp">
+      <Filter>Source\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +388,9 @@
     <ClInclude Include="Engine\Header\GameEventHandler.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Header\ScriptTest.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\LinearizeDepthPostProcess.fx">
@@ -405,5 +417,10 @@
     <FxCompile Include="Shader\DebugShader.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LuaScript\HelloWorld.lua">
+      <Filter>LuaScript</Filter>
+    </None>
   </ItemGroup>
 </Project>

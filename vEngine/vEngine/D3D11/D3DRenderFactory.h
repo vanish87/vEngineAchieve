@@ -17,7 +17,7 @@
 
 namespace vEngine
 {
-	class MOCAPGE_API D3DRenderFactory : public RenderFactory
+	class VENGINE_API D3DRenderFactory : public RenderFactory
 	{
 	public:
 		D3DRenderFactory(void);

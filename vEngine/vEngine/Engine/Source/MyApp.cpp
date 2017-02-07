@@ -3,6 +3,7 @@
 #include "Common\Header\Timer.h"
 #include "Engine\Header\RenderTools.h"
 #include "Engine\Header\ResourceLoader.h"
+#include "Engine\Header\ScriptTest.h"
 
 //#include "StartMenu.h"
 
@@ -25,6 +26,8 @@ MyApp::~MyApp(void)
 
 void MyApp::InitObjects()
 {
+
+	ScriptTest::GetInstance().Run();
 
 	SceneObject testoject, testoject1;
 	testoject.AddComponent(&testoject1);
@@ -99,6 +102,7 @@ void MyApp::InitObjects()
 	camera_->AddToScene(true);
 
 	DebugTracking::GetInstance().PrintALL();
+
 
 
 	newstate_ = new MyState(this);

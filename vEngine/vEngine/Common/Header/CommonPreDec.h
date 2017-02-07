@@ -11,16 +11,29 @@
 #pragma once
 
 //dll defines
-//#define MOCAPGE_API __declspec(dllexport)
-#define MOCAPGE_API
+//#define VENGINE_API __declspec(dllexport)
+#define VENGINE_API
 
-#include <assert.h>
+//#include <assert.h>
 //#include "boost/smart_ptr.hpp"
 
 #include <iostream>
 #define PRINT(x) std::cout<<x<<std::endl;
-#define PRINT_AND_RETURN(x, returnVal) {std::cout<<x<<std::endl;return returnVal;}
-#define PRINT_AND_ASSERT(x) {std::cout<<x<<std::endl; assert(false);}
+#define PRINT_AND_RETURN(x, returnVal) {PRINT(x);return returnVal;}
+#define PRINT_FILE_AND_FUCTION PRINT("in File "<<__FILE__<<" Line "<<__LINE__<<" Function "<<__FUNCTION__);
+#define PRINT_AND_ASSERT(x) \
+{\
+	PRINT(x); \
+	PRINT_FILE_AND_FUCTION;\
+	__debugbreak();\
+}
+#define CHECK_AND_ASSERT(condition,x) \
+{\
+	if(!(condition)){\
+		PRINT(x); \
+		PRINT_FILE_AND_FUCTION;\
+		__debugbreak();}\
+}
 #define COMPILE_PRINT_AND_ASSERT(exp, x) {static_assert(exp, x);}
 
 #define DEBUG_CLASS_FILE_NAME virtual std::string GetName() override { return __FILE__; };
