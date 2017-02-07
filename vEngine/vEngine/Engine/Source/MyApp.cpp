@@ -36,6 +36,8 @@ void MyApp::InitObjects()
 	script.RegisterCppFunction(dec);
 	script.RunFile("LuaScript/HelloWorld.lua");
 
+	script.StartMonitorPath("LuaScript/");
+
 	SceneObject testoject, testoject1;
 	testoject.AddComponent(&testoject1);
 

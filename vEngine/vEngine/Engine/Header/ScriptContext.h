@@ -3,9 +3,28 @@
 
 #pragma once
 #include "Common\Header\CommonPreDec.h"
+#include "Common\Header\Thread.h"
+#include <mutex>
 
 namespace vEngine
 {	
+	//to monitor and reload script when it is necessary
+	class ScriptThread : public Thread
+	{
+	public:
+		ScriptThread();
+		~ScriptThread();
+
+		void SetPath(std::string PathToWatch);
+	public:
+		virtual ReturnCode Main(void* para) override;
+
+	private:
+		bool should_quit_;
+		std::string current_path_;
+		std::mutex mutex_;
+	};
+
 	typedef bool(*ScriptFunction)(void* UserData);
 	struct ScriptFuctionDescription
 	{
@@ -25,6 +44,11 @@ namespace vEngine
 		virtual bool RegisterCppFunction(const ScriptFuctionDescription& Description) = 0;
 
 		static ScriptContext* CreateContext();
+
+		void StartMonitorPath(std::string PathToWatch);
+	private:
+		ScriptThread monitor_thread_;
+		std::mutex mutex_;
 	};
 }
 
