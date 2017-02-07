@@ -39,6 +39,8 @@ namespace vEngine
 	class SpotLight;
 
 	class Configure;
+
+	class ScriptContext;
 }
 
 #endif

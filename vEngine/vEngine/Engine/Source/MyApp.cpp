@@ -4,6 +4,7 @@
 #include "Engine\Header\RenderTools.h"
 #include "Engine\Header\ResourceLoader.h"
 #include "Engine\Header\ScriptTest.h"
+#include "Engine\Header\ScriptContext.h"
 
 //#include "StartMenu.h"
 
@@ -27,7 +28,13 @@ MyApp::~MyApp(void)
 void MyApp::InitObjects()
 {
 
-	ScriptTest::GetInstance().Run();
+	//ScriptTest::GetInstance().Run();
+	ScriptContext& script = Context::Instance().GetScriptContext();
+	ScriptFuctionDescription dec;
+	dec.name_ = "ThisIsAcppFuction";
+	dec.fuction_ = MyApp::ToBeCalledFromLua;
+	script.RegisterCppFunction(dec);
+	script.RunFile("LuaScript/HelloWorld.lua");
 
 	SceneObject testoject, testoject1;
 	testoject.AddComponent(&testoject1);
@@ -180,6 +187,12 @@ void MyApp::MakePlane()
 void MyApp::SetSceneObject(SceneObject* scene_object)
 {
 	this->test_scene_ = scene_object;
+}
+
+bool MyApp::ToBeCalledFromLua(void* UserData)
+{
+	PRINT("Lua call this function");
+	return true;
 }
 
 void MyState::Update()

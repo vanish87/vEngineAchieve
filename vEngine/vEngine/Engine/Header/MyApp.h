@@ -26,6 +26,8 @@ public:
 
 	void SetSceneObject(vEngine::SceneObject* scene_object);
 
+	static bool ToBeCalledFromLua(void* UserData);
+
 private:
 
 	static void SacleCallBack(void* UserData);

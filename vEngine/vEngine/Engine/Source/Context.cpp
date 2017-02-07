@@ -1,4 +1,5 @@
 #include "Engine\Header\Context.h"
+#include "Engine\Header\ScriptContext.h"
 #include "D3D11\D3DRenderFactory.h"
 
 namespace vEngine
@@ -47,6 +48,12 @@ namespace vEngine
 	StateManager& Context::GetStateManager()
 	{
 		return state_manager_;
+	}
+
+	ScriptContext& Context::GetScriptContext()
+	{
+		if (script_context_ == nullptr) script_context_ = ScriptContext::CreateContext();
+		return *script_context_;
 	}
 
 	void Context::RegisterAppInstance(App * app_instance)

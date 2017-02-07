@@ -49,6 +49,12 @@
     <Filter Include="LuaScript">
       <UniqueIdentifier>{d73cd002-1549-4f1b-b15b-93fcad3ee5bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Script\Lua">
+      <UniqueIdentifier>{ced88c52-ebfd-4193-b55b-10373fbe243a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Lua">
+      <UniqueIdentifier>{b8c7a938-2ca4-4094-88f9-388558ba4970}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Configure\Config.xml">
@@ -208,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Source\Script\ScriptTest.cpp">
       <Filter>Source\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Script\ScriptContext.cpp">
+      <Filter>Source\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptContext.cpp">
+      <Filter>Source\Script\Lua</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,6 +402,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Header\ScriptTest.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Lua\LuaScriptContext.h">
+      <Filter>Header\Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

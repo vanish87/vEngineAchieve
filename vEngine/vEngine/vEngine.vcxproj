@@ -66,6 +66,8 @@
     <ClCompile Include="Engine\Source\ResourceLoader.cpp" />
     <ClCompile Include="Engine\Source\SceneManager.cpp" />
     <ClCompile Include="Engine\Source\SceneObject.cpp" />
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptContext.cpp" />
+    <ClCompile Include="Engine\Source\Script\ScriptContext.cpp" />
     <ClCompile Include="Engine\Source\Script\ScriptTest.cpp" />
     <ClCompile Include="Engine\Source\ShaderObject.cpp" />
     <ClCompile Include="Engine\Source\StateManager.cpp" />
@@ -113,6 +115,7 @@
     <ClInclude Include="Engine\Header\GameObject.h" />
     <ClInclude Include="Engine\Header\GameState.h" />
     <ClInclude Include="Engine\Header\Light.h" />
+    <ClInclude Include="Engine\Header\Lua\LuaScriptContext.h" />
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
     <ClInclude Include="Engine\Header\MyApp.h" />
