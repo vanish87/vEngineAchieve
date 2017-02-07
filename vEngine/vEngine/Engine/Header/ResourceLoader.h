@@ -37,10 +37,12 @@ namespace vEngine
 	{
 	public:
 		ResourceLoadingJob(GameObject* JobObj, CompleteCallBack callback = nullptr);
+		~ResourceLoadingJob();
 	public:
 		virtual void Run() override;
 
 	private:
+		ResourceLoadingJob() {};
 		GameObject* object_to_load_;
 		CompleteCallBack complete_call_back_;
 	};
@@ -57,7 +59,7 @@ namespace vEngine
 
 
 		void AddAsync(GameObject* ObjectToLoad, CompleteCallBack callback = nullptr);
-		void AddSync();
+		//void AddSync();
 	private:
 		ResourceLoadingThread loading_thread_;
 
