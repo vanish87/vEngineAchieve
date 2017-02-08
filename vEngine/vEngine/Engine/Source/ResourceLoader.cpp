@@ -45,6 +45,10 @@ namespace vEngine
 	{
 		this->loading_thread_.Create(nullptr);
 	}
+	ResourceLoader::~ResourceLoader()
+	{
+		this->loading_thread_.Join();
+	}
 
 	void ResourceLoader::AddAsync(GameObject* ObjectToLoad, CompleteCallBack callback /*= nullptr*/)
 	{

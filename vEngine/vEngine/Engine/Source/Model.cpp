@@ -102,7 +102,7 @@ namespace vEngine
 		for(size_t i =0; i < node->mNumMeshes; ++i)
 		{
 			const aiMesh* mesh = ai_scene_->mMeshes[node->mMeshes[i]];
-			assert(mesh->mPrimitiveTypes == aiPrimitiveType_TRIANGLE);
+			CHECK_ASSERT(mesh->mPrimitiveTypes == aiPrimitiveType_TRIANGLE);
 
 			if(!mesh->HasPositions())continue;
 

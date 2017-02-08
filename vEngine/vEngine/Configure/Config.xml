@@ -5,7 +5,7 @@
   </context>
   
   <render>
-    <frame width="1280" height="800" fullscreen="0">      
+    <frame width="1280" height="720" fullscreen="0">      
       </frame>
     <msaa4x value="0"/>
     <gamma value="1"/>

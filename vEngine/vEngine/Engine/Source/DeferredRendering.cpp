@@ -142,9 +142,8 @@ namespace vEngine
 		Texture* texture_2d = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, render_setting.width, render_setting.height,
 			1, 1, R32G32B32A32_F, render_setting.msaa4x ==1 ? 4 : 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 		render_view = Context::Instance().GetRenderFactory().MakeRenderView(texture_2d, 1, 0);
-		RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ_WRITE, BU_SHADER_RES);
+		lighting_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ_WRITE, BU_SHADER_RES);
 		lighting_buffer_->AddRenderView(render_view);
-		AddLightingBuffer(shader_resource);
 
 		linearize_depth_so_ = new D3DShaderobject();
 		linearize_depth_so_->LoadFxoFile("FxFiles/LinearizeDepthPostProcess.cso");
@@ -166,6 +165,7 @@ namespace vEngine
 		back_buffer_ = Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer();
 
 
+		//debug pp
 		output_to_tex_so_ = new D3DShaderobject();
 		output_to_tex_so_->LoadFxoFile("FxFiles/DebugShader.cso");
 		output_to_tex_so_->SetTechnique("PPTech");
@@ -185,11 +185,6 @@ namespace vEngine
 		gbuffer_srv_.push_back(shader_resource_view);
 	}
 	
-	void DeferredRendering::AddLightingBuffer( RenderBuffer* shader_resource)
-	{
-		lighting_srv_ = shader_resource;
-	}
-
 	void DeferredRendering::Update()
 	{
 		//do DR here
@@ -310,7 +305,7 @@ namespace vEngine
 
 			for (size_t i =0; i< lights.size(); i++)
 			{
-				assert(light_buffer != nullptr);
+				CHECK_ASSERT(light_buffer != nullptr);
 				light_buffer[i].color = lights[i]->GetColor();
 				type = lights[i]->GetType();
 				light_buffer[i].falloff = lights[i]->GetAttrib();

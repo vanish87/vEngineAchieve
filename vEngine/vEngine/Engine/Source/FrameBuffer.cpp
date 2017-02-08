@@ -29,6 +29,7 @@ namespace vEngine
 			if (render_views_[i]->GetTexture() == render_view->GetTexture())
 			{
 				delete render_view;
+				PRINT_AND_ASSERT("render view exsits");
 				return;
 			}
 		}

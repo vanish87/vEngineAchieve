@@ -28,7 +28,7 @@ namespace vEngine
 		void* Map(AccessType access_type)
 		{
 			this->DoMap(access_type);
-			assert(data_);
+			CHECK_ASSERT(data_);
 			return data_ ;
 		};
 		virtual void UnMap() = 0;

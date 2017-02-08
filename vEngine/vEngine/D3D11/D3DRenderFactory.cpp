@@ -123,7 +123,7 @@ namespace vEngine
 
 	vEngine::Texture* D3DRenderFactory::MakeTexture2D(void* TextureData)
 	{
-		assert(TextureData != nullptr);
+		CHECK_ASSERT(TextureData != nullptr);
 		ID3D11Texture2D* ptr = static_cast<ID3D11Texture2D*>(TextureData);
 		return new D3DTexture2D(ptr);
 	}

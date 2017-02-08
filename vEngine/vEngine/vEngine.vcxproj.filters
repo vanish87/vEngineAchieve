@@ -224,6 +224,9 @@
     <ClCompile Include="Engine\Source\Script\Lua\LuaScriptFunctions.cpp">
       <Filter>Source\Script\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="TestCase\SceneObjectTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">

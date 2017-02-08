@@ -44,10 +44,10 @@ void MyApp::InitObjects()
 	vEngine::UUID RefID = testoject1.id();
 	vEngine::UUID nullID = GameObject::NullObject().id();
 	//vEngine::UUID newID;
-	assert(testoject1 == testoject.FindComponentByUUID(RefID));
-	assert(testoject1 != testoject.FindComponentByUUID(nullID));
-	assert(GameObject::NullObject() == testoject.FindComponentByUUID(nullID));
-	assert(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
+	CHECK_ASSERT(testoject1 == testoject.FindComponentByUUID(RefID));
+	CHECK_ASSERT(testoject1 != testoject.FindComponentByUUID(nullID));
+	CHECK_ASSERT(GameObject::NullObject() == testoject.FindComponentByUUID(nullID));
+	CHECK_ASSERT(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
 
 	DebugTracking::GetInstance().PrintALL();
 
@@ -130,6 +130,10 @@ void MyApp::SacleCallBack(void* UserData)
 	SceneObject* s = new SceneObject(model);
 	app.SetSceneObject(s);
 	s->AddToScene();
+
+	SceneObject* news = Context::Instance().GetSceneManager().FindOjectByUUID(s->id());
+	CHECK_AND_ASSERT(news == s, "Check scene objects");
+	CHECK_AND_ASSERT(*news == *s, "Check scene objects");
 }
 
 void MyApp::ReleaseObjects()

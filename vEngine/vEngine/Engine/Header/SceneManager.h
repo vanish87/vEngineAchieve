@@ -22,6 +22,8 @@ namespace vEngine
 		void AddLight(Light* light);
 		void AddCamera(Camera* camera, bool as_main = false);
 
+		SceneObject* FindOjectByUUID(const UUID& uuid);
+
 		void Flush();
 		void Update();
 		std::vector<Light*> GetLights();

@@ -38,7 +38,7 @@ namespace vEngine
 		}
 		case SOP_POP:
 		{
-			assert(current_state_ == game_state);
+			CHECK_ASSERT(current_state_ == game_state);
 			//TODO: memory leak
 			current_state_ = current_state_->GetParent();
 			break;

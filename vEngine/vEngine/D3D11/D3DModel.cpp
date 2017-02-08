@@ -177,7 +177,7 @@ namespace vEngine
 
 		D3D11_RESOURCE_DIMENSION dimension;
 		texture->GetType(&dimension);
-		assert(dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
+		CHECK_ASSERT(dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
 
 		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(texture);
 		

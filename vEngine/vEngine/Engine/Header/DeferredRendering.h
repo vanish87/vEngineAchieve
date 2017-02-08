@@ -34,7 +34,7 @@ namespace vEngine
 		//Mesh* GetQuadMesh(){return fullscreen_mesh_;};
 		//Mesh* GetFullscreenQuad();
 
-		void AddLightingBuffer( RenderBuffer* shader_resource);
+		//void AddLightingBuffer( RenderBuffer* shader_resource);
 
 		FrameBuffer* & GetLighingBuffer(){return lighting_buffer_;};
 		RenderBuffer* & GetLightingBufferSRV(){return lighting_srv_;};

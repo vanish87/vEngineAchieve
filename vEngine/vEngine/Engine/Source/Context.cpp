@@ -8,6 +8,10 @@ namespace vEngine
 	{
 
 	}
+	Context::~Context()
+	{
+
+	}
 	Context& Context::Instance()
 	{
 		static Context context;

@@ -75,6 +75,7 @@
     <ClCompile Include="Engine\Source\Texture.cpp" />
     <ClCompile Include="Engine\Source\Viewport.cpp" />
     <ClCompile Include="Engine\Source\Window.cpp" />
+    <ClCompile Include="TestCase\SceneObjectTest.cpp" />
     <ClCompile Include="TestCase\ThreadTest.cpp" />
   </ItemGroup>
   <ItemGroup>

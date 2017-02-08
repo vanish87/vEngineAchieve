@@ -43,19 +43,19 @@ namespace vEngine
 
 	ID3D11RasterizerState* D3DRenderState::GetRasterizerState()
 	{
-		assert(state_type_ == RST_RASTERIZER);
+		CHECK_ASSERT(state_type_ == RST_RASTERIZER);
 		return rasterizer_state_;
 	}
 
 	ID3D11DepthStencilState* D3DRenderState::GetDepthStencilState()
 	{
-		assert(state_type_ == RST_DEPTH);
+		CHECK_ASSERT(state_type_ == RST_DEPTH);
 		return depth_stencil_state_;
 	}
 
 	ID3D11BlendState* D3DRenderState::GetBlendState()
 	{
-		assert(state_type_ == RST_BLEND);
+		CHECK_ASSERT(state_type_ == RST_BLEND);
 		return blend_state_;
 	}
 

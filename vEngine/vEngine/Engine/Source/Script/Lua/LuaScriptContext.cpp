@@ -21,10 +21,12 @@ namespace vEngine
 	LuaScriptContext::LuaScriptContext()
 	{
 		this->L = luaL_newstate();
-		luaL_openlibs(L);
 		CHECK_AND_ASSERT(L != nullptr, "Lua init error");
-		//TODO close it in destructor
-		//lua_close(L);
+		luaL_openlibs(L);
+	}
+	LuaScriptContext::~LuaScriptContext()
+	{
+		lua_close(L);
 	}
 
 	bool LuaScriptContext::RunString(std::string ScriptToRun)

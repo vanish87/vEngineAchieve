@@ -34,6 +34,12 @@
 		PRINT_FILE_AND_FUCTION;\
 		__debugbreak();}\
 }
+#define CHECK_ASSERT(condition) \
+{\
+	if(!(condition)){\
+		PRINT_FILE_AND_FUCTION;\
+		__debugbreak();}\
+}
 #define COMPILE_PRINT_AND_ASSERT(exp, x) {static_assert(exp, x);}
 
 #define DEBUG_CLASS_FILE_NAME virtual std::string GetName() override { return __FILE__; };
@@ -45,10 +51,11 @@ private:\
 	class_name(); \
 	class_name(class_name const&){}; \
 	class_name& operator=(class_name const&){}; \
-	~class_name(){}; 
+	~class_name(); 
 
 
 //#define ENABLE_TEST
+//#define ENABLE_SCENE_TEST
 
 namespace vEngine
 {
