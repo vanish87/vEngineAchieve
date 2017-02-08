@@ -31,6 +31,7 @@ namespace vEngine
 		std::string name_;
 		ScriptFunction fuction_;
 	};
+
 	class ScriptContext
 	{
 	public:
@@ -45,6 +46,7 @@ namespace vEngine
 
 		static ScriptContext* CreateContext();
 
+		void SetupBuildinFunctions();
 		void StartMonitorPath(std::string PathToWatch);
 	private:
 		ScriptThread monitor_thread_;

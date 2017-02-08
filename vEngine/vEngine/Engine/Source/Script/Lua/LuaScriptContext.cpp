@@ -48,17 +48,42 @@ namespace vEngine
 	}
 
 
-	void LuaScriptContext::PrintError(lua_State* state)
+	void LuaScriptContext::PrintError(lua_State* state, int Result)
 	{
 		const char* ErrorMessage = lua_tostring(state, -1);
-		PRINT_AND_ASSERT(ErrorMessage);
+		switch (Result)
+		{
+		case LUA_ERRRUN:
+		{
+			PRINT_AND_ASSERT("EXECUTION ERROR: " << ErrorMessage);
+		}
+		break;
+		case LUA_ERRSYNTAX:
+		{
+			PRINT_AND_ASSERT("SYNTAX ERROR: " << ErrorMessage);
+		}
+		break;
+		case LUA_ERRMEM:
+		{
+			PRINT_AND_ASSERT("MEMORY ERROR: " << ErrorMessage);
+		}
+		break;
+		case LUA_ERRERR:
+		{
+			PRINT_AND_ASSERT("ERROR in ERROR HANDLER: " << ErrorMessage);
+		}
+		break;
+		default:
+			PRINT_AND_ASSERT(ErrorMessage);
+			break;
+		}
 		lua_pop(state, 1);
 	}
 	void LuaScriptContext::CheckAndPrintError(lua_State* state, int Result)
 	{
 		if (Result != LUA_OK)
 		{
-			PrintError(state);
+			PrintError(state, Result);
 		}
 	}
 

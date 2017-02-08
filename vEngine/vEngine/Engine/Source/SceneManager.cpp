@@ -64,6 +64,7 @@ namespace vEngine
 	void SceneManager::Update()
 		//do scene cull here
 	{
+		std::unique_lock<std::mutex> lk(mutex_);
 		render_list_.clear();
 		std::vector<SceneObject*>::iterator so;
 		for(so = scene_object_list.begin() ; so < scene_object_list.end(); so++)
@@ -76,6 +77,7 @@ namespace vEngine
 
 	void SceneManager::AddSceneObject( SceneObject* scene_object )
 	{
+		std::unique_lock<std::mutex> lk(mutex_);
 		scene_object_list.push_back(scene_object);
 	}
 

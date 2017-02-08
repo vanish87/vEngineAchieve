@@ -56,7 +56,11 @@ namespace vEngine
 
 	ScriptContext& Context::GetScriptContext()
 	{
-		if (script_context_ == nullptr) script_context_ = ScriptContext::CreateContext();
+		if (script_context_ == nullptr)
+		{
+			script_context_ = ScriptContext::CreateContext();
+			script_context_->SetupBuildinFunctions();
+		}
 		return *script_context_;
 	}
 

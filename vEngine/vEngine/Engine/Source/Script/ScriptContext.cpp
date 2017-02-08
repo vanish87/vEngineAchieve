@@ -1,5 +1,6 @@
 #include "Engine\Header\ScriptContext.h"
 #include "Engine\Header\Lua\LuaScriptContext.h"
+#include "Engine\Header\Context.h"
 #include <filesystem>
 #include <windows.h>
 
@@ -21,15 +22,22 @@ namespace vEngine
 	{
 		//TODO if there is new script implementation
 		//choose correct one here
-		ScriptContext& Context = LuaScriptContext::GetInstance();
+		return &LuaScriptContext::GetInstance();
+	}
+
+	void ScriptContext::SetupBuildinFunctions()
+	{
+		ScriptContext& context = Context::Instance().GetScriptContext();
 		ScriptFuctionDescription desc;
 		desc.name_ = "SetGbuffer1";
 		desc.fuction_ = Lua_SetGbuffer1;
-		Context.RegisterCppFunction(desc);
+		context.RegisterCppFunction(desc);
 		desc.name_ = "SetGbuffer2";
 		desc.fuction_ = Lua_SetGbuffer2;
-		Context.RegisterCppFunction(desc);
-		return &Context;
+		context.RegisterCppFunction(desc);
+		desc.name_ = "SetLighting";
+		desc.fuction_ = Lua_SetGbuffer2;
+		context.RegisterCppFunction(desc);
 	}
 
 	void ScriptContext::StartMonitorPath(std::string PathToWatch)

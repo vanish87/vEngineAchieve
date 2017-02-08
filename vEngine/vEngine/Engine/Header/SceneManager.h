@@ -3,12 +3,13 @@
 
 #pragma once
 #include <vector>
+#include <mutex>
 #include "Common\Header\CommonPreDec.h"
-
 
 #include "Engine\Header\RenderElement.h"
 #include "Engine\Header\SceneObject.h"
 #include "Engine\Header\Light.h"
+
 
 namespace vEngine
 {
@@ -37,6 +38,8 @@ namespace vEngine
 
 		std::vector<Light*> lights_;
 		std::vector<Camera*> cameras_;
+
+		std::mutex mutex_;
 	};
 
 }
