@@ -56,49 +56,86 @@ namespace vEngine
 		if (this->current_path_.empty()) return RCFailure();
 
 		//windows dependent code
-		DWORD dwWaitStatus;
-		HANDLE dwChangeHandles[1];
-		dwChangeHandles[0] = FindFirstChangeNotification(
-			this->current_path_.c_str(),	// directory to watch 
-			TRUE,							// do not watch subtree 
-			FILE_NOTIFY_CHANGE_LAST_WRITE); // watch file name changes 
 
-		if (dwChangeHandles[0] == INVALID_HANDLE_VALUE)
-		{
-			PRINT("ERROR: FindFirstChangeNotification function failed.");
-			this->should_quit_ = true;
+		HANDLE hDir = CreateFileW(std::wstring(current_path_.begin(), current_path_.end()).c_str(),
+			FILE_LIST_DIRECTORY,
+			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+			NULL,
+			OPEN_EXISTING,
+			FILE_FLAG_BACKUP_SEMANTICS,
+			NULL);
+
+		if (hDir == INVALID_HANDLE_VALUE) {
+			PRINT("CreateFile failed.");
+			return RCFailure();
 		}
+
+		bool EventHanlded = false;
 
 		while (!this->should_quit_ && !this->current_path_.empty())
 		{
-			dwWaitStatus = WaitForMultipleObjects(1, dwChangeHandles, FALSE, INFINITE);
+			wchar_t lpBuffer[1024] = { L'\0' };
+			DWORD dwBytesReturned;
+			DWORD dwNotifyFilter;
+			BOOL bRet;
 
-			switch (dwWaitStatus)
-			{
-			case WAIT_OBJECT_0:
-				if (FindNextChangeNotification(dwChangeHandles[0]) == FALSE)
-				{
-					PRINT("\n ERROR: FindNextChangeNotification function failed.\n");
-					this->should_quit_ = true;
-				}
-				break;
-			case WAIT_TIMEOUT:
+			dwNotifyFilter =
+				FILE_NOTIFY_CHANGE_LAST_WRITE;
 
-				// A timeout occurred, this would happen if some value other 
-				// than INFINITE is used in the Wait call and no changes occur.
-				// In a single-threaded environment you might not want an
-				// INFINITE wait.
+			bRet = ReadDirectoryChangesW(hDir,  
+				lpBuffer, 
+				sizeof(lpBuffer) / sizeof(lpBuffer[0]), 
+				TRUE,
+				dwNotifyFilter, 
+				&dwBytesReturned, 
+				NULL,
+				NULL);
 
-				PRINT("\nNo changes in the timeout period.\n");
-				break;
-
-			default:
-				PRINT("\n ERROR: Unhandled dwWaitStatus.\n");
-				this->should_quit_ = true;
+			if (!bRet) {
+				PRINT("ReadDirectoryChangesW failed.");
 				break;
 			}
 
-			std::this_thread::sleep_for(std::chrono::microseconds(10));
+			int i = 0;
+			bool EventHanldedThisFrame = false;
+			while (!EventHanlded) {
+				FILE_NOTIFY_INFORMATION *lpInfomation
+					= (FILE_NOTIFY_INFORMATION *)&lpBuffer[i];
+
+				wchar_t filename[1024] = { L'\0' };
+				const size_t length = sizeof(filename) / sizeof(filename[0]);
+				lpInfomation->FileName[lpInfomation->FileNameLength / sizeof(wchar_t)] = L'\0';
+				std::wstring FileName = std::wstring(current_path_.begin(), current_path_.end()) + std::wstring(lpInfomation->FileName);
+
+				switch (lpInfomation->Action) {
+
+				case FILE_ACTION_MODIFIED:
+					PRINT(std::string(FileName.begin(),FileName.end()));
+					EventHanlded = true;
+					EventHanldedThisFrame = true;
+					break;
+
+				case FILE_ACTION_ADDED:
+				case FILE_ACTION_REMOVED:
+				case FILE_ACTION_RENAMED_OLD_NAME:
+				case FILE_ACTION_RENAMED_NEW_NAME:
+				default:
+					PRINT("Unknown File Action: " << FileName.c_str());
+					break;
+				}
+
+				if (lpInfomation->NextEntryOffset == 0) {
+					break;
+				}
+				i += lpInfomation->NextEntryOffset / 2;
+			}
+
+			if (!EventHanldedThisFrame)
+			{
+				EventHanlded = false;
+			}
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 
 		return RCSuccess();
