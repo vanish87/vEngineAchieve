@@ -221,6 +221,9 @@
     <ClCompile Include="Engine\Source\Script\Lua\LuaScriptContext.cpp">
       <Filter>Source\Script\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptFunctions.cpp">
+      <Filter>Source\Script\Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -406,6 +409,9 @@
     <ClInclude Include="Engine\Header\Lua\LuaScriptContext.h">
       <Filter>Header\Lua</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Header\Lua\LuaScriptFunctions.h">
+      <Filter>Header\Lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\LinearizeDepthPostProcess.fx">
@@ -435,6 +441,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LuaScript\HelloWorld.lua">
+      <Filter>LuaScript</Filter>
+    </None>
+    <None Include="LuaScript\DebugUpdate.lua">
       <Filter>LuaScript</Filter>
     </None>
   </ItemGroup>

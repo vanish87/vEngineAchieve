@@ -1,4 +1,6 @@
 #include "Engine\Header\StateManager.h"
+#include "Engine\Header\Context.h"
+#include "Engine\Header\ScriptContext.h"
 
 namespace vEngine
 {
@@ -14,9 +16,14 @@ namespace vEngine
 
 	void StateManager::Update()
 	{
-		if(current_state_ != nullptr)
+		ScriptContext& script = Context::Instance().GetScriptContext();
+		script.RunFile("LuaScript/DebugUpdate.lua");
+
+		if (current_state_ != nullptr)
+		{
 			//do state update
 			current_state_->Update();
+		}
 	}
 
 	void StateManager::ChangeState( GameState* game_state, StateOP op )

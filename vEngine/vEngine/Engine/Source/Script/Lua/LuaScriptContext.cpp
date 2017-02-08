@@ -10,7 +10,7 @@ namespace vEngine
 {
 	static int LuaFunctionInstance(lua_State* L)
 	{
-		CHECK_AND_ASSERT(lua_isuserdata(L, lua_upvalueindex(1)), "Check upvlues");
+		CHECK_AND_ASSERT(lua_isuserdata(L, lua_upvalueindex(1)), "Check upvalues");
 		ScriptFuctionDescription* func = static_cast<ScriptFuctionDescription*>(lua_touserdata(L, lua_upvalueindex(1)));
 		//init a stack and set it as a parameter
 		func->fuction_(nullptr);
@@ -29,12 +29,16 @@ namespace vEngine
 
 	bool LuaScriptContext::RunString(std::string ScriptToRun)
 	{
-		return false;
+		int Result = luaL_loadstring(L, ScriptToRun.c_str());
+		CheckAndPrintError(L, Result);
+		Result = lua_pcall(L, 0, 0, 0);
+		CheckAndPrintError(L, Result);
+		return Result == LUA_OK;
 	}
 
 	bool LuaScriptContext::RunFile(std::string FileName)
 	{
-		int Result = luaL_loadfile(L, "LuaScript/HelloWorld.lua");
+		int Result = luaL_loadfile(L, FileName.c_str());
 		CheckAndPrintError(L, Result);
 		Result = lua_pcall(L, 0, 0, 0);
 		CheckAndPrintError(L, Result);

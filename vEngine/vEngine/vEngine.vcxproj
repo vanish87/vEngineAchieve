@@ -67,6 +67,7 @@
     <ClCompile Include="Engine\Source\SceneManager.cpp" />
     <ClCompile Include="Engine\Source\SceneObject.cpp" />
     <ClCompile Include="Engine\Source\Script\Lua\LuaScriptContext.cpp" />
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptFunctions.cpp" />
     <ClCompile Include="Engine\Source\Script\ScriptContext.cpp" />
     <ClCompile Include="Engine\Source\Script\ScriptTest.cpp" />
     <ClCompile Include="Engine\Source\ShaderObject.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Engine\Header\GameState.h" />
     <ClInclude Include="Engine\Header\Light.h" />
     <ClInclude Include="Engine\Header\Lua\LuaScriptContext.h" />
+    <ClInclude Include="Engine\Header\Lua\LuaScriptFunctions.h" />
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
     <ClInclude Include="Engine\Header\MyApp.h" />
@@ -207,6 +209,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="LuaScript\DebugUpdate.lua" />
     <None Include="LuaScript\HelloWorld.lua" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

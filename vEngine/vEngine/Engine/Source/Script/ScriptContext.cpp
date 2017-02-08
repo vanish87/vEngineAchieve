@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <windows.h>
 
+#include "Engine\Header\Lua\LuaScriptFunctions.h"
+
 
 namespace vEngine
 {
@@ -19,7 +21,15 @@ namespace vEngine
 	{
 		//TODO if there is new script implementation
 		//choose correct one here
-		return &LuaScriptContext::GetInstance();
+		ScriptContext& Context = LuaScriptContext::GetInstance();
+		ScriptFuctionDescription desc;
+		desc.name_ = "SetGbuffer1";
+		desc.fuction_ = Lua_SetGbuffer1;
+		Context.RegisterCppFunction(desc);
+		desc.name_ = "SetGbuffer2";
+		desc.fuction_ = Lua_SetGbuffer2;
+		Context.RegisterCppFunction(desc);
+		return &Context;
 	}
 
 	void ScriptContext::StartMonitorPath(std::string PathToWatch)
