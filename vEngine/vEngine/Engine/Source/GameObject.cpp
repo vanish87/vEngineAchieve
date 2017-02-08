@@ -32,7 +32,7 @@ namespace vEngine
 	void GameObject::AddComponent(GameObject* const GameObject_)
 	{
 		CHECK_AND_ASSERT(GameObject_ != nullptr, "GameObject Error");
-		CHECK_AND_ASSERT(GameObject_ != &GameObject::NullObject() && GameObject_ != this, "GameObject Error");
+		CHECK_AND_ASSERT(*GameObject_ != GameObject::NullObject() && GameObject_ != this, "GameObject Error");
 		this->ConponentList_[GameObject_->id()] = GameObject_;
 		CHECK_AND_ASSERT(this->ConponentList_[GameObject_->id()] == GameObject_, "GameObject Error");
 	}

@@ -27,7 +27,7 @@ namespace vEngine
 		return new D3DRenderLayout();
 	}
 
-	RenderBuffer* D3DRenderFactory::MakeRenderBuffer( InitData init_data, AccessType access_type, BufferUsage usage, uint32_t width, uint32_t type_size)
+	RenderBuffer* D3DRenderFactory::MakeRenderBuffer( InitData& init_data, AccessType access_type, BufferUsage usage, uint32_t width, uint32_t type_size)
 	{
 		//TODO : Change BufferUsage to support OR operation
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());

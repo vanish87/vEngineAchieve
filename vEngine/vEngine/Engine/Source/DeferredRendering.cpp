@@ -191,12 +191,12 @@ namespace vEngine
 /*
 			//Deferred Shading
 			//---------------------------------------------------------------------------
-			render_engine->SetNormalState();
+			render_engine.SetNormalState();
 			//bind gbuffer
-			FrameBuffer* back_buffer = render_engine->CurrentFrameBuffer();
+			FrameBuffer* back_buffer = render_engine.CurrentFrameBuffer();
 			Camera* back_frame_camera = back_buffer->GetFrameCamera();
-			render_engine->GetGBuffer()->SetFrameCamera(back_frame_camera);
-			render_engine->BindFrameBuffer(render_engine->GetGBuffer());
+			render_engine.GetGBuffer()->SetFrameCamera(back_frame_camera);
+			render_engine.BindFrameBuffer(render_engine.GetGBuffer());
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			std::vector<RenderElement*>::iterator re;
@@ -211,8 +211,8 @@ namespace vEngine
 
 			
 			//bind screen buffer
-			render_engine->BindFrameBuffer(back_buffer);
-			render_engine->SetDeferredRenderingState();
+			render_engine.BindFrameBuffer(back_buffer);
+			render_engine.SetDeferredRenderingState();
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
 			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights();
@@ -227,15 +227,15 @@ namespace vEngine
 
 			//set gbuffer as input textures
 			ShaderObject* shader_object = render_list_[0]->GetShaderObject();
-			std::vector<RenderBuffer*> gbuffer_srv = render_engine->GetGBufferSRV();	
-			FrameBuffer* gbuffer = render_engine->GetGBuffer();
+			std::vector<RenderBuffer*> gbuffer_srv = render_engine.GetGBufferSRV();	
+			FrameBuffer* gbuffer = render_engine.GetGBuffer();
 			RenderBuffer* depth_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(gbuffer->GetDepthTexture(), AT_GPU_READ_WRITE, BU_SHADER_RES); 
 			shader_object->SetReource("position_tex", gbuffer_srv[3], 1);
 			shader_object->SetReource("diffuse_tex", gbuffer_srv[1], 1);
 			shader_object->SetReource("specular_tex", gbuffer_srv[2], 1);
 			shader_object->SetReource("normal_tex", gbuffer_srv[0], 1);
 			//do lighting
-			Mesh* quad = render_engine->GetFullscreenQuad();
+			Mesh* quad = render_engine.GetFullscreenQuad();
 			//Set Shader file for quad
 			quad->SetShaderObject(shader_object);
 			quad->SetRenderParameters();
@@ -250,7 +250,7 @@ namespace vEngine
 */
 
 
-		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
+		RenderEngine& render_engine = Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
 		//ideally each render element should have its own shader object so that it can be rendered independently
 		//in deferred rendering, all render element should share same shader object, which is "DeferredLighting.fx"
@@ -260,10 +260,10 @@ namespace vEngine
 		//main_camera_ = Context::Instance().GetSceneManager().GetLights()[0]->GetCamera();
 		//Deferred Lighting
 			//pass 0
-			render_engine->SetNormalState();
+			render_engine.SetNormalState();
 			//bind gbuffer
 			gbuffer_->GetViewport().SetCamera(main_camera_);
-			render_engine->BindFrameBuffer(gbuffer_);
+			render_engine.BindFrameBuffer(gbuffer_);
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			std::vector<RenderElement*>::iterator re;
@@ -288,7 +288,7 @@ namespace vEngine
 
 			//pass 1
 			//bind lighting buffer
-			render_engine->BindFrameBuffer(lighting_buffer_);
+			render_engine.BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
 			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights(); 
@@ -339,8 +339,8 @@ namespace vEngine
 				if(type == LT_SPOT)
 				{
 					shadow_map_buffer_->GetViewport().SetCamera(sm_camera);
-					render_engine->BindFrameBuffer(shadow_map_buffer_);
-					render_engine->SetNormalState();
+					render_engine.BindFrameBuffer(shadow_map_buffer_);
+					render_engine.SetNormalState();
 
 					Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 					std::vector<RenderElement*>::iterator re;
@@ -379,8 +379,8 @@ namespace vEngine
 				shader_object->SetReource("shadow_map_tex", shadow_blur_srv_, 1);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_srv_, 1);
 
-				render_engine->BindFrameBuffer(lighting_buffer_);
-				render_engine->SetDeferredRenderingState();
+				render_engine.BindFrameBuffer(lighting_buffer_);
+				render_engine.SetDeferredRenderingState();
 
 				fullscreen_mesh_->SetShaderObject(shader_object);
 				fullscreen_mesh_->SetRenderParameters();
@@ -400,7 +400,7 @@ namespace vEngine
 			}
 
 			//pass 2
-			render_engine->BindFrameBuffer(back_buffer_);
+			render_engine.BindFrameBuffer(back_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			shader_object->SetReource("lighting_tex", lighting_srv_, 1);
 			shader_object->SetReource("diffuse_tex", gbuffer_srv_[1], 1);
@@ -418,8 +418,8 @@ namespace vEngine
 
 	void DeferredRendering::OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer)
 	{
-		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
-		render_engine->BindFrameBuffer(back_buffer_);
+		RenderEngine& render_engine = Context::Instance().GetRenderFactory().GetRenderEngine();
+		render_engine.BindFrameBuffer(back_buffer_);
 		output_to_tex_pp_->SetInput(GBuffer->GetRenderView(GBufferIndex)->GetTexture(), 0);
 		//output_to_tex_pp_->SetInput(shadow_depth_, 0);
 		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
