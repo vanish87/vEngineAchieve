@@ -36,7 +36,7 @@ namespace vEngine
 		desc.fuction_ = Lua_SetGbuffer2;
 		context.RegisterCppFunction(desc);
 		desc.name_ = "SetLighting";
-		desc.fuction_ = Lua_SetGbuffer2;
+		desc.fuction_ = Lua_SetLighting;
 		context.RegisterCppFunction(desc);
 	}
 
@@ -75,7 +75,7 @@ namespace vEngine
 
 		//windows dependent code
 
-		HANDLE hDir = CreateFileW(std::wstring(current_path_.begin(), current_path_.end()).c_str(),
+		HANDLE hDir = CreateFile(current_path_.c_str(),
 			FILE_LIST_DIRECTORY,
 			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
 			NULL,
@@ -128,7 +128,7 @@ namespace vEngine
 				switch (lpInfomation->Action) {
 
 				case FILE_ACTION_MODIFIED:
-					PRINT(std::string(FileName.begin(),FileName.end()));
+					PRINT("file modified: "<<std::string(FileName.begin(),FileName.end()));
 					EventHanlded = true;
 					EventHanldedThisFrame = true;
 					break;
