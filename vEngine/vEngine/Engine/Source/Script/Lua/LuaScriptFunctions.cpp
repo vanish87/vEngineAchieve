@@ -40,10 +40,17 @@ namespace vEngine
 		{
 		case SFCT_Begin:
 			//PRINT("here to push parameter");
+			stack->PushInt(3);
+			stack->PushInt(5);
 			break;
 		case SFCT_End:
+		{
 			//PRINT("here to get return value");
+			int value = 0;
+			stack->PopInt(value);
+			//PRINT(value);
 			break;
+		}
 		default:
 			break;
 		}
