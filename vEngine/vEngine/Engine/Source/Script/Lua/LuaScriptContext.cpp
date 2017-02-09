@@ -40,12 +40,32 @@ namespace vEngine
 		return Result == LUA_OK;
 	}
 
-	bool LuaScriptContext::RunFile(std::string FileName)
+	bool LuaScriptContext::RunFile(std::string FileName, std::string FunctionName /*= ""*/)
 	{
 		int Result = luaL_loadfile(L, FileName.c_str());
 		CheckAndPrintError(L, Result);
-		Result = lua_pcall(L, 0, 0, 0);
+		bool IsFunctionCall = !FunctionName.empty();
+		LuaScriptStack Stack;
+		if (IsFunctionCall)
+		{
+			Result = lua_pcall(L, 0, 0, 0);
+			CheckAndPrintError(L, Result);
+			lua_getglobal(L, FunctionName.c_str());
+			if (!lua_isfunction(L, -1))
+			{
+				lua_pop(L, 1);
+				return false;
+			}
+			this->FunctionBegin(FunctionName, &Stack);
+		}
+		Result = lua_pcall(L, Stack.PushedCount(), LUA_MULTRET, 0);
 		CheckAndPrintError(L, Result);
+		if (IsFunctionCall)
+		{
+			//to get return value for RunFile caller
+			//best way is to pack them to a return value container
+			this->FunctionEnd(FunctionName, &Stack);
+		}
 		return Result == LUA_OK;
 	}
 
@@ -100,7 +120,7 @@ namespace vEngine
 		NewCopy->name_ = Description.name_;
 		NewCopy->parameter_num_ = Description.parameter_num_;
 		NewCopy->fuction_ = Description.fuction_;
-		this->functions_.push_back(NewCopy);
+		this->cpp_functions_.push_back(NewCopy);
 
 		lua_pushlightuserdata(this->L, NewCopy);
 		lua_pushcclosure(this->L, LuaFunctionInstance, 1 /*number of pushed data*/);

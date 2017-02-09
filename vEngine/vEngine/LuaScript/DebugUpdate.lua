@@ -4,4 +4,8 @@
 --SetGbuffer2()
 --SetLighting()
 
-SetGbufferIndex(1)
+--SetGbufferIndex(1)
+
+function Update()
+	SetGbufferIndex(1)
+end

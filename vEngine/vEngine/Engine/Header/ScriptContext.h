@@ -5,9 +5,11 @@
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\Thread.h"
 #include <mutex>
+#include <vector>
 
 namespace vEngine
 {	
+	class ScriptStack;
 	//to monitor and reload script when it is necessary
 	class ScriptThread : public Thread
 	{
@@ -41,17 +43,29 @@ namespace vEngine
 	public:
 
 		virtual bool RunString(std::string ScriptToRun) = 0;
-		virtual bool RunFile(std::string FileName) = 0;
+		virtual bool RunFile(std::string FileName, std::string FunctionName = "") = 0;
 
 		virtual bool RegisterCppFunction(const ScriptFuctionDescription& Description) = 0;
+		virtual bool RegisterScriptFunction(const ScriptFuctionDescription& Description);
 
 		static ScriptContext* CreateContext();
 
 		void SetupBuildinFunctions();
+
+		//this function should handle "FunctionName"'s input(aka. Parameters)
+		//to push parameter here
+		bool FunctionBegin(std::string FunctionName, ScriptStack* Stack);
+		//this function should handle "FunctionName"'s output(aka. Return values)
+		//to pop return value here
+		bool FunctionEnd(std::string FunctionName, ScriptStack* Stack);
+
 		void StartMonitorPath(std::string PathToWatch);
 	private:
 		ScriptThread monitor_thread_;
 		std::mutex mutex_;
+	protected:
+		std::vector<ScriptFuctionDescription*> cpp_functions_;
+		std::vector<ScriptFuctionDescription*> script_functions_;
 	};
 }
 

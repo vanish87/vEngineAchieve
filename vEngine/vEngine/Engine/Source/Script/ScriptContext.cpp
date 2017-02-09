@@ -1,4 +1,5 @@
 #include "Engine\Header\ScriptContext.h"
+#include "Engine\Header\ScriptStack.h"
 #include "Engine\Header\Lua\LuaScriptContext.h"
 #include "Engine\Header\Context.h"
 #include <filesystem>
@@ -16,6 +17,44 @@ namespace vEngine
 	ScriptContext::~ScriptContext()
 	{
 
+	}
+
+	bool ScriptContext::FunctionBegin(std::string FunctionName, ScriptStack* Stack)
+	{
+		for (ScriptFuctionDescription*& i : this->script_functions_)
+		{
+			if (i->name_ == FunctionName)
+			{
+				ScriptFunctionCallType type = SFCT_Begin;
+				Stack->SetAdditionalData(&type);
+				i->fuction_(Stack);
+			}
+		}
+		return true;
+	}
+
+	bool ScriptContext::FunctionEnd(std::string FunctionName, ScriptStack* Stack)
+	{
+		for (ScriptFuctionDescription*& i : this->script_functions_)
+		{
+			if (i->name_ == FunctionName)
+			{
+				ScriptFunctionCallType type = SFCT_End;
+				Stack->SetAdditionalData(&type);
+				i->fuction_(Stack);
+			}
+		}
+		return true;
+	}
+
+	bool ScriptContext::RegisterScriptFunction(const ScriptFuctionDescription& Description)
+	{
+		ScriptFuctionDescription* NewCopy = new ScriptFuctionDescription();
+		NewCopy->name_ = Description.name_;
+		NewCopy->parameter_num_ = Description.parameter_num_;
+		NewCopy->fuction_ = Description.fuction_;
+		this->script_functions_.push_back(NewCopy);
+		return true;
 	}
 
 	ScriptContext* ScriptContext::CreateContext()
@@ -42,6 +81,10 @@ namespace vEngine
 		desc.parameter_num_ = 1;
 		desc.fuction_ = Lua_SetGbufferIndex;
 		context.RegisterCppFunction(desc);
+		desc.name_ = "Update";
+		desc.parameter_num_ = 0;
+		desc.fuction_ = CPP_Update;
+		context.RegisterScriptFunction(desc);
 	}
 
 	void ScriptContext::StartMonitorPath(std::string PathToWatch)

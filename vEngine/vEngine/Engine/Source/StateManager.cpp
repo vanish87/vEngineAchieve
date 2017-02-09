@@ -17,7 +17,7 @@ namespace vEngine
 	void StateManager::Update()
 	{
 		ScriptContext& script = Context::Instance().GetScriptContext();
-		script.RunFile("LuaScript/DebugUpdate.lua");
+		script.RunFile("LuaScript/DebugUpdate.lua", "Update");
 
 		if (current_state_ != nullptr)
 		{
