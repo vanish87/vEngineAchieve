@@ -1,4 +1,5 @@
 #include "Engine\Header\Lua\LuaScriptContext.h"
+#include "Engine\Header\Lua\LuaScriptStack.h"
 
 #ifdef __cplusplus
 #include "lua\lua.hpp"
@@ -13,9 +14,10 @@ namespace vEngine
 		CHECK_AND_ASSERT(lua_isuserdata(L, lua_upvalueindex(1)), "Check upvalues");
 		ScriptFuctionDescription* func = static_cast<ScriptFuctionDescription*>(lua_touserdata(L, lua_upvalueindex(1)));
 		//init a stack and set it as a parameter
-		func->fuction_(nullptr);
+		LuaScriptStack Stack;
+		func->fuction_(&Stack);
 		//return number of pushed result in this function
-		return 0;
+		return Stack.PushedCount();
 	}
 
 	LuaScriptContext::LuaScriptContext()
@@ -87,10 +89,16 @@ namespace vEngine
 		}
 	}
 
+	lua_State* LuaScriptContext::state()
+	{
+		return this->L;
+	}
+
 	bool LuaScriptContext::RegisterCppFunction(const ScriptFuctionDescription& Description)
 	{
 		ScriptFuctionDescription* NewCopy = new ScriptFuctionDescription();
 		NewCopy->name_ = Description.name_;
+		NewCopy->parameter_num_ = Description.parameter_num_;
 		NewCopy->fuction_ = Description.fuction_;
 		this->functions_.push_back(NewCopy);
 

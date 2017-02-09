@@ -3,3 +3,5 @@
 --SetGbuffer1()
 --SetGbuffer2()
 --SetLighting()
+
+SetGbufferIndex(1)

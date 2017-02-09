@@ -29,6 +29,7 @@ namespace vEngine
 	struct ScriptFuctionDescription
 	{
 		std::string name_;
+		uint32_t parameter_num_;
 		ScriptFunction fuction_;
 	};
 

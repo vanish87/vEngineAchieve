@@ -38,6 +38,10 @@ namespace vEngine
 		desc.name_ = "SetLighting";
 		desc.fuction_ = Lua_SetLighting;
 		context.RegisterCppFunction(desc);
+		desc.name_ = "SetGbufferIndex";
+		desc.parameter_num_ = 1;
+		desc.fuction_ = Lua_SetGbufferIndex;
+		context.RegisterCppFunction(desc);
 	}
 
 	void ScriptContext::StartMonitorPath(std::string PathToWatch)

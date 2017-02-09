@@ -27,6 +27,7 @@ namespace vEngine
 		void PrintError(lua_State* state, int Result);
 		void CheckAndPrintError(lua_State* state, int Result);
 
+		lua_State* state();
 	private:
 		lua_State* L;
 		std::vector<ScriptFuctionDescription*> functions_;

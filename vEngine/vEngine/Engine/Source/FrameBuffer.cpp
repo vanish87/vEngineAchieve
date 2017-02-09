@@ -37,6 +37,12 @@ namespace vEngine
 	}
 
 
+	RenderView* FrameBuffer::GetRenderView(size_t index)
+	{
+		CHECK_ASSERT(index < render_views_.size());
+		return render_views_[index];
+	}
+
 	Viewport& FrameBuffer::GetViewport()
 	{
 		return viewport_;

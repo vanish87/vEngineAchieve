@@ -29,7 +29,7 @@ namespace vEngine
 		virtual void OnBind() = 0;
 		virtual void Clear(float4 color, float depth, uint32_t mask) = 0;
 		virtual void AddRenderView(RenderView* render_view);
-		virtual RenderView* GetRenderView(size_t index){return render_views_[index];};
+		virtual RenderView* GetRenderView(size_t index);
 		Texture* GetDepthTexture(){return depth_texture_;};
 
 	private:

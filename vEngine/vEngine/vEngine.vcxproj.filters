@@ -227,6 +227,12 @@
     <ClCompile Include="TestCase\SceneObjectTest.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Script\ScriptStack.cpp">
+      <Filter>Source\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptStack.cpp">
+      <Filter>Source\Script\Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -413,6 +419,12 @@
       <Filter>Header\Lua</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Header\Lua\LuaScriptFunctions.h">
+      <Filter>Header\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\ScriptStack.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Lua\LuaScriptStack.h">
       <Filter>Header\Lua</Filter>
     </ClInclude>
   </ItemGroup>

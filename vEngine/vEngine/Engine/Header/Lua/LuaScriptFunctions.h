@@ -8,6 +8,7 @@ namespace vEngine
 	bool Lua_SetGbuffer1(void* UserData);
 	bool Lua_SetGbuffer2(void* UserData);
 	bool Lua_SetLighting(void* UserData);
+	bool Lua_SetGbufferIndex(void* UserData);
 }
 
 #endif

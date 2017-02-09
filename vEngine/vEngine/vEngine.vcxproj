@@ -68,7 +68,9 @@
     <ClCompile Include="Engine\Source\SceneObject.cpp" />
     <ClCompile Include="Engine\Source\Script\Lua\LuaScriptContext.cpp" />
     <ClCompile Include="Engine\Source\Script\Lua\LuaScriptFunctions.cpp" />
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptStack.cpp" />
     <ClCompile Include="Engine\Source\Script\ScriptContext.cpp" />
+    <ClCompile Include="Engine\Source\Script\ScriptStack.cpp" />
     <ClCompile Include="Engine\Source\Script\ScriptTest.cpp" />
     <ClCompile Include="Engine\Source\ShaderObject.cpp" />
     <ClCompile Include="Engine\Source\StateManager.cpp" />
@@ -119,6 +121,7 @@
     <ClInclude Include="Engine\Header\Light.h" />
     <ClInclude Include="Engine\Header\Lua\LuaScriptContext.h" />
     <ClInclude Include="Engine\Header\Lua\LuaScriptFunctions.h" />
+    <ClInclude Include="Engine\Header\Lua\LuaScriptStack.h" />
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
     <ClInclude Include="Engine\Header\MyApp.h" />
@@ -134,6 +137,7 @@
     <ClInclude Include="Engine\Header\ResourceLoader.h" />
     <ClInclude Include="Engine\Header\SceneManager.h" />
     <ClInclude Include="Engine\Header\SceneObject.h" />
+    <ClInclude Include="Engine\Header\ScriptStack.h" />
     <ClInclude Include="Engine\Header\ScriptTest.h" />
     <ClInclude Include="Engine\Header\ShaderObject.h" />
     <ClInclude Include="Engine\Header\StateManager.h" />
