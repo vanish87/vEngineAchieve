@@ -178,6 +178,7 @@ namespace vEngine
 
 	DeferredRendering::~DeferredRendering(void)
 	{
+
 	}
 
 	void DeferredRendering::AddGBuffer( RenderBuffer* shader_resource_view )

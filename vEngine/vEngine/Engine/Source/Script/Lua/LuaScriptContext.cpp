@@ -116,13 +116,13 @@ namespace vEngine
 
 	bool LuaScriptContext::RegisterCppFunction(const ScriptFuctionDescription& Description)
 	{
-		ScriptFuctionDescription* NewCopy = new ScriptFuctionDescription();
+		ScriptFuctionDescriptionSharedPtr NewCopy = std::make_shared<ScriptFuctionDescription>();
 		NewCopy->name_ = Description.name_;
 		NewCopy->parameter_num_ = Description.parameter_num_;
 		NewCopy->fuction_ = Description.fuction_;
 		this->cpp_functions_.push_back(NewCopy);
 
-		lua_pushlightuserdata(this->L, NewCopy);
+		lua_pushlightuserdata(this->L, NewCopy.get());
 		lua_pushcclosure(this->L, LuaFunctionInstance, 1 /*number of pushed data*/);
 		lua_setglobal(L, NewCopy->name_.c_str());
 		return true;

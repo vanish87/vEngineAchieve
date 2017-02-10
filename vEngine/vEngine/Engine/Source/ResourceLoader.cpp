@@ -22,6 +22,7 @@ namespace vEngine
 			while (this->loading_queue_.empty())
 			{
 				cond_variable_.wait(lk);
+				if (should_quit_) return RCSuccess();
 			}
 			ThreadJob* job = loading_queue_.front();
 			loading_queue_.pop();
@@ -41,12 +42,19 @@ namespace vEngine
 		this->cond_variable_.notify_one();
 	}
 
+	void ResourceLoadingThread::Quit()
+	{
+		this->should_quit_ = true;
+		this->cond_variable_.notify_one();
+	}
+
 	ResourceLoader::ResourceLoader()
 	{
 		this->loading_thread_.Create(nullptr);
 	}
 	ResourceLoader::~ResourceLoader()
 	{
+		this->loading_thread_.Quit();
 		this->loading_thread_.Join();
 	}
 

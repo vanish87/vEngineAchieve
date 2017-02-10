@@ -28,7 +28,7 @@ namespace vEngine
 		SceneManager&  GetSceneManager();
 		StateManager&  GetStateManager();
 		ScriptContext& GetScriptContext();
-		void RegisterAppInstance(App* app_instance);
+		void RegisterAppInstance(AppSharedPtr app_instance);
 		const App& GetAppInstance() const;
 		//ResourceLoader& GetResourceLoader();
 
@@ -37,13 +37,13 @@ namespace vEngine
 
 		Configure::ContextSetting context_config_;
 
-		RenderFactory*	render_factory_;
+		RenderFactorySharedPtr	render_factory_;
 		SceneManager scene_manager_;
 		StateManager state_manager_;
-		ScriptContext* script_context_;
+		ScriptContextSharedPtr script_context_;
 		//ResourceLoader* resource_loader_;
 
-		App* app_instance_;
+		AppSharedPtr app_instance_;
 	};
 }
 

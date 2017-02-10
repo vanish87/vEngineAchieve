@@ -30,7 +30,7 @@ namespace vEngine
 		if(!context_config_.render_factory_name.compare(cfg.render_factory_name) || render_factory_==nullptr)
 		{
 			//this->LoadRenderFactory(cfg.render_factory_name);
-			render_factory_= new D3DRenderFactory();
+			render_factory_= std::make_shared<D3DRenderFactory>();
 		}
 
 		//resource_loader_ = new ResourceLoader();
@@ -58,13 +58,13 @@ namespace vEngine
 	{
 		if (script_context_ == nullptr)
 		{
-			script_context_ = ScriptContext::CreateContext();
+			script_context_ = ScriptContextSharedPtr(ScriptContext::CreateContext());
 			script_context_->SetupBuildinFunctions();
 		}
 		return *script_context_;
 	}
 
-	void Context::RegisterAppInstance(App * app_instance)
+	void Context::RegisterAppInstance(AppSharedPtr app_instance)
 	{
 		if (this->app_instance_ != nullptr)
 			PRINT_AND_ASSERT("this is not supported");

@@ -21,7 +21,7 @@ namespace vEngine
 
 	bool ScriptContext::FunctionBegin(std::string FunctionName, ScriptStack* Stack)
 	{
-		for (ScriptFuctionDescription*& i : this->script_functions_)
+		for (ScriptFuctionDescriptionSharedPtr& i : this->script_functions_)
 		{
 			if (i->name_ == FunctionName)
 			{
@@ -35,7 +35,7 @@ namespace vEngine
 
 	bool ScriptContext::FunctionEnd(std::string FunctionName, ScriptStack* Stack)
 	{
-		for (ScriptFuctionDescription*& i : this->script_functions_)
+		for (ScriptFuctionDescriptionSharedPtr& i : this->script_functions_)
 		{
 			if (i->name_ == FunctionName)
 			{
@@ -49,7 +49,7 @@ namespace vEngine
 
 	bool ScriptContext::RegisterScriptFunction(const ScriptFuctionDescription& Description)
 	{
-		ScriptFuctionDescription* NewCopy = new ScriptFuctionDescription();
+		ScriptFuctionDescriptionSharedPtr NewCopy = std::make_shared<ScriptFuctionDescription>();
 		NewCopy->name_ = Description.name_;
 		NewCopy->parameter_num_ = Description.parameter_num_;
 		NewCopy->fuction_ = Description.fuction_;
@@ -100,7 +100,7 @@ namespace vEngine
 
 	ScriptThread::~ScriptThread()
 	{
-
+		this->ThreadInstance.detach();
 	}
 
 	void ScriptThread::SetPath(std::string PathToWatch)

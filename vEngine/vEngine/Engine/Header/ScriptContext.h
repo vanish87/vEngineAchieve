@@ -4,6 +4,7 @@
 #pragma once
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\Thread.h"
+#include "Engine\Header\EnginePreDec.h"
 #include <mutex>
 #include <vector>
 
@@ -64,8 +65,8 @@ namespace vEngine
 		ScriptThread monitor_thread_;
 		std::mutex mutex_;
 	protected:
-		std::vector<ScriptFuctionDescription*> cpp_functions_;
-		std::vector<ScriptFuctionDescription*> script_functions_;
+		std::vector<ScriptFuctionDescriptionSharedPtr> cpp_functions_;
+		std::vector<ScriptFuctionDescriptionSharedPtr> script_functions_;
 	};
 }
 

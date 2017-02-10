@@ -29,7 +29,7 @@ namespace vEngine
         
         ReturnCode Join();
         
-    private:
+	protected:
         std::string Name;
         void* Parameter;        
         
