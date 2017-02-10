@@ -36,7 +36,7 @@ void MyApp::InitObjects()
 	script.StartMonitorPath("LuaScript/");
 
 	SceneObject testoject, testoject1;
-	testoject.AddComponent(GameObjectSharedPtr(&testoject1));
+	testoject.AddComponent(&testoject1);
 
 	vEngine::UUID RefID = testoject1.id();
 	vEngine::UUID nullID = GameObject::NullObject().id();

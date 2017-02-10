@@ -18,7 +18,10 @@ namespace vEngine
 
 		virtual void Update();
 		virtual void Load();
-		virtual void AddComponent(GameObjectSharedPtr const GameObject_);
+		//user should keep tracking and make sure GameObject* is valid
+		//it could be released by registering an observer to it 
+		//and to remove it when it has be destructed.
+		virtual void AddComponent(GameObject* const GameObject_);
 		virtual GameObject& FindComponentByUUID(const UUID& UUID_);
 
 		virtual std::string GetName();
@@ -53,8 +56,7 @@ namespace vEngine
 
 	protected:
 		UUID id_;
-
-		std::unordered_map<UUID, GameObjectSharedPtr> ConponentList_;
+		std::unordered_map<UUID, GameObject*> ConponentList_;
 	};
 
 	class NGameObject : public GameObject
@@ -102,7 +104,10 @@ namespace vEngine
 		};
 		void UnTrack(GameObject* const object)
 		{
-			this->ConponentList_.erase(object->id());
+			if (this->ConponentList_.find(object->id()) != this->ConponentList_.end())
+			{
+				this->ConponentList_.erase(object->id());
+			}
 			//PRINT("Tracking " << typeid(*object).name());
 			//PRINT("subclass "<< object->GetName().c_str());
 		};

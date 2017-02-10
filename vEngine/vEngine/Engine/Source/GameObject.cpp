@@ -29,10 +29,11 @@ namespace vEngine
 		return "ERROR";
 	}
 
-	void GameObject::AddComponent(GameObjectSharedPtr const GameObject_)
+	void GameObject::AddComponent(GameObject* const GameObject_)
 	{
 		CHECK_AND_ASSERT(GameObject_ != nullptr, "GameObject Error");
-		CHECK_AND_ASSERT(*GameObject_ != GameObject::NullObject() && GameObject_ != GameObjectSharedPtr(this), "GameObject Error");
+		CHECK_ASSERT(*GameObject_ != GameObject::NullObject());
+		CHECK_ASSERT(GameObject_ != this);
 		this->ConponentList_[GameObject_->id()] = GameObject_;
 		CHECK_AND_ASSERT(this->ConponentList_[GameObject_->id()] == GameObject_, "GameObject Error");
 	}
@@ -40,7 +41,7 @@ namespace vEngine
 	GameObject& GameObject::FindComponentByUUID(const UUID& UUID_)
 	{
 		if(this->ConponentList_.find(UUID_) == this->ConponentList_.end()) return GameObject::NullObject();
-		GameObjectSharedPtr Ret = this->ConponentList_[UUID_];
+		GameObject* Ret = this->ConponentList_[UUID_];
 		CHECK_AND_ASSERT(Ret != nullptr, "Find Error");
 		return *Ret;
 	}
