@@ -24,7 +24,7 @@ namespace vEngine
 		Configure::ContextSetting config = Context::Instance().GetConfigure();
 
 		//register app here
-		Context::Instance().RegisterAppInstance(AppSharedPtr(this));
+		Context::Instance().RegisterAppInstance(this);
 
 		//then create system window
 		this->win_.InitWindow(app_name_, config.render_setting);

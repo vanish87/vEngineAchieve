@@ -64,7 +64,7 @@ namespace vEngine
 		return *script_context_;
 	}
 
-	void Context::RegisterAppInstance(AppSharedPtr app_instance)
+	void Context::RegisterAppInstance(App* app_instance)
 	{
 		if (this->app_instance_ != nullptr)
 			PRINT_AND_ASSERT("this is not supported");

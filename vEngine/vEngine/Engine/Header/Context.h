@@ -27,7 +27,7 @@ namespace vEngine
 		SceneManager&  GetSceneManager();
 		StateManager&  GetStateManager();
 		ScriptContext& GetScriptContext();
-		void RegisterAppInstance(AppSharedPtr app_instance);
+		void RegisterAppInstance(App* app_instance);
 		const App& GetAppInstance() const;
 
 	private:
@@ -40,7 +40,7 @@ namespace vEngine
 		StateManager state_manager_;
 		ScriptContextSharedPtr script_context_;
 
-		AppSharedPtr app_instance_;
+		App* app_instance_;
 	};
 }
 

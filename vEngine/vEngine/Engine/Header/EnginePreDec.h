@@ -10,11 +10,15 @@ namespace vEngine
 	class name;\
 	typedef std::shared_ptr<name> name##SharedPtr;
 
+	#define CLASS_AND_UNIQUE_POINTER(name) \
+	class name;\
+	typedef std::unique_ptr<name> name##UniquePtr;
+
 	#define STRUCT_AND_SHARED_POINTER(name) \
 	struct name;\
 	typedef std::shared_ptr<name> name##SharedPtr;
 
-	CLASS_AND_SHARED_POINTER(App)
+	class App;
 	class Window;
 
 	class Texture;
