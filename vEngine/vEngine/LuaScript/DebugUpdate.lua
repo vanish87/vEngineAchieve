@@ -6,8 +6,8 @@
 
 --SetGbufferIndex(1)
 
-function Update (x, y)
+function Update ()
 	--io.write (string.format ("Hello from %d, %d\n", x, y))
 	SetGbufferIndex (1)
-	return 8;
+	--return 8;
 end
