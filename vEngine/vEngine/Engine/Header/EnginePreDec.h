@@ -6,7 +6,7 @@
 
 namespace vEngine
 {
-#define CLASS_AND_SHARED_POINTER(name) \
+	#define CLASS_AND_SHARED_POINTER(name) \
 	class name;\
 	typedef std::shared_ptr<name> name##SharedPtr;
 
@@ -32,11 +32,11 @@ namespace vEngine
 	class ShaderObject;
 	class PostProcess;
 
-	class GameObject;
+	CLASS_AND_SHARED_POINTER(GameObject)
 	class SceneObject;
 	class SceneManager;
 
-	class GameState;
+	CLASS_AND_SHARED_POINTER(GameState)
 	class StateManager;
 
 	class Viewport;

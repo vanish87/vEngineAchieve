@@ -2,7 +2,7 @@
 #define GAMESTATE_H_
 
 #pragma once
-#include "Common\Header\CommonPreDec.h"
+#include "Engine\Header\EnginePreDec.h"
 #include <windows.h>
 
 namespace vEngine
@@ -13,8 +13,8 @@ namespace vEngine
 		GameState(void);
 		~GameState(void);
 
-		void SetParent(GameState* parent){parent_ = parent;};
-		GameState* GetParent(){return parent_;};
+		void SetParent(GameStateSharedPtr parent){parent_ = parent;};
+		GameStateSharedPtr GetParent(){return parent_;};
 
 		virtual void Update() = 0;
 
@@ -35,7 +35,7 @@ namespace vEngine
 		}
 
 	private:
-		GameState* parent_;
+		GameStateSharedPtr parent_;
 	};
 
 

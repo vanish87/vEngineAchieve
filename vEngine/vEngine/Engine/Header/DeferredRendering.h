@@ -23,11 +23,9 @@ namespace vEngine
 	class DeferredRendering
 	{
 	public:
-		DeferredRendering(Configure::RenderSetting& render_setting);
+		DeferredRendering(const Configure::RenderSetting& render_setting);
 		~DeferredRendering(void);
-
-		void AddGBuffer(RenderBuffer* shader_resource_view);
-
+		
 		FrameBuffer* & GetGBuffer(){return gbuffer_;};
 		std::vector<RenderBuffer*> GetGBufferSRV(){return gbuffer_srv_;};
 

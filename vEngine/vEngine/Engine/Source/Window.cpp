@@ -1,4 +1,5 @@
 #include "Engine\Header\Window.h"
+#include "Engine\Header\GameState.h"
 
 namespace vEngine
 {
@@ -7,7 +8,7 @@ namespace vEngine
 	{
 	}
 
-	void Window::InitWindow( std::string app_name, Configure::RenderSetting render_setting )
+	void Window::InitWindow( std::string app_name, Configure::RenderSetting& render_setting )
 	{
 		if (this->inited_)
 			PRINT_AND_RETURN("Window has been Initied", );

@@ -11,7 +11,6 @@
 #include "Engine\Header\SceneManager.h"
 #include "Engine\Header\StateManager.h"
 #include "Engine\Header\EnginePreDec.h"
-//#include "ResourceLoader.h" // find in Deprecated Files folder
 
 namespace vEngine
 {
@@ -30,7 +29,6 @@ namespace vEngine
 		ScriptContext& GetScriptContext();
 		void RegisterAppInstance(AppSharedPtr app_instance);
 		const App& GetAppInstance() const;
-		//ResourceLoader& GetResourceLoader();
 
 	private:
 		SINGLETON_PRAVATE(Context)
@@ -41,7 +39,6 @@ namespace vEngine
 		SceneManager scene_manager_;
 		StateManager state_manager_;
 		ScriptContextSharedPtr script_context_;
-		//ResourceLoader* resource_loader_;
 
 		AppSharedPtr app_instance_;
 	};

@@ -1,22 +1,13 @@
 #ifndef COMMON_PREDEC_H_
 #define COMMON_PREDEC_H_
 
-//#pragma warning(disable:4819 4355) take care
-
-//deal with the 'max' macro in windows.h colliding with 'max' in 'std'
-//#ifndef NOMINMAX
-//#define NOMINMAX
-//#endif // !NOMINMAX
-
 #pragma once
 
 //dll defines
 //#define VENGINE_API __declspec(dllexport)
 #define VENGINE_API
 
-//#include <assert.h>
-//#include "boost/smart_ptr.hpp"
-
+//debug and assert
 #include <iostream>
 #define PRINT(x) std::cout<<x<<std::endl;
 #define PRINT_AND_RETURN(x, returnVal) {PRINT(x);return returnVal;}
@@ -49,10 +40,12 @@
 #define SINGLETON_PRAVATE(class_name)\
 private:\
 	class_name(); \
-	class_name(class_name const&){}; \
-	class_name& operator=(class_name const&){}; \
+	class_name(class_name const&){__debugbreak();}; \
+	class_name& operator=(class_name const&){__debugbreak();}; \
 	~class_name(); 
 
+//another way to link static libs
+//#pragma comment(lib, LIB_FILE_NAME)
 
 //#define ENABLE_TEST
 //#define ENABLE_SCENE_TEST
@@ -67,13 +60,7 @@ namespace vEngine
 	typedef unsigned __int16 uint16_t;
 	typedef unsigned __int32 uint32_t;
 	typedef unsigned __int64 uint64_t;
-
-	//template<typename T>
-	//class Matrix;
-
-	//class XMLParser;
-	//typedef std::shared_ptr<XMLParser> XMLParserPtr;
-
+	
 	template <typename T>
 	class Vec2;
 	typedef Vec2<int32_t> int2;

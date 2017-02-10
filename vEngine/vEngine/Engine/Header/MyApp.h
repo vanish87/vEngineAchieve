@@ -7,6 +7,7 @@
 #include "Engine\Header\App.h"
 #include "Common\Header\Vector.h"
 #include "Engine\Header\EnginePreDec.h"
+#include "Engine\Header\GameState.h"
 #include "D3D11\D3DModel.h"
 #include <vector>
 
@@ -46,7 +47,7 @@ private:
 	float pitch_angle_;
 	float speed_;
 
-	MyState* newstate_;
+	vEngine::GameStateSharedPtr newstate_;
 };
 
 //state is used for change between different game scene

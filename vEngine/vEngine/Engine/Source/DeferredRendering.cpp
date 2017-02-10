@@ -19,7 +19,7 @@ namespace vEngine
 
 	static const int2 ShadowMapSize = int2(2048, 2048);
 
-	DeferredRendering::DeferredRendering( Configure::RenderSetting& render_setting )
+	DeferredRendering::DeferredRendering( const Configure::RenderSetting& render_setting )
 	{
 		gbuffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		lighting_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
@@ -39,7 +39,7 @@ namespace vEngine
 			//as render target
 			gbuffer_->AddRenderView(render_view);
 			//as shader resource
-			AddGBuffer(shader_resource);
+			gbuffer_srv_.push_back(shader_resource);
 		}
 
 		//init shadow blur buffer
@@ -179,11 +179,6 @@ namespace vEngine
 	DeferredRendering::~DeferredRendering(void)
 	{
 
-	}
-
-	void DeferredRendering::AddGBuffer( RenderBuffer* shader_resource_view )
-	{
-		gbuffer_srv_.push_back(shader_resource_view);
 	}
 	
 	void DeferredRendering::Update()

@@ -20,9 +20,8 @@ namespace vEngine
 	public:
 		RenderEngine(void);
 		virtual ~RenderEngine(void);
-		virtual void InitRenderWindow(std::string const & name, Configure::RenderSetting const & render_setting);
+		virtual void InitRenderWindow(const std::string& name, const Configure::RenderSetting& render_setting);
 		Configure::RenderSetting& GetRenderSetting(){return render_setting_;};
-		void InitLights();
 
 		virtual void BindFrameBuffer(FrameBuffer* const & frame_buffer) = 0;
 		virtual FrameBuffer* CurrentFrameBuffer(){return cur_frame_buffer_;};
@@ -37,7 +36,7 @@ namespace vEngine
 		//RenderBuffer* & GetLightsBuufer(){return light_buffer_;};
 		
 		//for Deferred Rendering
-		void InitDeferredRendering(Configure::RenderSetting render_setting );
+		void InitDeferredRendering(const Configure::RenderSetting& render_setting );
 		//TODO : Use ShaderState to set State
 		virtual void SetDeferredRenderingState() = 0;
 		virtual void SetNormalState() = 0;

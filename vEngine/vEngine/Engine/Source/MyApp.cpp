@@ -6,14 +6,11 @@
 #include "Engine\Header\ScriptTest.h"
 #include "Engine\Header\ScriptContext.h"
 
-//#include "StartMenu.h"
-
 #include "D3D11\D3DSkyDome.h"
 
 using namespace vEngine;
 
-MyApp app;
-
+static MyApp app;
 
 MyApp::MyApp(void) : App("vEngine")
 {
@@ -39,7 +36,7 @@ void MyApp::InitObjects()
 	script.StartMonitorPath("LuaScript/");
 
 	SceneObject testoject, testoject1;
-	testoject.AddComponent(&testoject1);
+	testoject.AddComponent(GameObjectSharedPtr(&testoject1));
 
 	vEngine::UUID RefID = testoject1.id();
 	vEngine::UUID nullID = GameObject::NullObject().id();
@@ -114,7 +111,7 @@ void MyApp::InitObjects()
 
 
 
-	newstate_ = new MyState(this);
+	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
 

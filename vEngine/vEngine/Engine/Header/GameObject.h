@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <typeinfo>
 #include "Common\Header\CommonPreDec.h"
+#include "Engine\Header\EnginePreDec.h"
 #include "Common\Header\UUID.h"
 
 namespace vEngine
@@ -17,7 +18,7 @@ namespace vEngine
 
 		virtual void Update();
 		virtual void Load();
-		virtual void AddComponent(GameObject* const GameObject_);
+		virtual void AddComponent(GameObjectSharedPtr const GameObject_);
 		virtual GameObject& FindComponentByUUID(const UUID& UUID_);
 
 		virtual std::string GetName();
@@ -53,7 +54,7 @@ namespace vEngine
 	protected:
 		UUID id_;
 
-		std::unordered_map<UUID, GameObject*> ConponentList_;
+		std::unordered_map<UUID, GameObjectSharedPtr> ConponentList_;
 	};
 
 	class NGameObject : public GameObject
