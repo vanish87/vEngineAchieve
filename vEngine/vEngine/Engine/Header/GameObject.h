@@ -81,6 +81,7 @@ namespace vEngine
 		};
 
 		std::unordered_map<UUID, GameObject*> ConponentList_;
+		std::unordered_map<UUID, GameObject*> ReleasedList_;
 	public:
 		static DebugTracking& GetInstance()
 		{
@@ -92,6 +93,8 @@ namespace vEngine
 		{
 			for (std::unordered_map<UUID, GameObject*>::iterator obj = ConponentList_.begin(); obj != ConponentList_.end();obj++)
 			{
+				//check ReleasedList_ first to ensure it is not released before
+				CHECK_ASSERT(this->ReleasedList_.find(obj->first) == this->ReleasedList_.end());
 				PRINT("subclass "<<obj->first.data_<< " with "<< obj->second->GetName().c_str());
 			}
 		}
@@ -104,6 +107,9 @@ namespace vEngine
 		};
 		void UnTrack(GameObject* const object)
 		{
+			CHECK_ASSERT(this->ReleasedList_.find(object->id()) == this->ReleasedList_.end());
+			this->ReleasedList_[object->id()] = object;
+
 			if (this->ConponentList_.find(object->id()) != this->ConponentList_.end())
 			{
 				this->ConponentList_.erase(object->id());

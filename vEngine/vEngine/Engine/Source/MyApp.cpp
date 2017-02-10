@@ -24,7 +24,6 @@ MyApp::~MyApp(void)
 
 void MyApp::InitObjects()
 {
-
 	//ScriptTest::GetInstance().Run();
 	ScriptContext& script = Context::Instance().GetScriptContext();
 	ScriptFuctionDescription dec;
