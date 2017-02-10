@@ -47,6 +47,11 @@ namespace vEngine
 		this->ThreadInstance.join();
         return RCSuccess();
     }
+
+	void Thread::Sleep(uint32_t TimeInMicroSeconds)
+	{
+		std::this_thread::sleep_for(std::chrono::microseconds(TimeInMicroSeconds));
+	}
         
     void* Thread::ThreadMain(void* ThreadData)
     {

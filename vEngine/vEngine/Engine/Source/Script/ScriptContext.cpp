@@ -200,7 +200,7 @@ namespace vEngine
 				EventHanlded = false;
 			}
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			this->Sleep(100);
 		}
 
 		return RCSuccess();
