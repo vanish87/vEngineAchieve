@@ -78,23 +78,23 @@ namespace vEngine
 		case LUA_ERRRUN:
 		{
 			PRINT_AND_ASSERT("EXECUTION ERROR: " << ErrorMessage);
+			break;
 		}
-		break;
 		case LUA_ERRSYNTAX:
 		{
 			PRINT_AND_ASSERT("SYNTAX ERROR: " << ErrorMessage);
+			break;
 		}
-		break;
 		case LUA_ERRMEM:
 		{
 			PRINT_AND_ASSERT("MEMORY ERROR: " << ErrorMessage);
+			break;
 		}
-		break;
 		case LUA_ERRERR:
 		{
 			PRINT_AND_ASSERT("ERROR in ERROR HANDLER: " << ErrorMessage);
+			break;
 		}
-		break;
 		default:
 			PRINT_AND_ASSERT(ErrorMessage);
 			break;
