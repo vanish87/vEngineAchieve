@@ -31,9 +31,58 @@ namespace vEngine
 	typedef bool(*ScriptFunction)(void* UserData);
 	struct ScriptFuctionDescription
 	{
+		enum FunctionType
+		{
+			FT_CONSTRUCTOR,
+			FT_DESTRUCTOR,
+			FT_NORMAL,
+		};
 		std::string name_;
+		FunctionType type_;
 		uint32_t parameter_num_;
+
 		ScriptFunction fuction_;
+
+		ScriptFuctionDescription()
+			:name_("INVALID"), type_(FT_NORMAL), parameter_num_(0), fuction_(nullptr)
+		{
+
+		}
+	};
+
+	class ScriptClassDescription
+	{	
+		friend class ScriptContext;
+		friend class LuaScriptContext;
+	private:
+		std::string name_;
+		std::vector<ScriptFuctionDescriptionSharedPtr> fuctions_;
+		ScriptFuctionDescriptionSharedPtr constructor_;
+		ScriptClassDescription() {};
+	public:
+		ScriptClassDescription(std::string name)
+			:name_(name)
+		{
+
+		}
+
+		void RegisterFunction(const ScriptFuctionDescriptionSharedPtr& FuncDesc)
+		{
+			switch (FuncDesc->type_)
+			{
+			case ScriptFuctionDescription::FT_CONSTRUCTOR:
+				constructor_ = FuncDesc;
+				break;
+			case ScriptFuctionDescription::FT_DESTRUCTOR:
+				break;
+			case ScriptFuctionDescription::FT_NORMAL:
+				fuctions_.push_back(FuncDesc);
+				break;
+			default:
+				break;
+			}
+		};
+				
 	};
 
 	class ScriptContext
@@ -47,6 +96,8 @@ namespace vEngine
 		virtual bool RunFile(std::string FileName, std::string FunctionName = "") = 0;
 
 		virtual bool RegisterCppFunction(const ScriptFuctionDescription& Description) = 0;
+		virtual bool RegisterCppClass(const ScriptClassDescription& Description) = 0;
+
 		virtual bool RegisterScriptFunction(const ScriptFuctionDescription& Description);
 
 		static ScriptContext* CreateContext();
@@ -67,6 +118,9 @@ namespace vEngine
 	protected:
 		std::vector<ScriptFuctionDescriptionSharedPtr> cpp_functions_;
 		std::vector<ScriptFuctionDescriptionSharedPtr> script_functions_;
+		std::vector<ScriptClassDescriptionSharedPtr> cpp_classes_;
+
+		ScriptClassDescriptionSharedPtr MakeCopyFrom(const ScriptClassDescription& Description);
 	};
 }
 

@@ -51,6 +51,7 @@ namespace vEngine
 	{
 		ScriptFuctionDescriptionSharedPtr NewCopy = std::make_shared<ScriptFuctionDescription>();
 		NewCopy->name_ = Description.name_;
+		NewCopy->type_ = Description.type_;
 		NewCopy->parameter_num_ = Description.parameter_num_;
 		NewCopy->fuction_ = Description.fuction_;
 		this->script_functions_.push_back(NewCopy);
@@ -91,6 +92,22 @@ namespace vEngine
 	{
 		this->monitor_thread_.SetPath(PathToWatch);
 		this->monitor_thread_.Create(nullptr);
+	}
+
+	ScriptClassDescriptionSharedPtr ScriptContext::MakeCopyFrom(const ScriptClassDescription& Description)
+	{
+		ScriptClassDescriptionSharedPtr NewClassCopy = std::make_shared<ScriptClassDescription>(Description.name_);
+		for (const ScriptFuctionDescriptionSharedPtr& i : Description.fuctions_)
+		{
+			ScriptFuctionDescriptionSharedPtr NewCopy = std::make_shared<ScriptFuctionDescription>();
+			NewCopy->name_ = i->name_;
+			NewCopy->type_ = i->type_;
+			NewCopy->parameter_num_ = i->parameter_num_;
+			NewCopy->fuction_ = i->fuction_;
+			NewClassCopy->fuctions_.push_back(NewCopy);
+		}
+		NewClassCopy->constructor_ = Description.constructor_;
+		return NewClassCopy;
 	}
 
 	ScriptThread::ScriptThread()

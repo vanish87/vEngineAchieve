@@ -128,4 +128,57 @@ namespace vEngine
 		return true;
 	}
 
+	bool LuaScriptContext::RegisterCppClass(const ScriptClassDescription& Description)
+	{
+		PRINT_AND_ASSERT("This should be test");
+		ScriptClassDescriptionSharedPtr NewCopy = this->MakeCopyFrom(Description);
+		this->cpp_classes_.push_back(NewCopy);
+
+		luaL_newmetatable(L, NewCopy->name_.c_str());
+		int ClassMetatable = lua_gettop(L);
+
+		lua_newtable(L);
+		int ClassFunctions = lua_gettop(L);
+
+		//set a global function table
+		lua_pushglobaltable(L);
+		lua_pushstring(L, NewCopy->name_.c_str());
+		lua_pushvalue(L, ClassFunctions);
+		lua_settable(L, -3);
+
+		lua_pushliteral(L, "__metatable");
+		lua_pushvalue(L, ClassFunctions);
+		lua_settable(L, ClassMetatable);  // hide metatable from Lua getmetatable()
+
+		lua_pushliteral(L, "__index");
+		lua_pushvalue(L, ClassFunctions);
+		lua_settable(L, ClassMetatable);
+
+		// mt for method table
+		lua_newtable(L);
+		int mt = lua_gettop(L);
+
+		lua_pushliteral(L, "__call"); 
+		lua_pushlightuserdata(this->L, NewCopy->constructor_.get());
+		lua_pushcclosure(this->L, LuaFunctionInstance, 1 /*number of pushed data*/);
+
+		lua_settable(L, mt);            // mt.__call = constructor
+
+		// Set mt as a metatable for methods table
+		lua_setmetatable(L, ClassFunctions);
+
+		// fill method table with methods from class T
+		for (unsigned int i = 0; i < NewCopy->fuctions_.size(); ++i)
+		{
+			lua_pushstring(L, NewCopy->fuctions_[i]->name_.c_str());
+			lua_pushlightuserdata(L, NewCopy->fuctions_[i].get());
+			lua_pushcclosure(L, LuaFunctionInstance, 1);
+			lua_settable(L, ClassFunctions);
+		}
+
+		lua_pop(L, 2);  // drop metatable and method table
+
+		return true;
+	}
+
 }

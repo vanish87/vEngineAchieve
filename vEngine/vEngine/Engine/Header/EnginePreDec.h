@@ -56,6 +56,7 @@ namespace vEngine
 
 	CLASS_AND_SHARED_POINTER(ScriptContext)
 	STRUCT_AND_SHARED_POINTER(ScriptFuctionDescription)
+	CLASS_AND_SHARED_POINTER(ScriptClassDescription)
 
 	#undef CLASS_AND_SHARED_POINTER
 	#undef STRUCT_AND_SHARED_POINTER

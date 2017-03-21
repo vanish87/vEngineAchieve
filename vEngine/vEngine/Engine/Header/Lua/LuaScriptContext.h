@@ -22,13 +22,12 @@ namespace vEngine
 		virtual bool RunString(std::string ScriptToRun) override;
 		virtual bool RunFile(std::string FileName, std::string FunctionName = "") override;
 		virtual bool RegisterCppFunction(const ScriptFuctionDescription& Description) override;
+		virtual bool RegisterCppClass(const ScriptClassDescription& Description) override;
 
 		void PrintError(lua_State* state, int Result);
 		void CheckAndPrintError(lua_State* state, int Result);
 
 		lua_State* state();
-
-
 
 
 	private:
