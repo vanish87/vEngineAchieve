@@ -28,8 +28,10 @@ namespace vEngine
         ReturnCode Create(void* Parameter_ = nullptr,std::string Name = __FILE__);
         
         ReturnCode Join();
+
+		void Sleep(uint32_t TimeInMicroSeconds);
         
-    private:
+	protected:
         std::string Name;
         void* Parameter;        
         

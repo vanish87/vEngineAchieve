@@ -15,7 +15,7 @@ namespace vEngine
 
 	void SceneObject::Update()
 	{
-		assert(this->render_element_ != nullptr);
+		CHECK_ASSERT(this->render_element_ != nullptr);
 		if (this->render_element_ != nullptr)
 		{
 			this->model_matrix_ = render_element_->model_matrix_;

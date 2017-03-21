@@ -24,6 +24,7 @@ namespace vEngine
 		virtual ReturnCode Main(void* para) override;
 
 		void AddToQueue(ThreadJob* job);
+		void Quit();
 
 	private:
 		std::queue<ThreadJob*> loading_queue_;

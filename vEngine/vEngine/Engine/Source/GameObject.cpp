@@ -25,23 +25,24 @@ namespace vEngine
 	std::string GameObject::GetName()
 	{
 		//should never call this
-		assert(false);
+		CHECK_AND_ASSERT(false,"should never call this");
 		return "ERROR";
 	}
 
 	void GameObject::AddComponent(GameObject* const GameObject_)
 	{
-		assert(GameObject_ != nullptr);
-		assert(GameObject_ != &GameObject::NullObject() && GameObject_ != this);
+		CHECK_AND_ASSERT(GameObject_ != nullptr, "GameObject Error");
+		CHECK_ASSERT(*GameObject_ != GameObject::NullObject());
+		CHECK_ASSERT(GameObject_ != this);
 		this->ConponentList_[GameObject_->id()] = GameObject_;
-		assert(this->ConponentList_[GameObject_->id()] == GameObject_);
+		CHECK_AND_ASSERT(this->ConponentList_[GameObject_->id()] == GameObject_, "GameObject Error");
 	}
 
 	GameObject& GameObject::FindComponentByUUID(const UUID& UUID_)
 	{
 		if(this->ConponentList_.find(UUID_) == this->ConponentList_.end()) return GameObject::NullObject();
 		GameObject* Ret = this->ConponentList_[UUID_];
-		assert(Ret != nullptr);
+		CHECK_AND_ASSERT(Ret != nullptr, "Find Error");
 		return *Ret;
 	}
 

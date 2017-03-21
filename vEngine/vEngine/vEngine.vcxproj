@@ -66,11 +66,18 @@
     <ClCompile Include="Engine\Source\ResourceLoader.cpp" />
     <ClCompile Include="Engine\Source\SceneManager.cpp" />
     <ClCompile Include="Engine\Source\SceneObject.cpp" />
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptContext.cpp" />
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptFunctions.cpp" />
+    <ClCompile Include="Engine\Source\Script\Lua\LuaScriptStack.cpp" />
+    <ClCompile Include="Engine\Source\Script\ScriptContext.cpp" />
+    <ClCompile Include="Engine\Source\Script\ScriptStack.cpp" />
+    <ClCompile Include="Engine\Source\Script\ScriptTest.cpp" />
     <ClCompile Include="Engine\Source\ShaderObject.cpp" />
     <ClCompile Include="Engine\Source\StateManager.cpp" />
     <ClCompile Include="Engine\Source\Texture.cpp" />
     <ClCompile Include="Engine\Source\Viewport.cpp" />
     <ClCompile Include="Engine\Source\Window.cpp" />
+    <ClCompile Include="TestCase\SceneObjectTest.cpp" />
     <ClCompile Include="TestCase\ThreadTest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +119,9 @@
     <ClInclude Include="Engine\Header\GameObject.h" />
     <ClInclude Include="Engine\Header\GameState.h" />
     <ClInclude Include="Engine\Header\Light.h" />
+    <ClInclude Include="Engine\Header\Lua\LuaScriptContext.h" />
+    <ClInclude Include="Engine\Header\Lua\LuaScriptFunctions.h" />
+    <ClInclude Include="Engine\Header\Lua\LuaScriptStack.h" />
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
     <ClInclude Include="Engine\Header\MyApp.h" />
@@ -127,6 +137,8 @@
     <ClInclude Include="Engine\Header\ResourceLoader.h" />
     <ClInclude Include="Engine\Header\SceneManager.h" />
     <ClInclude Include="Engine\Header\SceneObject.h" />
+    <ClInclude Include="Engine\Header\ScriptStack.h" />
+    <ClInclude Include="Engine\Header\ScriptTest.h" />
     <ClInclude Include="Engine\Header\ShaderObject.h" />
     <ClInclude Include="Engine\Header\StateManager.h" />
     <ClInclude Include="Engine\Header\texture.h" />
@@ -201,6 +213,10 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="LuaScript\DebugUpdate.lua" />
+    <None Include="LuaScript\HelloWorld.lua" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{21DB105E-D529-4661-81F0-F6FBF97511B5}</ProjectGuid>
     <RootNamespace>vEngine</RootNamespace>
@@ -254,6 +270,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <ExtensionsToDeleteOnClean>**.lua;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ExtensionsToDeleteOnClean>**.lua;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -272,11 +292,13 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTexd.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTexd.lib;Effects11d.lib;LuaLibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /d /e /y /i /f "$(SolutionDir)Media" "$(OutDir)Media"
-xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"</Command>
+xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"
+xcopy /d /e /y /i /f "$(ProjectDir)LuaScript" "$(OutDir)LuaScript"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -307,11 +329,12 @@ xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc140-mt.lib;DirectXTex.lib;Effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc140-mt.lib;DirectXTex.lib;Effects11.lib;LuaLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /d /e /y /i /f "$(SolutionDir)Media" "$(OutDir)Media"
-xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"</Command>
+xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"
+xcopy /d /e /y /i /f "$(ProjectDir)LuaScript" "$(OutDir)LuaScript"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -3,10 +3,8 @@
 
 #pragma once
 #include <vector>
-#include "Common\Header\CommonPreDec.h"
+#include "Engine\Header\EnginePreDec.h"
 #include "TypeAndFormat.h"
-
-#include "GameState.h"
 
 namespace vEngine
 {
@@ -17,12 +15,12 @@ namespace vEngine
 		~StateManager(void);
 
 		void Update();
-		void ChangeState(GameState* game_state, StateOP op);
-		GameState* CurrentState();
+		void ChangeState(GameStateSharedPtr game_state, StateOP op);
+		GameStateSharedPtr CurrentState();
 
 	private:
-		std::vector<GameState*> states_;
-		GameState* current_state_;
+		std::vector<GameStateSharedPtr> states_;
+		GameStateSharedPtr current_state_;
 
 	};
 

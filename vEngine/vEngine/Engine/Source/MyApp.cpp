@@ -3,15 +3,14 @@
 #include "Common\Header\Timer.h"
 #include "Engine\Header\RenderTools.h"
 #include "Engine\Header\ResourceLoader.h"
-
-//#include "StartMenu.h"
+#include "Engine\Header\ScriptTest.h"
+#include "Engine\Header\ScriptContext.h"
 
 #include "D3D11\D3DSkyDome.h"
 
 using namespace vEngine;
 
-MyApp app;
-
+static MyApp app;
 
 MyApp::MyApp(void) : App("vEngine")
 {
@@ -25,6 +24,15 @@ MyApp::~MyApp(void)
 
 void MyApp::InitObjects()
 {
+	//ScriptTest::GetInstance().Run();
+	ScriptContext& script = Context::Instance().GetScriptContext();
+	ScriptFuctionDescription dec;
+	dec.name_ = "ThisIsAcppFuction";
+	dec.fuction_ = MyApp::ToBeCalledFromLua;
+	script.RegisterCppFunction(dec);
+	script.RunFile("LuaScript/HelloWorld.lua");
+
+	script.StartMonitorPath("LuaScript/");
 
 	SceneObject testoject, testoject1;
 	testoject.AddComponent(&testoject1);
@@ -32,10 +40,10 @@ void MyApp::InitObjects()
 	vEngine::UUID RefID = testoject1.id();
 	vEngine::UUID nullID = GameObject::NullObject().id();
 	//vEngine::UUID newID;
-	assert(testoject1 == testoject.FindComponentByUUID(RefID));
-	assert(testoject1 != testoject.FindComponentByUUID(nullID));
-	assert(GameObject::NullObject() == testoject.FindComponentByUUID(nullID));
-	assert(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
+	CHECK_ASSERT(testoject1 == testoject.FindComponentByUUID(RefID));
+	CHECK_ASSERT(testoject1 != testoject.FindComponentByUUID(nullID));
+	CHECK_ASSERT(GameObject::NullObject() == testoject.FindComponentByUUID(nullID));
+	CHECK_ASSERT(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
 
 	DebugTracking::GetInstance().PrintALL();
 
@@ -101,7 +109,8 @@ void MyApp::InitObjects()
 	DebugTracking::GetInstance().PrintALL();
 
 
-	newstate_ = new MyState(this);
+
+	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
 
@@ -117,6 +126,10 @@ void MyApp::SacleCallBack(void* UserData)
 	SceneObject* s = new SceneObject(model);
 	app.SetSceneObject(s);
 	s->AddToScene();
+
+	SceneObject* news = Context::Instance().GetSceneManager().FindOjectByUUID(s->id());
+	CHECK_AND_ASSERT(news == s, "Check scene objects");
+	CHECK_AND_ASSERT(*news == *s, "Check scene objects");
 }
 
 void MyApp::ReleaseObjects()
@@ -176,6 +189,12 @@ void MyApp::MakePlane()
 void MyApp::SetSceneObject(SceneObject* scene_object)
 {
 	this->test_scene_ = scene_object;
+}
+
+bool MyApp::ToBeCalledFromLua(void* UserData)
+{
+	PRINT("Lua call this function");
+	return true;
 }
 
 void MyState::Update()

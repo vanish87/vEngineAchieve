@@ -1,8 +1,9 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
-#include <assert.h>
+//#include <assert.h>
 #include <array>
+#include "Common\Header\CommonPreDec.h"
 
 #pragma once
 
@@ -68,7 +69,7 @@ namespace vEngine
 
 		T& operator[](size_t index)
 		{
-			assert(index < 2);
+			CHECK_ASSERT(index < 2);
 			return vec_[index];
 		}
 
@@ -99,7 +100,7 @@ namespace vEngine
 
 		Vec2 operator/(const T & rhs) const
 		{ 
-			assert( rhs != 0);
+			CHECK_ASSERT( rhs != 0);
 			return Vec2(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs));
 		}
 
@@ -178,7 +179,7 @@ namespace vEngine
 
 		T& operator[](size_t index)
 		{
-			assert(index < 3);
+			CHECK_ASSERT(index < 3);
 			return vec_[index];
 		}
 
@@ -201,7 +202,7 @@ namespace vEngine
 
 		Vec3 operator/(const T & rhs) const
 		{ 
-			assert( rhs != 0);
+			CHECK_ASSERT( rhs != 0);
 			return Vec3(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs) , vec_[2]* (1.0f  / rhs));
 		}
 
@@ -296,13 +297,13 @@ namespace vEngine
 
 		const T& operator[](size_t index) const
 		{
-			assert(index < 4);
+			CHECK_ASSERT(index < 4);
 			return vec_[index];
 		}
 
 		T& operator[](size_t index)
 		{
-			assert(index < 4);
+			CHECK_ASSERT(index < 4);
 			return vec_[index];
 		}
 
@@ -325,7 +326,7 @@ namespace vEngine
 
 		Vec4 operator/(const T & rhs) const
 		{ 
-			assert( rhs != 0);
+			CHECK_ASSERT( rhs != 0);
 			return Vec4(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs) , vec_[2]* (1.0f  / rhs),vec_[3]* (1.0f  / rhs));
 		}
 	};

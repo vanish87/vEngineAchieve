@@ -7,10 +7,10 @@
 
 #include "Common\Header\CommonPreDec.h"
 #include "Common\Header\Configure.h"
-#include "RenderFactory.h"
-#include "SceneManager.h"
-#include "StateManager.h"
-//#include "ResourceLoader.h" // find in Deprecated Files folder
+#include "Engine\Header\RenderFactory.h"
+#include "Engine\Header\SceneManager.h"
+#include "Engine\Header\StateManager.h"
+#include "Engine\Header\EnginePreDec.h"
 
 namespace vEngine
 {
@@ -24,21 +24,21 @@ namespace vEngine
 		Configure::ContextSetting const & GetConfigure() const;
 
 		RenderFactory& GetRenderFactory();
-		SceneManager& GetSceneManager();
-		StateManager& GetStateManager();
+		SceneManager&  GetSceneManager();
+		StateManager&  GetStateManager();
+		ScriptContext& GetScriptContext();
 		void RegisterAppInstance(App* app_instance);
 		const App& GetAppInstance() const;
-		//ResourceLoader& GetResourceLoader();
 
 	private:
 		SINGLETON_PRAVATE(Context)
 
 		Configure::ContextSetting context_config_;
 
-		RenderFactory*	render_factory_;
+		RenderFactorySharedPtr	render_factory_;
 		SceneManager scene_manager_;
 		StateManager state_manager_;
-		//ResourceLoader* resource_loader_;
+		ScriptContextSharedPtr script_context_;
 
 		App* app_instance_;
 	};

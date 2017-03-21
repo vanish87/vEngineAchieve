@@ -1,4 +1,7 @@
 #include "Engine\Header\StateManager.h"
+#include "Engine\Header\GameState.h"
+#include "Engine\Header\Context.h"
+#include "Engine\Header\ScriptContext.h"
 
 namespace vEngine
 {
@@ -14,12 +17,17 @@ namespace vEngine
 
 	void StateManager::Update()
 	{
-		if(current_state_ != nullptr)
+		ScriptContext& script = Context::Instance().GetScriptContext();
+		script.RunFile("LuaScript/DebugUpdate.lua", "Update");
+
+		if (current_state_ != nullptr)
+		{
 			//do state update
 			current_state_->Update();
+		}
 	}
 
-	void StateManager::ChangeState( GameState* game_state, StateOP op )
+	void StateManager::ChangeState(GameStateSharedPtr game_state, StateOP op )
 	{
 		switch (op)
 		{
@@ -31,8 +39,7 @@ namespace vEngine
 		}
 		case SOP_POP:
 		{
-			assert(current_state_ == game_state);
-			//TODO: memory leak
+			CHECK_ASSERT(current_state_ == game_state);
 			current_state_ = current_state_->GetParent();
 			break;
 		}
@@ -41,7 +48,7 @@ namespace vEngine
 		}
 	}
 
-	GameState* StateManager::CurrentState()
+	GameStateSharedPtr StateManager::CurrentState()
 	{
 		return current_state_;
 	}

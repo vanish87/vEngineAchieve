@@ -40,7 +40,7 @@ namespace vEngine
 		template <typename T>
 		Matrix<T>	Multiply( const Matrix<T> & lhs, const Matrix<T> & rhs )
 		{
-			assert( lhs.row() == rhs.col() );
+			CHECK_ASSERT( lhs.row() == rhs.col() );
 			Matrix<T> ret;
 			size_t dim = 4;
 

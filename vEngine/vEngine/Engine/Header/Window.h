@@ -17,7 +17,7 @@ namespace vEngine
 	{
 		friend class App;
 	public:
-		void InitWindow(std::string app_name, Configure::RenderSetting render_setting);
+		void InitWindow(std::string app_name, Configure::RenderSetting& render_setting);
 		~Window(void);
 
 		HWND GetWnd() const

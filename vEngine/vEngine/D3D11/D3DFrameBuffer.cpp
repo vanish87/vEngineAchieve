@@ -31,7 +31,7 @@ namespace vEngine
 			rtvs.push_back(static_cast<D3DRenderTargetView*>(this->render_views_[i])->D3DRTV());
 		D3DDepthStencilRenderView* depth_view = static_cast<D3DDepthStencilRenderView*>(depth_stencil_view_);
 		ID3D11DepthStencilView* dsv = depth_view->D3DDSV();
-		assert(dsv != nullptr);
+		CHECK_ASSERT(dsv != nullptr);
 		
 		dsv = depth_view->D3DDSV();
 		//only draw depth

@@ -29,12 +29,19 @@ namespace vEngine
 			if (render_views_[i]->GetTexture() == render_view->GetTexture())
 			{
 				delete render_view;
+				//PRINT_AND_ASSERT("render view exists");
 				return;
 			}
 		}
 		render_views_.push_back(render_view);
 	}
 
+
+	RenderView* FrameBuffer::GetRenderView(size_t index)
+	{
+		CHECK_ASSERT(index < render_views_.size());
+		return render_views_[index];
+	}
 
 	Viewport& FrameBuffer::GetViewport()
 	{

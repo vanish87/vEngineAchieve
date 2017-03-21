@@ -91,7 +91,7 @@ namespace vEngine
 		:d3d_rt_view_(nullptr), d3d_sr_view_(nullptr), d3d_ds_view_(nullptr)
 	{
 		//this desc_ should be used to verify texture parameter only
-		assert(texture != nullptr);
+		CHECK_ASSERT(texture != nullptr);
 
 		texture->GetDesc(&this->desc_);
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
@@ -141,7 +141,7 @@ namespace vEngine
 			//check it first
 			D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 			D3D11_RENDER_TARGET_VIEW_DESC desc;
-			assert(array_size == 1);
+			CHECK_ASSERT(array_size == 1);
 			if(array_size == 1)
 			{
 				desc.Format = d3d_re->MapFormat(this->format_);

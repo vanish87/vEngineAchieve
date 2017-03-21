@@ -39,7 +39,7 @@ namespace vEngine
 	
 	D3DDepthStencilRenderView::D3DDepthStencilRenderView(Texture& texture, int array_size, int mip_level, DepthStencilUsage usage)
 	{
-		assert(texture.GetType() == TEXTURE2D);
+		CHECK_ASSERT(texture.GetType() == TEXTURE2D);
 		D3DTexture2D* d3d_texture = static_cast<D3DTexture2D*>(&texture);
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;

@@ -19,7 +19,7 @@ namespace vEngine
 
 	void Viewport::SetCamera(Camera* camera)
 	{
-		assert(camera != nullptr && *camera != GameObject::NullObject());
+		CHECK_ASSERT(camera != nullptr && *camera != GameObject::NullObject());
 		this->camera_.SetView(camera->GetPos(), camera->GetLookAt(), camera->GetUp());
 		float2 NearFar = camera->GetNearFar();
 		this->camera_.SetProjection(camera->GetFovy(), camera->GetAspect(), NearFar.x(), NearFar.y());

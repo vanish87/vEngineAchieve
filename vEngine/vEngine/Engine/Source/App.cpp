@@ -37,7 +37,6 @@ namespace vEngine
 			Context::Instance().GetRenderFactory().GetRenderEngine().InitDeferredRendering(config.render_setting);
 
 		this->InitObjects();
-		Context::Instance().GetRenderFactory().GetRenderEngine().InitLights();
 
 	}
 
