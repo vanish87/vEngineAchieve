@@ -53,7 +53,6 @@
     <ClCompile Include="Engine\Source\Light.cpp" />
     <ClCompile Include="Engine\Source\Mesh.cpp" />
     <ClCompile Include="Engine\Source\Model.cpp" />
-    <ClCompile Include="Engine\Source\MyApp.cpp" />
     <ClCompile Include="Engine\Source\PostProcess.cpp" />
     <ClCompile Include="Engine\Source\RenderBuffer.cpp" />
     <ClCompile Include="Engine\Source\RenderElement.cpp" />
@@ -124,7 +123,6 @@
     <ClInclude Include="Engine\Header\Lua\LuaScriptStack.h" />
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
-    <ClInclude Include="Engine\Header\MyApp.h" />
     <ClInclude Include="Engine\Header\PostProcess.h" />
     <ClInclude Include="Engine\Header\RenderBuffer.h" />
     <ClInclude Include="Engine\Header\RenderElement.h" />
@@ -237,7 +235,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -300,6 +298,13 @@
 xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"
 xcopy /d /e /y /i /f "$(ProjectDir)LuaScript" "$(OutDir)LuaScript"</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTexd.lib;Effects11d.lib;LuaLibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Verbose>false</Verbose>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
