@@ -230,6 +230,9 @@
     <ClCompile Include="Engine\Source\Script\Lua\LuaScriptStack.cpp">
       <Filter>Source\Script\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="TestCase\Font_FreeType.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -420,6 +423,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Header\Lua\LuaScriptStack.h">
       <Filter>Header\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="TestCase\TestCase.h">
+      <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
