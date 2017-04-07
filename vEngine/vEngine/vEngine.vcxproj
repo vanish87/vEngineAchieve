@@ -76,6 +76,7 @@
     <ClCompile Include="Engine\Source\Texture.cpp" />
     <ClCompile Include="Engine\Source\Viewport.cpp" />
     <ClCompile Include="Engine\Source\Window.cpp" />
+    <ClCompile Include="TestCase\Font_FreeType.cpp" />
     <ClCompile Include="TestCase\SceneObjectTest.cpp" />
     <ClCompile Include="TestCase\ThreadTest.cpp" />
   </ItemGroup>
@@ -143,6 +144,7 @@
     <ClInclude Include="Engine\Header\TypeAndFormat.h" />
     <ClInclude Include="Engine\Header\Viewport.h" />
     <ClInclude Include="Engine\Header\Window.h" />
+    <ClInclude Include="TestCase\TestCase.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\DebugShader.fx">
@@ -241,7 +243,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -286,7 +288,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)External;$(SolutionDir)External\freetype2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -300,7 +302,7 @@ xcopy /d /e /y /i /f "$(ProjectDir)LuaScript" "$(OutDir)LuaScript"
 xcopy /d /e /y /i /f "$(SolutionDir)External\RuntimeDLL" "$(OutDir)"</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTexd.lib;Effects11d.lib;LuaLibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTexd.lib;Effects11d.lib;LuaLibd.lib;FreeType2Libd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -327,7 +329,7 @@ xcopy /d /e /y /i /f "$(SolutionDir)External\RuntimeDLL" "$(OutDir)"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)External;$(SolutionDir)External\freetype2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -335,13 +337,17 @@ xcopy /d /e /y /i /f "$(SolutionDir)External\RuntimeDLL" "$(OutDir)"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc140-mt.lib;DirectXTex.lib;Effects11.lib;LuaLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc140-mt.lib;DirectXTex.lib;Effects11.lib;LuaLib.lib;FreeType2Lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /d /e /y /i /f "$(SolutionDir)Media" "$(OutDir)Media"
 xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"
 xcopy /d /e /y /i /f "$(ProjectDir)LuaScript" "$(OutDir)LuaScript"</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTex.lib;Effects11.lib;LuaLib.lib;FreeType2Lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

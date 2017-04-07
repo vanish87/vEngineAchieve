@@ -8,6 +8,8 @@
 
 #include "D3D11\D3DSkyDome.h"
 
+#include "TestCase/TestCase.h"
+
 using namespace vEngine;
 
 static MyApp app;
@@ -46,6 +48,8 @@ void MyApp::InitObjects()
 	CHECK_ASSERT(GameObject::NullObject() == testoject.FindComponentByUUID(testoject.id()));
 
 	DebugTracking::GetInstance().PrintALL();
+
+	RunFontTest();
 
 	//set up lights
 	for(int i = 0; i < 1 ; ++i)
