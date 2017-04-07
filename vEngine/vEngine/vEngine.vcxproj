@@ -298,7 +298,8 @@
     <PostBuildEvent>
       <Command>xcopy /d /e /y /i /f "$(SolutionDir)Media" "$(OutDir)Media"
 xcopy /d /f /e /y /i "$(ProjectDir)Configure" "$(OutDir)Configure"
-xcopy /d /e /y /i /f "$(ProjectDir)LuaScript" "$(OutDir)LuaScript"</Command>
+xcopy /d /e /y /i /f "$(ProjectDir)LuaScript" "$(OutDir)LuaScript"
+xcopy /d /e /y /i /f "$(SolutionDir)External\RuntimeDLL" "$(OutDir)"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>assimpd-vc140-mt.lib;DirectXTexd.lib;Effects11d.lib;LuaLibd.lib;FreeType2Libd.lib;%(AdditionalDependencies)</AdditionalDependencies>
