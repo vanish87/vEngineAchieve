@@ -94,6 +94,11 @@ namespace vEngine
 		this->monitor_thread_.Create(nullptr);
 	}
 
+	void ScriptContext::Quit()
+	{
+		this->monitor_thread_.Quit();
+	}
+
 	ScriptClassDescriptionSharedPtr ScriptContext::MakeCopyFrom(const ScriptClassDescription& Description)
 	{
 		ScriptClassDescriptionSharedPtr NewClassCopy = std::make_shared<ScriptClassDescription>(Description.name_);
@@ -117,7 +122,7 @@ namespace vEngine
 
 	ScriptThread::~ScriptThread()
 	{
-		this->ThreadInstance.detach();
+
 	}
 
 	void ScriptThread::SetPath(std::string PathToWatch)
@@ -133,13 +138,19 @@ namespace vEngine
 		this->current_path_ = path.generic_string();
 	}
 
+	void ScriptThread::Quit()
+	{
+		this->should_quit_ = true;
+		this->ThreadInstance.detach();
+	}
+
 	ReturnCode ScriptThread::Main(void* para)
 	{
 		if (this->current_path_.empty()) return RCFailure();
 
 		//windows dependent code
 
-		HANDLE hDir = CreateFile(current_path_.c_str(),
+		HANDLE hDir = CreateFile(std::wstring(current_path_.begin(), current_path_.end()).c_str(),
 			FILE_LIST_DIRECTORY,
 			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
 			NULL,

@@ -18,7 +18,8 @@ namespace vEngine
 		ScriptThread();
 		~ScriptThread();
 
-		void SetPath(std::string PathToWatch);
+		void SetPath(std::string PathToWatch); 
+		void Quit();
 	public:
 		virtual ReturnCode Main(void* para) override;
 
@@ -112,6 +113,7 @@ namespace vEngine
 		bool FunctionEnd(std::string FunctionName, ScriptStack* Stack);
 
 		void StartMonitorPath(std::string PathToWatch);
+		void Quit();
 	private:
 		ScriptThread monitor_thread_;
 		std::mutex mutex_;

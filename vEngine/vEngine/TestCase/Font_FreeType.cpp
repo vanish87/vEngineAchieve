@@ -80,11 +80,13 @@ void RunFontTest()
 	CHECK_ASSERT(error == FT_Err_Ok);
 
 	FT_UInt index = FT_Get_Char_Index(face, 'A');	
+	wchar_t ChineseCha = L'\u6c38';
+	wchar_t Char = L'\u00fc';
 
 	// Dump out a single glyph to a tga.
 	WriteGlyphAsTGA(library,
 		"Media/output/font_test.tga",
-		L'B',
+		ChineseCha,
 		face,
 		100,
 		Pixel32(255, 90, 30),

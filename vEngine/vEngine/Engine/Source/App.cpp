@@ -1,5 +1,6 @@
 #include "Engine\Header\App.h"
 #include "Engine\Header\Context.h"
+#include "Engine\Header\ScriptContext.h"
 #include "Engine\Header\Window.h"
 
 namespace vEngine
@@ -82,6 +83,9 @@ namespace vEngine
 
 			}
 		}
+
+		//TODO: Shutdown all threads now
+		Context::Instance().GetScriptContext().Quit();
 	}
 
 	const Window& App::GetWindow() const
