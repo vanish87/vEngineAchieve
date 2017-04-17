@@ -90,7 +90,7 @@ namespace vEngine
 	{
 		if (this->cameras_.empty())
 		{
-			PRINT_AND_ASSERT("Add a camera first");
+			PRINT_AND_BREAK("Add a camera first");
 			this->cameras_.push_back(new Camera());
 		}
 

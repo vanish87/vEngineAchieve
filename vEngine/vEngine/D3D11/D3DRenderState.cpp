@@ -33,7 +33,7 @@ namespace vEngine
 	{
 		D3DRenderState();
 		state_type_ = RST_BLEND;	
-		PRINT_AND_ASSERT("not implemented");
+		PRINT_AND_BREAK("not implemented");
 	}
 
 

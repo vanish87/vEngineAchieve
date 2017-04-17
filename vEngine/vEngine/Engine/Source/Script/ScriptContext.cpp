@@ -127,7 +127,7 @@ namespace vEngine
 
 	void ScriptThread::SetPath(std::string PathToWatch)
 	{
-		if (!this->current_path_.empty()) PRINT_AND_ASSERT("cannot change path while running at this time");
+		if (!this->current_path_.empty()) PRINT_AND_BREAK("cannot change path while running at this time");
 
 		std::experimental::filesystem::path path = PathToWatch;
 		if (path.is_relative())

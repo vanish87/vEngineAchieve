@@ -432,9 +432,6 @@
     <FxCompile Include="Shader\LinearizeDepthPostProcess.fx">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\Rendering.fx">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="Shader\SkyDome.fx">
       <Filter>Shader</Filter>
     </FxCompile>
@@ -451,6 +448,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="Shader\DebugShader.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Rendering.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

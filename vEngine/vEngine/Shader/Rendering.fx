@@ -28,6 +28,59 @@ cbuffer cbPerFrame
 	Light light;
 };
 
+float _RefractiveIndex = 0.3;
+float PI = 3.141592653f;
+
+//reflection R
+float SchlickFresnelWithN(float n, float3 halfVec, float3 viewDir/*or LightDir*/)
+{
+	float FresnelFactor = pow((1 - n) / (1 + n), 2);
+	float  VdotH = dot(halfVec, viewDir);
+	return FresnelFactor + ((1 - FresnelFactor) * pow(1 - VdotH, 5));
+}
+
+//refraction T
+float FresnelT(float n, float3 normal, float3 In)
+{
+	return 1 - SchlickFresnelWithN(n, normal, In);
+}
+
+float CookTorranceGeometry(float3 normal, float3 halfVec, float3 viewDir, float3 lightDir)
+{
+	float NdotH = dot(normal, halfVec);
+	float VdotH = dot(viewDir, halfVec);
+	float NdotMin = min(dot(normal, viewDir), dot(normal, lightDir));
+	return min(1.0f, 2.0f * NdotH * NdotMin / VdotH);
+}
+
+//The power p is the "roughness parameter" of the Phong NDF; high values represent smooth
+//surfaces and low values represent rough ones.
+float BlinnPhongDistribution(float3 normal, float3 halfVec, float alpha)
+{
+	float normalizeTerm = (alpha + 2) / (2 * PI);
+	return normalizeTerm * pow(max(0, dot(normal, halfVec)), alpha);
+}
+
+//http://simonstechblog.blogspot.jp/2011/12/microfacet-brdf.html
+//http://blog.selfshadow.com/publications/s2012-shading-course/hoffman/s2012_pbs_physics_math_notes.pdf
+float CalBlinnPhongBRDF_Specular(float3 normal, float3 viewDir, float3 lightDir, bool withFresnal, float power)
+{
+	float3 halfVec = normalize(viewDir + lightDir);
+	float f = 1;
+	if (withFresnal)
+	{
+		f = SchlickFresnelWithN(_RefractiveIndex, halfVec, lightDir);
+	}
+
+	float g = CookTorranceGeometry(normal, halfVec, viewDir, lightDir);
+	//BlinnPhong distribution
+	float d = BlinnPhongDistribution(normal, halfVec, power);
+
+	float NdotL = dot(normal, lightDir);
+	float NdotV = dot(normal, viewDir);
+	return f * g * d / (4 * NdotL * NdotV);
+}
+
 float4 CalLighting( in float3 normal, 
 					 in float3 position, //view_pos
 					 in float4 diffuseAlbedo,
@@ -153,7 +206,8 @@ float4 CalPreLighting(	 in float3 normal,
 							//Clight * (N * Lc)
 							diffuse = light_color * diffuse_angle * att;
 							//pow(N*H, alpha) * Clight * (N * Lc)
-							spec    = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+							spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+							spec = light_color.r * CalBlinnPhongBRDF_Specular(normal, pos_eye, pos_light, true, spec_factor);
 						}
 
 						float inner = light.inner_outer.x;
@@ -186,3 +240,4 @@ float4 CalPreLighting(	 in float3 normal,
 	}	
     return litColor;
 }
+

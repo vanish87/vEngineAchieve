@@ -24,7 +24,7 @@ namespace vEngine
 		else
 			if(usage_ == BU_SHADER_CONST)
 			{
-				PRINT_AND_ASSERT("Not implemented");
+				PRINT_AND_BREAK("Not implemented");
 			}
 	}
 

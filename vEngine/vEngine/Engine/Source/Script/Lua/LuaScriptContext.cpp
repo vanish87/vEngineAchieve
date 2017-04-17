@@ -77,26 +77,26 @@ namespace vEngine
 		{
 		case LUA_ERRRUN:
 		{
-			PRINT_AND_ASSERT("EXECUTION ERROR: " << ErrorMessage);
+			PRINT_AND_BREAK("EXECUTION ERROR: " << ErrorMessage);
 			break;
 		}
 		case LUA_ERRSYNTAX:
 		{
-			PRINT_AND_ASSERT("SYNTAX ERROR: " << ErrorMessage);
+			PRINT_AND_BREAK("SYNTAX ERROR: " << ErrorMessage);
 			break;
 		}
 		case LUA_ERRMEM:
 		{
-			PRINT_AND_ASSERT("MEMORY ERROR: " << ErrorMessage);
+			PRINT_AND_BREAK("MEMORY ERROR: " << ErrorMessage);
 			break;
 		}
 		case LUA_ERRERR:
 		{
-			PRINT_AND_ASSERT("ERROR in ERROR HANDLER: " << ErrorMessage);
+			PRINT_AND_BREAK("ERROR in ERROR HANDLER: " << ErrorMessage);
 			break;
 		}
 		default:
-			PRINT_AND_ASSERT(ErrorMessage);
+			PRINT_AND_BREAK(ErrorMessage);
 			break;
 		}
 		lua_pop(state, 1);
@@ -130,7 +130,7 @@ namespace vEngine
 
 	bool LuaScriptContext::RegisterCppClass(const ScriptClassDescription& Description)
 	{
-		PRINT_AND_ASSERT("This should be test");
+		PRINT_AND_BREAK("This should be test");
 		ScriptClassDescriptionSharedPtr NewCopy = this->MakeCopyFrom(Description);
 		this->cpp_classes_.push_back(NewCopy);
 

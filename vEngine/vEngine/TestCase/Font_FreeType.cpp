@@ -1,4 +1,4 @@
-#include "TestCase.h"
+﻿#include "TestCase.h"
 #include "Common/Header/CommonPreDec.h"
 
 #include "freetype2/include/ft2build.h"
@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <locale>
+#include <codecvt>
 
 typedef unsigned char uint8;
 typedef unsigned short uint16;
@@ -76,12 +78,25 @@ void RunFontTest()
 	
 	FT_Face     face;
 
-	error = FT_New_Face(library, "Media/fonts/arial.ttf", 0, &face);
+	//error = FT_New_Face(library, "Media/fonts/arial.ttf", 0, &face);
+	error = FT_New_Face(library, "Media/fonts/chinese.msyh.ttf", 0, &face);
 	CHECK_ASSERT(error == FT_Err_Ok);
 
 	FT_UInt index = FT_Get_Char_Index(face, 'A');	
-	wchar_t ChineseCha = L'\u6c38';
+	wchar_t ChineseCha = L'\u6771';
+	ChineseCha = L'\x4e1c';
 	wchar_t Char = L'\u00fc';
+
+	//std::string newtest = "d东や";
+
+	//std::wstring_convert<std::codecvt_utf8<char>, wchar_t> conv;
+	//std::wstring utf32str = conv.from_bytes(newtest);
+
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	//std::wstring newwstring = converter.from_bytes(newtest);
+
+	ChineseCha = L'あ';
 
 	// Dump out a single glyph to a tga.
 	WriteGlyphAsTGA(library,
@@ -219,8 +234,9 @@ WriteGlyphAsTGA(FT_Library &library,
 	if (FT_Set_Char_Size(face, size << 6, size << 6, 90, 90) == 0)
 	{
 		// Load the glyph we are looking for.
-		FT_UInt gindex = FT_Get_Char_Index(face, ch);
-		if (FT_Load_Glyph(face, gindex, FT_LOAD_NO_BITMAP) == 0)
+		FT_UInt gindex = FT_Get_Char_Index(face, (FT_ULong)ch);
+		CHECK_ASSERT(gindex > 0);
+		if (gindex != 0 && FT_Load_Glyph(face, gindex, FT_LOAD_NO_BITMAP) == 0)
 		{
 			// Need an outline for this to work.
 			if (face->glyph->format == FT_GLYPH_FORMAT_OUTLINE)

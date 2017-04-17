@@ -52,7 +52,7 @@ void MyApp::InitObjects()
 	RunFontTest();
 
 	//set up lights
-	for(int i = 0; i < 1 ; ++i)
+	for(int i = 0; i < 0 ; ++i)
 	{
 		point_light_ = new PointLight();
 		point_light_->SetPos(float3(50.f + i*20 ,10.f, 0.f));	

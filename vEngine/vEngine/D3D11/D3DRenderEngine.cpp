@@ -265,7 +265,7 @@ namespace vEngine
 			d3d_frame_buffer->D3DRTView()->D3DRTV()->Release();
 			d3d_frame_buffer->D3DDSView()->D3DDSV()->Release();
 			//
-			PRINT_AND_ASSERT("This should be check and make a new MakeFrameBuffer here");
+			PRINT_AND_BREAK("This should be check and make a new MakeFrameBuffer here");
 			//then the rest of this function should only handle render targets
 		}
 
@@ -414,7 +414,7 @@ namespace vEngine
 		case DXGI_FORMAT_R24G8_TYPELESS:
 			return R24G8_TYPELESS;
 		default:
-			PRINT_AND_ASSERT("Should handle this");
+			PRINT_AND_BREAK("Should handle this");
 			return R32G32B32A32_U;
 		}
 	}

@@ -34,7 +34,7 @@ namespace vEngine
 		}
 		else
 		{
-			//PRINT_AND_ASSERT("Memory leak here");
+			//PRINT_AND_BREAK("Memory leak here");
 			RenderBuffer* old = input_srv_[index];
 			delete old;
 			input_srv_[index] = shader_resource;
