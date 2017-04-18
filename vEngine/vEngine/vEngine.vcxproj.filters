@@ -233,6 +233,9 @@
     <ClCompile Include="TestCase\Font_FreeType.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Profiler.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -426,6 +429,12 @@
     </ClInclude>
     <ClInclude Include="TestCase\TestCase.h">
       <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Profiler.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Header\StringHash.h">
+      <Filter>Common\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

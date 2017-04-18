@@ -26,6 +26,7 @@ namespace vEngine
 		void Retart();
 		//return time in ms(1 millisecond = 10e-3 second)
 		double Time();
+		//return time in ms(1 millisecond = 10e-3 second)
 		float Timef();
 
 

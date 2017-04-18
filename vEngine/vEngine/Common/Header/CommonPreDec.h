@@ -86,6 +86,13 @@ namespace vEngine
 	class Sphere;
 	typedef Sphere<float> sphere;
 
+	#ifdef _DEBUG
+	class StringHash;
+	typedef StringHash string_hash;
+	#else
+	typedef size_t string_hash;
+	#endif
+
 	class Ray;
 	class AABBox;
 }
