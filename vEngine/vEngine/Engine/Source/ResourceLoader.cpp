@@ -75,30 +75,16 @@ namespace vEngine
 	{
 
 	}
-
-	class ResLoaderProfile :public ProfilerEventHandler
-	{
-	public:
-		ResLoaderProfile()
-			:ProfilerEventHandler(string_hash("Resloader"))
-		{
-
-		}
-		virtual bool Process(Profiler::PROFILER_EVENT Event)
-		{
-			PRINT("evet");
-			return true;
-		}
-	};
+	
 	void ResourceLoadingJob::Run()
 	{
-		ResLoaderProfile ResPro;
+		ProfileLogHandler ResPro("LoadProfile");
 		Profiler ModelLoad("LoadProfiler");
 		ModelLoad.SetEnable(true);
 		ModelLoad.RegisterEventHandler(&ResPro);
 		ModelLoad.Begin(Profiler::PE_FUNCTION_CALL);
 		this->object_to_load_->Load();
-		ModelLoad.End(Profiler::PE_FUNCTION_CALL);
+		ModelLoad.End(Profiler::PE_FUNCTION_CALL, "ResourceLoadingJob::Load");
 		if (this->complete_call_back_ != nullptr)
 		{
 			this->complete_call_back_(this->object_to_load_);

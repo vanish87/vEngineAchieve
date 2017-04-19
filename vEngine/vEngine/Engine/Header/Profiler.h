@@ -6,6 +6,8 @@
 #include "Common\Header\StringHash.h"
 #include "Engine\Header\EnginePreDec.h"
 #include <vector>
+#include <experimental\filesystem>
+#include <unordered_map>
 
 namespace vEngine
 {	
@@ -21,7 +23,7 @@ namespace vEngine
 		virtual ~Profiler();
 
 		virtual void Begin(PROFILER_EVENT EventType);
-		virtual void End(PROFILER_EVENT EventType);
+		virtual void End(PROFILER_EVENT EventType, std::string Name);
 
 		void RegisterEventHandler(ProfilerEventHandler* Handler);
 		void UnRegisterEventHandler(ProfilerEventHandler* Handler);
@@ -53,12 +55,34 @@ namespace vEngine
 
 		virtual ~ProfilerEventHandler() {};
 
-		virtual bool Process(Profiler::PROFILER_EVENT Event) = 0;
+		virtual bool Process(Profiler::PROFILER_EVENT Event, float Time, std::string Name) = 0;
 
 	private:
 		ProfilerEventHandler() {};
 
 		string_hash Signature;
+	};
+
+	class ProfileLogHandler :public ProfilerEventHandler
+	{
+	public:
+		ProfileLogHandler(std::string LogFileName);
+		virtual bool Process(Profiler::PROFILER_EVENT Event, float Time, std::string Name);
+
+	private:
+		std::string LogFilePath;
+	};
+
+	class ProfileStatsHandler :public ProfilerEventHandler
+	{
+	public:
+		ProfileStatsHandler();
+		virtual bool Process(Profiler::PROFILER_EVENT Event, float Time, std::string Name);
+
+	private:
+		std::unordered_map<std::string, std::tuple<float,int>> EventStats;
+		uint64_t Counter;
+
 	};
 }
 

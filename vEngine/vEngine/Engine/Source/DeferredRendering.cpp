@@ -1,6 +1,7 @@
 #include "Engine\Header\DeferredRendering.h"
 #include "Engine\Header\RenderTools.h"
 #include "D3D11\D3DModel.h"
+#include "Engine\Header\Profiler.h"
 
 
 namespace vEngine
@@ -18,6 +19,10 @@ namespace vEngine
 	static uint32_t GbufferIndex = 0;
 
 	static const int2 ShadowMapSize = int2(2048, 2048);
+
+
+	static ProfileStatsHandler LogHanlder;
+	static Profiler RenderingProfiler("RenderingProfiler");
 
 	DeferredRendering::DeferredRendering( const Configure::RenderSetting& render_setting )
 	{
@@ -244,7 +249,9 @@ namespace vEngine
 			//End of Deferred Shading
 			//---------------------------------------------------------------------------
 */
-
+		RenderingProfiler.SetEnable(true);
+		RenderingProfiler.RegisterEventHandler(&LogHanlder);
+		RenderingProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 
 		RenderEngine& render_engine = Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
@@ -282,6 +289,8 @@ namespace vEngine
 				return;
 			}
 
+			RenderingProfiler.End(Profiler::PE_FUNCTION_CALL, "Pass 0: Gbuffer");
+			RenderingProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 			//pass 1
 			//bind lighting buffer
 			render_engine.BindFrameBuffer(lighting_buffer_);
@@ -386,7 +395,10 @@ namespace vEngine
 
 			delete[] light_buffer;
 			//pass 1 end 
-			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
+			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd(); 
+			
+			RenderingProfiler.End(Profiler::PE_FUNCTION_CALL, "Pass 1: Lighting");
+			RenderingProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 
 			if (EnableLightingDebug)
 			{
@@ -407,7 +419,9 @@ namespace vEngine
 			fullscreen_mesh_->EndRender();
 
 
-			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
+			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd(); 
+			RenderingProfiler.End(Profiler::PE_FUNCTION_CALL, "Pass 2: Final ");
+
 			Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 	}
 
