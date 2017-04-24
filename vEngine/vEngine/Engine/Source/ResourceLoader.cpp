@@ -84,7 +84,7 @@ namespace vEngine
 		ModelLoad.RegisterEventHandler(&ResPro);
 		ModelLoad.Begin(Profiler::PE_FUNCTION_CALL);
 		this->object_to_load_->Load();
-		ModelLoad.End(Profiler::PE_FUNCTION_CALL, "ResourceLoadingJob::Load");
+		ModelLoad.End(Profiler::PE_FUNCTION_CALL, "ResourceLoadingJob::Load::" + this->object_to_load_->GetName());
 		if (this->complete_call_back_ != nullptr)
 		{
 			this->complete_call_back_(this->object_to_load_);

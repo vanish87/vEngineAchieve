@@ -231,7 +231,8 @@ WriteGlyphAsTGA(FT_Library &library,
 	float outlineWidth)
 {
 	// Set the size to use.
-	if (FT_Set_Char_Size(face, size << 6, size << 6, 90, 90) == 0)
+	//if (FT_Set_Char_Size(face, size << 6, size << 6, 90, 90) == 0)
+	if (FT_Set_Pixel_Sizes(face, 1024, 1024) == 0)
 	{
 		// Load the glyph we are looking for.
 		FT_UInt gindex = FT_Get_Char_Index(face, (FT_ULong)ch);
