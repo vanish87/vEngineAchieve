@@ -27,9 +27,9 @@ namespace vEngine
 			li->usage = VBU_INDEX;
 			li->vertex_size = vertex_size;
 			break;
-			default:
-				NULL;
-				break;
+		default:
+			PRINT_AND_BREAK("not supported");
+			break;
 		}
 		data_.push_back(li);
 	}

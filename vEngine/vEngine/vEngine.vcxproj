@@ -46,6 +46,7 @@
     <ClCompile Include="Engine\Source\Camera.cpp" />
     <ClCompile Include="Engine\Source\Context.cpp" />
     <ClCompile Include="Engine\Source\DeferredRendering.cpp" />
+    <ClCompile Include="Engine\Source\Font.cpp" />
     <ClCompile Include="Engine\Source\FrameBuffer.cpp" />
     <ClCompile Include="Engine\Source\GameEventHandler.cpp" />
     <ClCompile Include="Engine\Source\GameObject.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Engine\Header\Context.h" />
     <ClInclude Include="Engine\Header\DeferredRendering.h" />
     <ClInclude Include="Engine\Header\EnginePreDec.h" />
+    <ClInclude Include="Engine\Header\Font.h" />
     <ClInclude Include="Engine\Header\FrameBuffer.h" />
     <ClInclude Include="Engine\Header\GameEventHandler.h" />
     <ClInclude Include="Engine\Header\GameObject.h" />
@@ -165,6 +167,11 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)FxFiles\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shader\Font.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)FxFiles\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\GaussianBlurXFilterPostProcess.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>

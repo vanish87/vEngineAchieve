@@ -422,7 +422,6 @@ namespace vEngine
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd(); 
 			RenderingProfiler.End(Profiler::PE_FUNCTION_CALL, "Pass 2: Final ");
 
-			Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 	}
 
 

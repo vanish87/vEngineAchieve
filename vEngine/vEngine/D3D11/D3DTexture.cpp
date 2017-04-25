@@ -76,7 +76,7 @@ namespace vEngine
 			break;
 		}
 
-		if(init_data)
+		if(init_data != nullptr)
 		{
 			d3d_init_data.pSysMem = init_data->data;
 			d3d_init_data.SysMemPitch =  init_data->row_pitch;
@@ -84,7 +84,7 @@ namespace vEngine
 		}
 		HRESULT result = d3d_re->D3DDevice()->CreateTexture2D(&desc_, init_data==nullptr? 0 :&d3d_init_data, &d3d_texture2D_);
 		if(FAILED(result))
-			PRINT("Cannot create Texture 2D");
+			PRINT_AND_BREAK("Cannot create Texture 2D");
 	}
 
 	D3DTexture2D::D3DTexture2D( ID3D11Texture2D* & texture)

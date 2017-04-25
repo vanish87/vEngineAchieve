@@ -136,7 +136,6 @@ namespace vEngine
 		for (int i = 0; i < numSubdivisions; ++i)
 			Subdivide(vertices, indices);
 
-		//投影顶点到球面上，然后缩放顶点到球心的距离
 		for (int i = 0; i < vertices.size(); ++i)
 		{
 			vertices[i].position = Math::Normalize(vertices[i].position);
@@ -187,7 +186,7 @@ namespace vEngine
 			vertices.push_back(vtm1); // 4
 			vertices.push_back(vtm2); // 5
 
-									  //索引出四个三角形
+
 			indices.push_back(i * 6 + 0);
 			indices.push_back(i * 6 + 3);
 			indices.push_back(i * 6 + 5);

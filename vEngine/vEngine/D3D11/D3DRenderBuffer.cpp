@@ -22,10 +22,10 @@ namespace vEngine
 				PRINT("Cannot create Shader Resource View");
 		}
 		else
-			if(usage_ == BU_SHADER_CONST)
-			{
-				PRINT_AND_BREAK("Not implemented");
-			}
+		if(usage_ == BU_SHADER_CONST)
+		{
+			PRINT_AND_BREAK("Not implemented");
+		}
 	}
 
 
@@ -56,12 +56,19 @@ namespace vEngine
 
 	void D3DShaderResourceView::UnMap()
 	{
-		throw std::exception("The method or operation is not implemented.");
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		d3d_re->D3DDeviceImmContext()->Unmap(d3d_texture_->D3DTexture(), 0);
 	}
 
 	void D3DShaderResourceView::DoMap( AccessType access_type )
 	{
-		throw std::exception("The method or operation is not implemented.");
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		//TODO : According to access_type, decide D3D_MAP_TYPE
+		HRESULT result = d3d_re->D3DDeviceImmContext()->Map(d3d_texture_->D3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		if (FAILED(result))
+			PRINT_AND_BREAK("Failed to map resource");
+		data_ = mappedResource.pData;
 	}
 
 	D3DShaderResourceView::D3DShaderResourceView( Texture& texture, int array_size, int mip_level )

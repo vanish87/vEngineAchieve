@@ -12,6 +12,9 @@
 #include <locale>
 #include <codecvt>
 
+#include "Engine\Header\Font.h"
+#include "Common\Header\Vector.h"
+
 typedef unsigned char uint8;
 typedef unsigned short uint16;
 typedef unsigned int uint32;
@@ -97,6 +100,8 @@ void RunFontTest()
 	//std::wstring newwstring = converter.from_bytes(newtest);
 
 	ChineseCha = L'あ';
+
+
 
 	// Dump out a single glyph to a tga.
 	WriteGlyphAsTGA(library,
@@ -232,7 +237,7 @@ WriteGlyphAsTGA(FT_Library &library,
 {
 	// Set the size to use.
 	//if (FT_Set_Char_Size(face, size << 6, size << 6, 90, 90) == 0)
-	if (FT_Set_Pixel_Sizes(face, 1024, 1024) == 0)
+	if (FT_Set_Pixel_Sizes(face, 128, 128) == 0)
 	{
 		// Load the glyph we are looking for.
 		FT_UInt gindex = FT_Get_Char_Index(face, (FT_ULong)ch);
@@ -279,18 +284,15 @@ WriteGlyphAsTGA(FT_Library &library,
 					if (!spans.empty())
 					{
 						// Figure out what the bounding rect is for both the span lists.
-						Rect rect((float)spans.front().x,
-							(float)spans.front().y,
-							(float)spans.front().x,
-							(float)spans.front().y);
-						for (Spans::iterator s = spans.begin();
-						s != spans.end(); ++s)
+						Rect rect((float)spans.front().x, (float)spans.front().y,
+								  (float)spans.front().x, (float)spans.front().y);
+
+						for (Spans::iterator s = spans.begin();	s != spans.end(); ++s)
 						{
 							rect.Include(Vec2((float)s->x, (float)s->y));
 							rect.Include(Vec2((float)s->x + s->width - 1, (float)s->y));
 						}
-						for (Spans::iterator s = outlineSpans.begin();
-						s != outlineSpans.end(); ++s)
+						for (Spans::iterator s = outlineSpans.begin(); s != outlineSpans.end(); ++s)
 						{
 							rect.Include(Vec2((float)s->x, (float)s->y));
 							rect.Include(Vec2((float)s->x + s->width - 1, (float)s->y));
@@ -315,30 +317,29 @@ WriteGlyphAsTGA(FT_Library &library,
 
 						// Loop over the outline spans and just draw them into the
 						// image.
-						for (Spans::iterator s = outlineSpans.begin();
-						s != outlineSpans.end(); ++s)
+						for (Spans::iterator s = outlineSpans.begin(); s != outlineSpans.end(); ++s)
+						{
 							for (int w = 0; w < s->width; ++w)
-								pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth
-									+ s->x - rect.xmin + w)] =
-								Pixel32(outlineCol.r, outlineCol.g, outlineCol.b,
-									s->coverage);
+							{
+								pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth + s->x - rect.xmin + w)] 
+									= Pixel32(outlineCol.r, outlineCol.g, outlineCol.b,	s->coverage);
+							}
+						}
 
 						// Then loop over the regular glyph spans and blend them into
 						// the image.
-						for (Spans::iterator s = spans.begin();
-						s != spans.end(); ++s)
+						for (Spans::iterator s = spans.begin(); s != spans.end(); ++s)
+						{
 							for (int w = 0; w < s->width; ++w)
 							{
-								Pixel32 &dst =
-									pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth
-										+ s->x - rect.xmin + w)];
-								Pixel32 src = Pixel32(fontCol.r, fontCol.g, fontCol.b,
-									s->coverage);
+								Pixel32 &dst =	pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth + s->x - rect.xmin + w)];
+								Pixel32 src = Pixel32(fontCol.r, fontCol.g, fontCol.b, s->coverage);
 								dst.r = (int)(dst.r + ((src.r - dst.r) * src.a) / 255.0f);
 								dst.g = (int)(dst.g + ((src.g - dst.g) * src.a) / 255.0f);
 								dst.b = (int)(dst.b + ((src.b - dst.b) * src.a) / 255.0f);
 								dst.a = std::min(255, dst.a + src.a);
 							}
+						}
 
 						// Dump the image to disk.
 						WriteTGA(fileName, pxl, imgWidth, imgHeight);

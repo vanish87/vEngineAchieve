@@ -1,11 +1,16 @@
 #include "Engine\Header\SceneManager.h"
 #include "Engine\Header\Context.h"
 
+#include "Engine\Header\Font.h"
+
 namespace vEngine
 {
 
+	vEngine::Font vfont;
+	static bool inited = false;
 	SceneManager::SceneManager(void)
 	{
+
 	}
 
 
@@ -58,6 +63,18 @@ namespace vEngine
 			//Forward Rendering End
 			//========================================================================================================================
 		}
+
+		//Do UI and Font here
+		if (inited == false)
+		{
+
+			vfont.LoadFontFile("Media/fonts/chinese.msyh.ttf");
+			vfont.DrawD3DText(L"hello world,?????", vEngine::int2(0, 0));
+			inited = true;
+		}
+		vfont.DumpToScreen();
+
+		Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 
 	}
 

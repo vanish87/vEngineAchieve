@@ -17,7 +17,6 @@ namespace vEngine
 {
 	//temp solution for pp
 	class D3DShaderobject;
-	class Model;
 	class D3DModel;
 
 	class DeferredRendering

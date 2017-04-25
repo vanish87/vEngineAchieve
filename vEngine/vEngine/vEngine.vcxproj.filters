@@ -236,6 +236,9 @@
     <ClCompile Include="Engine\Source\Profiler.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Font.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -436,6 +439,9 @@
     <ClInclude Include="Common\Header\StringHash.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Header\Font.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\LinearizeDepthPostProcess.fx">
@@ -460,6 +466,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Rendering.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Font.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>
