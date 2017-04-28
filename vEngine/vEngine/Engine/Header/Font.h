@@ -25,7 +25,7 @@ namespace vEngine
 		void DrawD3DText(std::wstring Text, int2 Position);
 
 		void DumpToScreen();
-
+		
 	private:
 		Mesh* font_mesh_;
 		Texture* bitmap_texture_;
@@ -34,6 +34,8 @@ namespace vEngine
 
 		FT_Library  library;
 		FT_Face     face;
+
+
 
 	};
 }

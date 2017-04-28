@@ -212,7 +212,7 @@ namespace vEngine
 			
 			HRESULT res = d3d_re->D3DDevice()->CreateShaderResourceView(this->D3DTexture(), &sr_desc, &d3d_sr_view_);
 			if(FAILED(res))
-				PRINT("Cannot create Shader Resource View");
+				PRINT_AND_BREAK("Cannot create Shader Resource View");
 		}
 		return d3d_sr_view_;
 	}

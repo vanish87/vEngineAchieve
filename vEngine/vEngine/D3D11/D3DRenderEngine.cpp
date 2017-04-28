@@ -393,6 +393,7 @@ namespace vEngine
 		case R24G8_TYPELESS:
 			return DXGI_FORMAT_R24G8_TYPELESS;
 		default:
+			PRINT_AND_BREAK("Unknown format");
 			return DXGI_FORMAT_R32G32B32A32_UINT;
 		}
 	}

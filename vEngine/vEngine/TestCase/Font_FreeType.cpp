@@ -99,7 +99,7 @@ void RunFontTest()
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	//std::wstring newwstring = converter.from_bytes(newtest);
 
-	ChineseCha = L'あ';
+	ChineseCha = L'h';
 
 
 
@@ -237,7 +237,7 @@ WriteGlyphAsTGA(FT_Library &library,
 {
 	// Set the size to use.
 	//if (FT_Set_Char_Size(face, size << 6, size << 6, 90, 90) == 0)
-	if (FT_Set_Pixel_Sizes(face, 128, 128) == 0)
+	if (FT_Set_Pixel_Sizes(face, 227, 128) == 0)
 	{
 		// Load the glyph we are looking for.
 		FT_UInt gindex = FT_Get_Char_Index(face, (FT_ULong)ch);

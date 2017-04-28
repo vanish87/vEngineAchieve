@@ -25,29 +25,31 @@ namespace vEngine
 		//"Media/fonts/chinese.msyh.ttf"
 		FT_Error error = FT_New_Face(library, file_name.c_str(), 0, &face);
 		CHECK_ASSERT(error == FT_Err_Ok);
-		
-		error = FT_Set_Pixel_Sizes(face, 128, 128);
+
+		error = FT_Set_Pixel_Sizes(face, 227, 128);
+		//error = FT_Set_Char_Size(face, 512, 512);
 		CHECK_ASSERT(error == FT_Err_Ok);
 
 		InitData init_data;
-		init_data.data = new uint32_t[128 * 128];
-		init_data.row_pitch = sizeof(uint32_t) * 128;
+		init_data.data = new uint32_t[227 * 128];
+		init_data.row_pitch = sizeof(uint32_t) * 227;
 		init_data.slice_pitch = 0;
 
-		this->bitmap_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(&init_data, 128, 128, 1, 1,
+		this->bitmap_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(&init_data, 227, 128, 1, 1,
 			R8G8B8A8_U, 1, 0, AT_CPU_WRITE_GPU_READ, TU_SHADER_RES);
 
+		delete[] init_data.data;
 
 		RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
-		uint32_t* data = static_cast<uint32_t*>(render_buffer->Map(AT_CPU_WRITE_GPU_READ));
+		byte* data = static_cast<byte*>(render_buffer->Map(AT_CPU_WRITE_GPU_READ));
 		CHECK_ASSERT(data != nullptr);
-		for (uint32_t i = 0; i < 128 * 128; ++i)
+		for (uint32_t i = 0; i < 227 * 128; ++i)
 		{
-			uint8_t r = 0;
-			uint8_t g = 0;
-			uint8_t b = 0;
-			uint8_t a = 255;
-			data[i] = (r << 24 | g << 16 | b << 8 | a);
+			uint32_t index = i * 4;
+			data[index] = 50;
+			data[index + 1] = 50;
+			data[index + 2] = 50;
+			data[index + 3] = 255;
 		}
 		render_buffer->UnMap();
 
@@ -94,24 +96,76 @@ namespace vEngine
 					continue;
 				}
 				RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
-				uint32_t* data = static_cast<uint32_t*>(render_buffer->Map(AT_CPU_WRITE_GPU_READ));
+				byte* data = static_cast<byte*>(render_buffer->Map(AT_CPU_WRITE_GPU_READ));
 				CHECK_ASSERT(data != nullptr);
 
+				uint32_t* new_bit = new uint32_t[face->glyph->bitmap.rows * face->glyph->bitmap.pitch];
 
 				for (uint32_t i = 0; i < face->glyph->bitmap.rows; ++i)
 				{
 					for (int32_t j = 0; j < face->glyph->bitmap.pitch; ++j)
 					{
-						uint32_t index = i * face->glyph->bitmap.pitch + j;
+						uint32_t index = i * face->glyph->bitmap.pitch + j ;
 						int color = face->glyph->bitmap.buffer[index];
-						uint8_t r = color == 0 ? 0 : 128;
-						uint8_t g = color == 0 ? 0 : 128;
-						uint8_t b = color == 0 ? 0 : 128;
-						uint8_t a = 255;
-						data[index] = (r << 24 | g << 16 | b << 8 | a);
+						byte r = color == 0 ? 0 : 255;
+						byte g = color == 0 ? 0 : 255;
+						byte b = color == 0 ? 0 : 255;
+						byte a = 255;
+						new_bit[index] = r;
+					}
+				}
+				
+				
+				for (uint32_t i = 0; i < 128; i++)
+				{
+					for (int32_t j = 0; j < 256; j ++)
+					{
+						uint32_t index = (i * 256 + j) * 4;
+						if (face->glyph->bitmap.pitch > j && face->glyph->bitmap.rows > i)
+						{
+							uint32_t bitmap_index = i * face->glyph->bitmap.pitch + j;
+							CHECK_ASSERT(bitmap_index < face->glyph->bitmap.pitch * face->glyph->bitmap.rows);
+							int color = face->glyph->bitmap.buffer[bitmap_index];
+
+							data[index]		= color;
+							data[index + 1] = color;
+							data[index + 2] = color;
+							data[index + 3] = 255;
+						}
+						else
+						{
+							data[index] = 50;
+							data[index + 1] = 0;
+							data[index + 2] = 0;
+							data[index + 3] = 255;
+						}
 					}
 				}
 				render_buffer->UnMap();
+
+				std::ofstream LogFile;
+				LogFile.open("bitmap.txt", std::fstream::out);
+				if (LogFile.is_open())
+				{
+					for (uint32_t i = 0; i < face->glyph->bitmap.rows; ++i)
+					{
+						for (int32_t j = 0; j < face->glyph->bitmap.pitch; ++j)
+						{
+							uint32_t index = i * face->glyph->bitmap.pitch + j;
+							int color = face->glyph->bitmap.buffer[index];
+							if (color == 0 )
+							{
+								LogFile << ' ';
+							}
+							else
+							{
+								LogFile << '*';
+							}
+						}
+						LogFile << std::endl;
+					}
+					LogFile.close();
+				}
 			}
 		}
 	}
