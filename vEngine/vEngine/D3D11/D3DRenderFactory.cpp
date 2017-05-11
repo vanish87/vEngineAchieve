@@ -108,11 +108,11 @@ namespace vEngine
 		
 	}
 
-	RenderBuffer* D3DRenderFactory::MakeRenderBuffer( Texture* texture, AccessType access_type, BufferUsage usage )
+	/*RenderBuffer* D3DRenderFactory::MakeRenderBuffer( Texture* texture, AccessType access_type, BufferUsage usage )
 	{
 		//TODO init AccessType access_type, BufferUsage usage and other render buffer varibles
 		return new D3DShaderResourceView(*texture, 1, 1);
-	}
+	}*/
 
 	Texture* D3DRenderFactory::MakeTexture2D( InitData const * init_data, uint32_t width, uint32_t height, uint32_t numMipMaps, uint32_t array_size, Format format, uint32_t sample_count, uint32_t sample_quality, AccessType access_type, TextureUsage texture_usage )
 	{		
@@ -128,7 +128,7 @@ namespace vEngine
 		return new D3DTexture2D(ptr);
 	}
 
-	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)
+	/*RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)
 	{
 		return new D3DRenderTargetView(*texture, array_size, mip_level );
 	}
@@ -136,6 +136,6 @@ namespace vEngine
 	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level, DepthStencilUsage usage)
 	{
 		return new D3DDepthStencilRenderView(*texture, array_size, mip_level, usage);
-	}
+	}*/
 
 }

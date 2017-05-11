@@ -47,7 +47,7 @@ namespace vEngine
 			Material* mat = materials_[meshes_[i]->GetMaterialID()];
 			if(mat->diffuse_tex != 0)
 			{
-				shader_object_->SetReource("mesh_diffuse",tex_srvs_[mat->diffuse_tex-1], 1);
+				shader_object_->SetReource("mesh_diffuse",static_cast<D3DTexture2D*>(textures_[mat->diffuse_tex-1]).GetShaderResourceView(1,1,TEXTURE2D), 1);
 			}
 			if(mat->normalmap_tex != 0)
 			{

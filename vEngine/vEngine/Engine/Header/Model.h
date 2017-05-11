@@ -75,7 +75,7 @@ namespace vEngine
 		std::vector<Mesh*> meshes_;
 		std::vector<Material*> materials_;
 		std::vector<Texture*> textures_;
-		std::vector<RenderBuffer*> tex_srvs_;
+		//std::vector<RenderBuffer*> tex_srvs_;
 
 		const aiScene* ai_scene_;
 
