@@ -262,8 +262,8 @@ namespace vEngine
 		{
 			//check it
 			d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
-			d3d_frame_buffer->D3DRTView()->D3DRTV()->Release();
-			d3d_frame_buffer->D3DDSView()->D3DDSV()->Release();
+			//d3d_frame_buffer->D3DRTView()->D3DRTV()->Release();
+			//d3d_frame_buffer->D3DDSView()->D3DDSV()->Release();
 			//
 			PRINT_AND_BREAK("This should be check and make a new MakeFrameBuffer here");
 			//then the rest of this function should only handle render targets
@@ -281,8 +281,8 @@ namespace vEngine
 			PRINT("Get back Buffer Failed!");
 		
 		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(back_buffer);
-		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(d3d_tex, 1, 0);
-		d3d_frame_buffer->AddRenderView(render_view);
+		//RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(d3d_tex, 1, 0);
+		d3d_frame_buffer->AddTexture(d3d_tex);
 		//it could be used later
 		//back_buffer->Release();
 

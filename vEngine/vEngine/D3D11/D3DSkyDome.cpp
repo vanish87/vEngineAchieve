@@ -86,8 +86,8 @@ namespace vEngine
 		Math::Translate(model_matrix_, cam_pos.x(), cam_pos.y(), cam_pos.z());
 		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
 		d3d_re->TrunoffCull();
-		RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
-		shader_object_->SetReource("background_tex", cude_srv , 1);
+		//RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
+		shader_object_->SetReource("background_tex", cube_texture_, 1);
 		//throw std::exception("The method or operation is not implemented.");
 	}
 

@@ -15,7 +15,7 @@ namespace vEngine
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 
 		this->depth_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, width, height, 1, 1, R24G8_TYPELESS, 1, 0, AT_GPU_READ_WRITE, TU_DEPTH_SR);
-		this->depth_stencil_view_ = Context::Instance().GetRenderFactory().MakeRenderView(this->depth_texture_, 0, 0, DSU_BOTH);
+		//this->depth_stencil_view_ = Context::Instance().GetRenderFactory().MakeRenderView(this->depth_texture_, 0, 0, DSU_BOTH);
 	}
 
 
@@ -27,9 +27,9 @@ namespace vEngine
 	{
 		D3DRenderEngine* render_engine = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		std::vector<ID3D11RenderTargetView*> rtvs;
-		for(size_t i = 0; i< render_views_.size(); i++)
-			rtvs.push_back(static_cast<D3DRenderTargetView*>(this->render_views_[i])->D3DRTV());
-		D3DDepthStencilRenderView* depth_view = static_cast<D3DDepthStencilRenderView*>(depth_stencil_view_);
+		for(size_t i = 0; i< render_texture_.size(); i++)
+			rtvs.push_back(static_cast<D3DTexture2D*>(this->render_texture_[i])->GetRenderTargetView(1,0,TEXTURE2D));
+		D3DDepthStencilRenderView* depth_view = static_cast<D3DTexture2D*>(this->depth_texture_).GetShaderResourceView(1,0,TEXTURE2D);
 		ID3D11DepthStencilView* dsv = depth_view->D3DDSV();
 		CHECK_ASSERT(dsv != nullptr);
 		
