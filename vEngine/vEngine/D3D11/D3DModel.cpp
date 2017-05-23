@@ -24,7 +24,7 @@ namespace vEngine
 		shader_object_->SetMatrixVariable("g_world_matrix", model_matrix_);
 		//TODO : use texture array to store every pom texture of mesh
 		if(pom_enabled_)
-			shader_object_->SetReource("normal_map_tex", pom_srv_, 1);
+			shader_object_->SetReource("normal_map_tex", pom_texture_, 1);
 	}
 
 	void D3DModel::Render(int pass_index)
@@ -47,13 +47,13 @@ namespace vEngine
 			Material* mat = materials_[meshes_[i]->GetMaterialID()];
 			if(mat->diffuse_tex != 0)
 			{
-				shader_object_->SetReource("mesh_diffuse",static_cast<D3DTexture2D*>(textures_[mat->diffuse_tex-1]).GetShaderResourceView(1,1,TEXTURE2D), 1);
+				shader_object_->SetReource("mesh_diffuse",textures_[mat->diffuse_tex-1], 1);
 			}
 			if(mat->normalmap_tex != 0)
 			{
 				shader_object_->SetBool("g_normal_map", true);
 				//set normal map there
-				shader_object_->SetReource("normal_map_tex",tex_srvs_[mat->normalmap_tex-1], 1);
+				shader_object_->SetReource("normal_map_tex", textures_[mat->normalmap_tex-1], 1);
 			}
 			else
 			{
@@ -190,7 +190,7 @@ namespace vEngine
 		//TODO: write a add material fun to add pom texture
 		pom_enabled_ = true;
 		pom_texture_ = LoadTexture(file_name);
-		pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
+		//pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 	}
 
 

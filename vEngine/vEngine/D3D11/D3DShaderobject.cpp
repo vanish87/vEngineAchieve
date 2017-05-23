@@ -123,31 +123,31 @@ namespace vEngine
 			PRINT("Cannot set RawData");
 	}
 
-	void D3DShaderobject::SetReource( std::string name, RenderBuffer* data, uint32_t type )
+	void D3DShaderobject::SetReource( std::string name, Texture* data, uint32_t type )
 	{
 
 		ID3DX11EffectShaderResourceVariable* sr_var = this->GetShaderRourceVariable(name);
-		if(data == 0)
+		if(data == nullptr)
 		{
 			HRESULT res = sr_var->SetResource(NULL);
 			if(FAILED(res))
 				PRINT("Cannot set Resource");
 			return;
 		}
+/*
 
 		//TODO : Combine them together
 		if(type == 0)//RenderBuffer
 		{
-			D3DRenderBuffer* d3d_render_buffer;
-			d3d_render_buffer = static_cast<D3DRenderBuffer*>(data);
-			HRESULT res = sr_var->SetResource(d3d_render_buffer->D3DShaderResourceView());
+			D3DTexture2D* d3d_tex = static_cast<D3DTexture2D*>(data);
+			HRESULT res = sr_var->SetResource(d3d_tex->Re(1,0,TEXTURE2D));
 			if(FAILED(res))
 				PRINT("Cannot set Resource");
 		}
-		else//Shader Resource
+		else//Shader Resource*/
 		{
-			D3DShaderResourceView* d3d_srv = static_cast<D3DShaderResourceView*>(data);
-			HRESULT res = sr_var->SetResource(d3d_srv->D3DSRV());
+			D3DTexture2D* d3d_tex = static_cast<D3DTexture2D*>(data);
+			HRESULT res = sr_var->SetResource(d3d_tex->GetShaderResourceView(1, 0, TEXTURE2D));
 			if(FAILED(res))
 				PRINT("Cannot set Resource");
 		}

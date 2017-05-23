@@ -5,11 +5,6 @@
 
 #include <vector>
 
-// #include <dae.h>
-// #include <dom.h>
-// #include <dom/domCOLLADA.h>
-// #pragma comment(lib, "libcollada14dom22-d.lib")
-
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
@@ -81,20 +76,9 @@ namespace vEngine
 
 		bool pom_enabled_;
 		Texture* pom_texture_;
-		RenderBuffer* pom_srv_;
+		//RenderBuffer* pom_srv_;
 
 		std::string file_name_;
-
-// 		float4x4 processMatrix(daeElement* node);
-// 		void processSource( DaeMesh* mesh, daeElement* sources );
-// 		void processTriangles( DaeMesh* mesh, daeElement* triangles );
-// 		Material* ProcessMaterial(DaeMesh* mesh, daeElement* material);
-// 		daeElement* Model::GetSampler(daeElement* param);
-
-
-	private:
-		//Dae loader
-		/*daeDatabase* db;*/
 	};
 }
 

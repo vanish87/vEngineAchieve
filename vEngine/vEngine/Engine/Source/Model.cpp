@@ -263,7 +263,7 @@ namespace vEngine
 				if(tex)
 				{
 					textures_.push_back(tex);
-					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
+					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
 					//index 0 reserved for null
 					mat->diffuse_tex = (uint32_t)textures_.size();
 				}

@@ -27,7 +27,7 @@ namespace vEngine
 		//for Render Target
 		FrameBuffer* output_buffer_;
 		//for Shader Resource
-		std::vector<RenderBuffer*> input_srv_;
+		std::vector<Texture*> input_tex_;
 	};
 }
 #endif

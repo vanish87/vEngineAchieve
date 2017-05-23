@@ -218,4 +218,9 @@ namespace vEngine
 	}
 
 
+	ID3D11DepthStencilView* D3DTexture2D::GetDepthStencilView(int array_size, int mip_level, TextureType type)
+	{
+
+	}
+
 }

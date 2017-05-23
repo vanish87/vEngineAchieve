@@ -21,6 +21,7 @@ namespace vEngine
 
 	}
 
+	/*
 	void FrameBuffer::AddRenderView( RenderView* render_view )
 	{
 		//TODO : Check if the render_view is exist.
@@ -36,11 +37,11 @@ namespace vEngine
 		render_views_.push_back(render_view);
 	}
 
-
-	RenderView* FrameBuffer::GetRenderView(size_t index)
+	*/
+	Texture* FrameBuffer::GetTexture(size_t index)
 	{
-		CHECK_ASSERT(index < render_views_.size());
-		return render_views_[index];
+		CHECK_ASSERT(index < render_texture_.size());
+		return render_texture_[index];
 	}
 
 	Viewport& FrameBuffer::GetViewport()
@@ -48,4 +49,16 @@ namespace vEngine
 		return viewport_;
 	}
 	
+	void FrameBuffer::AddTexture(Texture* render_tex)
+	{
+		for (size_t i = 0; i < render_texture_.size(); i++)
+		{
+			if (render_texture_[i] == render_tex)
+			{
+				PRINT_AND_BREAK("render view exists");
+			}
+		}
+		render_texture_.push_back(render_tex);
+	}
+
 }

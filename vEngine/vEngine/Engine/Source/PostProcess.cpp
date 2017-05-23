@@ -24,34 +24,34 @@ namespace vEngine
 
 	void PostProcess::SetInput( Texture* tex, size_t index )
 	{
-
-		RenderBuffer* shader_resource = Context::Instance().GetRenderFactory().MakeRenderBuffer(tex, AT_GPU_READ_WRITE, BU_SHADER_RES);
-		if(index >= input_srv_.size())
+		if(index >= input_tex_.size())
 		{
 			//Add to input
-			input_srv_.push_back(shader_resource);
-			fullscreen_mesh_->GetShaderObject()->SetShaderResourceVariable("input_tex_" + std::to_string(static_cast<long long>(input_srv_.size() - 1)));
+			input_tex_.push_back(tex);
+			fullscreen_mesh_->GetShaderObject()->SetShaderResourceVariable("input_tex_" + std::to_string(static_cast<long long>(input_tex_.size() - 1)));
 		}
 		else
 		{
 			//PRINT_AND_BREAK("Memory leak here");
-			RenderBuffer* old = input_srv_[index];
-			delete old;
-			input_srv_[index] = shader_resource;
+			if (input_tex_[index] != tex)
+			{
+				input_tex_[index] = tex;
+			}
 		}
 	}
 
 	void PostProcess::SetOutput( Texture* tex, size_t index )
 	{
-		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(tex, 1, 0);
-		if (output_buffer_->GetViewport().Height() != render_view->Height()
-			|| output_buffer_->GetViewport().Width() != render_view->Width()
+		//TODO: Check size here
+		//RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(tex, 1, 0);
+		/*if (output_buffer_->GetViewport().Height() != tex->Height()
+			|| output_buffer_->GetViewport().Width() != tex->Width()
 			)
 		{
 			delete this->output_buffer_;
-			output_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_view->Width(), render_view->Height());
-		}
-		output_buffer_->AddRenderView(render_view);
+			output_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(tex->Width(), tex->Height());
+		}*/
+		output_buffer_->AddTexture(tex);
 	}
 
 	void PostProcess::Apply()
@@ -61,10 +61,10 @@ namespace vEngine
 		re->BindFrameBuffer(output_buffer_);
 		Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 		ShaderObject* shander_object = fullscreen_mesh_->GetShaderObject();
-		for(size_t i = 0; i < input_srv_.size(); ++i)
+		for(size_t i = 0; i < input_tex_.size(); ++i)
 		{
 			//TODO: temp solution
-			shander_object->SetReource("input_tex_" + std::to_string(static_cast<long long>(i)), input_srv_[i], 1);
+			shander_object->SetReource("input_tex_" + std::to_string(static_cast<long long>(i)), input_tex_[i], 1);
 		}
 		fullscreen_mesh_->SetRenderParameters();
 		fullscreen_mesh_->Render(0);

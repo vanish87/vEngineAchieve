@@ -40,7 +40,9 @@ namespace vEngine
 
 		delete[] init_data.data;
 
-		RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
+		CHECK_ASSERT(false);
+
+		/*RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
 		byte* data = static_cast<byte*>(render_buffer->Map(AT_CPU_WRITE_GPU_READ));
 		CHECK_ASSERT(data != nullptr);
 		for (uint32_t i = 0; i < 227 * 128; ++i)
@@ -51,7 +53,7 @@ namespace vEngine
 			data[index + 2] = 50;
 			data[index + 3] = 255;
 		}
-		render_buffer->UnMap();
+		render_buffer->UnMap();*/
 
 		D3DShaderobject* output_to_tex_so_ = new D3DShaderobject();
 		output_to_tex_so_->LoadFxoFile("FxFiles/DebugShader.cso");
@@ -95,7 +97,9 @@ namespace vEngine
 				{
 					continue;
 				}
-				RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
+
+				CHECK_ASSERT(false);
+				/*RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
 				byte* data = static_cast<byte*>(render_buffer->Map(AT_CPU_WRITE_GPU_READ));
 				CHECK_ASSERT(data != nullptr);
 
@@ -141,7 +145,7 @@ namespace vEngine
 						}
 					}
 				}
-				render_buffer->UnMap();
+				render_buffer->UnMap();*/
 
 				std::ofstream LogFile;
 				LogFile.open("bitmap.txt", std::fstream::out);
@@ -172,8 +176,9 @@ namespace vEngine
 
 	void Font::DumpToScreen()
 	{
+		CHECK_ASSERT(false);
 		output_to_tex_pp_->SetInput(bitmap_texture_, 0);
-		output_to_tex_pp_->SetOutput(Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetRenderView(0)->GetTexture(), 0);
+		//output_to_tex_pp_->SetOutput(Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetRenderView(0)->GetTexture(), 0);
 		output_to_tex_pp_->Apply();
 	}
 
