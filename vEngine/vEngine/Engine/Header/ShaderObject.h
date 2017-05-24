@@ -30,6 +30,8 @@ namespace vEngine
 		virtual void SetTechnique(std::string name) = 0;
 		virtual size_t GetPass() = 0;
 		virtual void Apply(size_t pass_index) = 0;
+		
+		virtual void LoadBinaryFile(std::string file_name);
 	};
 }
 

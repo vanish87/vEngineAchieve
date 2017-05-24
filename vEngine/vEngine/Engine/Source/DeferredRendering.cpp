@@ -54,8 +54,8 @@ namespace vEngine
 			1, 1, R32G32B32A32_F,  1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 
 
-		linearize_shadow_map_so_ = new D3DShaderobject();
-		linearize_shadow_map_so_->LoadFxoFile("FxFiles/LinearizeDepthPostProcess.cso");
+		linearize_shadow_map_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		linearize_shadow_map_so_->LoadBinaryFile("FxFiles/LinearizeDepthPostProcess.cso");
 		linearize_shadow_map_so_->SetTechnique("PPTech");
 
 		linearize_shadow_map_pp_ = new PostProcess();
@@ -68,8 +68,8 @@ namespace vEngine
 		shadow_blur_Y_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, ShadowMapSize.x(), ShadowMapSize.y(),
 			1, 1, R32G32B32A32_F, 1, 0, AT_GPU_READ_WRITE, TU_SR_RT);
 
-		shadow_map_blur_so_ = new D3DShaderobject();
-		shadow_map_blur_so_->LoadFxoFile("FxFiles/GaussianBlurXFilterPostProcess.cso");
+		shadow_map_blur_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		shadow_map_blur_so_->LoadBinaryFile("FxFiles/GaussianBlurXFilterPostProcess.cso");
 		shadow_map_blur_so_->SetTechnique("PPTech");
 
 		shadow_map_xblur_pp_ = new PostProcess();
@@ -77,7 +77,7 @@ namespace vEngine
 		shadow_map_xblur_pp_->SetInput(shadow_linear_depth_, 0);
 		shadow_map_xblur_pp_->SetOutput(shadow_blur_X_, 0);
 
-		shadow_map_blur_so_->LoadFxoFile("FxFiles/GaussianBlurYFilterPostProcess.cso");
+		shadow_map_blur_so_->LoadBinaryFile("FxFiles/GaussianBlurYFilterPostProcess.cso");
 		shadow_map_blur_so_->SetTechnique("PPTech");
 
 		shadow_map_yblur_pp_ = new PostProcess();
@@ -100,8 +100,8 @@ namespace vEngine
 		//shadowing_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(shadowing_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 
 		//init SSDO
-		ssdo_so_ = new D3DShaderobject();;
-		ssdo_so_->LoadFxoFile("FxFiles/SSDO.cso");
+		ssdo_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		ssdo_so_->LoadBinaryFile("FxFiles/SSDO.cso");
 		ssdo_so_->SetTechnique("PPTech");
 
 		D3DModel random_tex_dummy;
@@ -124,8 +124,8 @@ namespace vEngine
 		ssdo_pp_->SetInput(noise_tex_, 2 );
 		ssdo_pp_->SetOutput(occlusion_tex_, 0);
 
-		occlusion_blur_so_ = new D3DShaderobject();
-		occlusion_blur_so_->LoadFxoFile("FxFiles/GaussianBlurXFilterPostProcess.cso");
+		occlusion_blur_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		occlusion_blur_so_->LoadBinaryFile("FxFiles/GaussianBlurXFilterPostProcess.cso");
 		occlusion_blur_so_->SetTechnique("PPTech");
 
 		occlusion_xblur_pp_ = new PostProcess();
@@ -133,7 +133,7 @@ namespace vEngine
 		occlusion_xblur_pp_->SetInput(occlusion_tex_, 0);
 		occlusion_xblur_pp_->SetOutput(occlusion_blur_X_, 0);
 
-		occlusion_blur_so_->LoadFxoFile("FxFiles/GaussianBlurYFilterPostProcess.cso");
+		occlusion_blur_so_->LoadBinaryFile("FxFiles/GaussianBlurYFilterPostProcess.cso");
 		occlusion_blur_so_->SetTechnique("PPTech");
 
 		occlusion_yblur_pp_ = new PostProcess();
@@ -150,8 +150,8 @@ namespace vEngine
 		//lighting_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(texture_2d, AT_GPU_READ_WRITE, BU_SHADER_RES);
 		lighting_buffer_->AddTexture(lighting_tex_);
 
-		linearize_depth_so_ = new D3DShaderobject();
-		linearize_depth_so_->LoadFxoFile("FxFiles/LinearizeDepthPostProcess.cso");
+		linearize_depth_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		linearize_depth_so_->LoadBinaryFile("FxFiles/LinearizeDepthPostProcess.cso");
 		linearize_depth_so_->SetTechnique("PPTech");
 
 		linearize_depth_pp_ = new PostProcess();
@@ -171,8 +171,8 @@ namespace vEngine
 
 
 		//debug pp
-		output_to_tex_so_ = new D3DShaderobject();
-		output_to_tex_so_->LoadFxoFile("FxFiles/DebugShader.cso");
+		output_to_tex_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		output_to_tex_so_->LoadBinaryFile("FxFiles/DebugShader.cso");
 		output_to_tex_so_->SetTechnique("PPTech");
 
 		output_to_tex_pp_ = new PostProcess();

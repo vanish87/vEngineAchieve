@@ -19,6 +19,24 @@ void WarningText(std::string text)
 	//printf("Back to normal");
 };
 
+void ErrorText(std::string text)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	WORD saved_attributes;
+
+	/* Save current attributes */
+	GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+	saved_attributes = consoleInfo.wAttributes;
+
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "ERROR: " << text << std::endl;
+	//printf("This is some nice COLORFUL text, isn't it?");
+	/* Restore original attributes */
+	SetConsoleTextAttribute(hConsole, saved_attributes);
+	//printf("Back to normal");
+};
+
 namespace vEngine
 {
 	Window::Window(void)

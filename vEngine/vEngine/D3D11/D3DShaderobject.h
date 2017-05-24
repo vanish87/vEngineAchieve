@@ -30,7 +30,7 @@ namespace vEngine
 		D3DShaderobject(void);
 		~D3DShaderobject(void);
 
-		void LoadFxoFile(std::string file_name);
+		void LoadBinaryFile(std::string file_name);
 
 		ID3DX11EffectTechnique* GetTechnique(){return tech_;};
 		virtual void SetTechnique(std::string name);

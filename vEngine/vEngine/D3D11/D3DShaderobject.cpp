@@ -12,13 +12,13 @@ namespace vEngine
 	{
 	}
 
-	void D3DShaderobject::LoadFxoFile( std::string file_name )
+	void D3DShaderobject::LoadBinaryFile( std::string file_name )
 	{
 		std::ifstream fin(file_name, std::ios::binary);
 
 		if (!fin)
 		{
-			PRINT("Cannot open Fxo File ");
+			PRINT_ERROR("Cannot open Fxo File ");
 			return;
 		}
 
@@ -32,7 +32,7 @@ namespace vEngine
 		D3DRenderEngine* render_engine = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		HRESULT result = D3DX11CreateEffectFromMemory(&compiledShader[0], size,	0, render_engine->D3DDevice(), &fx_, NULL);
 		if(FAILED(result))
-			PRINT("Cannot Load Effect File");
+			PRINT_ERROR("Cannot Load Effect File");
 	}
 
 	void D3DShaderobject::SetVariable( std::string name )
@@ -55,7 +55,7 @@ namespace vEngine
 		ID3DX11EffectScalarVariable* bool_var = this->GetBoolVariable(name);
 		HRESULT res = bool_var->SetBool(value);
 		if(FAILED(res))
-			PRINT("Cannot SetBool");
+			PRINT_ERROR("Cannot SetBool");
 	}
 	void D3DShaderobject::SetMatrixVariable( std::string name, float4x4 & matrix )
 	{
@@ -67,7 +67,7 @@ namespace vEngine
 				p[i*(int)matrix.row() + j] = matrix[i][j];
 		HRESULT res = mat_var->SetMatrix(p);
 		if(FAILED(res))
-			PRINT("Cannot set Shader Matrix");
+			PRINT_ERROR("Cannot set Shader Matrix");
 		delete[] p;
 	}
 
@@ -82,7 +82,7 @@ namespace vEngine
 		float data[3] = {vec3[0], vec3[1], vec3[2]};
 		HRESULT res = vec3_var->SetFloatVector(data);
 		if(FAILED(res))
-			PRINT("Cannot SetFloatVector");
+			PRINT_ERROR("Cannot SetFloatVector");
 	}
 
 	void D3DShaderobject::SetVectorVariable( std::string name, float4 & vec4 )
@@ -90,7 +90,8 @@ namespace vEngine
 		ID3DX11EffectVectorVariable* vec4_var = GetVectorVariable(name);
 		float data[4] = {vec4[0], vec4[1], vec4[2], vec4[3]};
 		HRESULT res = vec4_var->SetFloatVector(data);
-		if(FAILED(res))PRINT("Fail to SetVectorVariable: " + name);
+		if(FAILED(res))
+			PRINT_ERROR("Fail to SetVectorVariable: " + name);
 	}
 
 	void D3DShaderobject::SetTechnique( std::string name )
@@ -103,7 +104,7 @@ namespace vEngine
 		D3DX11_TECHNIQUE_DESC tech_desc;
 		HRESULT res = tech_->GetDesc( &tech_desc );
 		if(FAILED(res))
-			PRINT("Cannot get pass");
+			PRINT_ERROR("Cannot get pass");
 		return tech_desc.Passes;
 	}
 
@@ -112,7 +113,7 @@ namespace vEngine
 		D3DRenderEngine* d3d_render_engine = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		HRESULT res = tech_->GetPassByIndex((UINT)pass_index)->Apply(0, d3d_render_engine->D3DDeviceImmContext());
 		if(FAILED(res))
-			PRINT("Cannot apply pass");
+			PRINT_ERROR("Cannot apply pass");
 	}
 
 	void D3DShaderobject::SetRawData( std::string name, void* data, uint32_t size )
@@ -120,7 +121,7 @@ namespace vEngine
 		ID3DX11EffectVariable* var = this->GetVariable(name);
 		HRESULT res = var->SetRawValue(data, 0, size);
 		if(FAILED(res))
-			PRINT("Cannot set RawData");
+			PRINT_ERROR("Cannot set RawData");
 	}
 
 	void D3DShaderobject::SetReource( std::string name, Texture* data, uint32_t type )
@@ -131,7 +132,7 @@ namespace vEngine
 		{
 			HRESULT res = sr_var->SetResource(NULL);
 			if(FAILED(res))
-				PRINT("Cannot set Resource");
+				PRINT_ERROR("Cannot set Resource");
 			return;
 		}
 /*
@@ -149,7 +150,7 @@ namespace vEngine
 			D3DTexture2D* d3d_tex = static_cast<D3DTexture2D*>(data);
 			HRESULT res = sr_var->SetResource(d3d_tex->GetShaderResourceView(1, 1, TEXTURE2D));
 			if(FAILED(res))
-				PRINT("Cannot set Resource");
+				PRINT_ERROR("Cannot set Resource");
 		}
 	}
 
@@ -157,7 +158,7 @@ namespace vEngine
 	{
 		bool valid = (bool)(fx_->GetVariableByName(name.c_str())->IsValid());
 		if( !valid)
-			PRINT("Cannot find Variables");
+			PRINT_ERROR("Cannot find Variables");
 		shader_resource_variable_[name] = fx_->GetVariableByName(name.c_str())->AsShaderResource();
 	}
 

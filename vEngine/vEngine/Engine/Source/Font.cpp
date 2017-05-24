@@ -53,8 +53,8 @@ namespace vEngine
 		}
 		bitmap_texture_->UnMap();
 
-		D3DShaderobject* output_to_tex_so_ = new D3DShaderobject();
-		output_to_tex_so_->LoadFxoFile("FxFiles/DebugShader.cso");
+		ShaderObject* output_to_tex_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		output_to_tex_so_->LoadBinaryFile("FxFiles/DebugShader.cso");
 		output_to_tex_so_->SetTechnique("PPTech");
 
 		output_to_tex_pp_ = new PostProcess();

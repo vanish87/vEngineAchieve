@@ -40,6 +40,8 @@ namespace vEngine
 
 		virtual Texture* MakeTexture2D(void* TextureData);
 
+		virtual ShaderObject* MakeShaderObject();
+
 		//virtual RenderView* MakeRenderView(Texture* texture, int array_size, int mip_level);
 		//virtual RenderView* MakeRenderView(Texture* texture, int array_size, int mip_level, DepthStencilUsage usage);
 

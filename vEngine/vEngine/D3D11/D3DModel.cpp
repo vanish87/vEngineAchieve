@@ -74,9 +74,9 @@ namespace vEngine
 
 	void D3DModel::LoadShaderFile( std::string file_name )
 	{
-		shader_object_ = new D3DShaderobject();
+		shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		d3d_shader_object->LoadFxoFile(file_name);
+		d3d_shader_object->LoadBinaryFile(file_name);
 
 		//set all meshes' shader file to this one
 		for(size_t i =0; i < meshes_.size(); i++)
@@ -163,17 +163,17 @@ namespace vEngine
 		{
 			HRESULT result = DirectX::LoadFromTGAFile(std::wstring(file_name.begin(), file_name.end()).c_str(), &metadata, image);
 			if (FAILED(result))
-				PRINT("Cannot Load Texture File" + file_name);
+				PRINT_ERROR("Cannot Load Texture File" + file_name);
 		}
 		else
 		{
 			HRESULT result = DirectX::LoadFromWICFile(std::wstring(file_name.begin(), file_name.end()).c_str(), NULL, &metadata, image);
 			if (FAILED(result))
-				PRINT("Cannot Load Texture File" + file_name);
+				PRINT_ERROR("Cannot Load Texture File" + file_name);
 		}
 		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
-			PRINT("Cannot Load Texture File");
+			PRINT_ERROR("Cannot Load Texture File");
 
 		D3D11_RESOURCE_DIMENSION dimension;
 		texture->GetType(&dimension);

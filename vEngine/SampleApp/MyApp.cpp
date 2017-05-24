@@ -83,7 +83,7 @@ void MyApp::InitObjects()
 
 
 	//model = new D3DModel();
-	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::SacleCallBack);
+	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
 	//model->LoadShaderFile("FxFiles/DeferredLighting.cso");
@@ -119,7 +119,7 @@ void MyApp::InitObjects()
 }
 
 
-void MyApp::SacleCallBack(void* UserData)
+void MyApp::LoadCallback(void* UserData)
 {
 	D3DModel* model = static_cast<D3DModel*>(UserData);
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");

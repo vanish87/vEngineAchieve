@@ -29,6 +29,7 @@ namespace vEngine
 		//a remap from platform dependent data
 		//e.g: from D3D11Texture to vEngine texture
 		virtual Texture* MakeTexture2D(void* TextureData) = 0;
+		virtual ShaderObject* MakeShaderObject() = 0;
 		//virtual RenderView* MakeRenderView(Texture* texture, int array_size, int mip_level) = 0;
 		//virtual RenderView* MakeRenderView(Texture* texture, int array_size, int mip_level, DepthStencilUsage usage) = 0;
 

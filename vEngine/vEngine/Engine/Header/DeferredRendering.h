@@ -57,7 +57,7 @@ namespace vEngine
 		//RenderBuffer* lighting_srv_;
 
 		//depth buffer
-		D3DShaderobject* linearize_depth_so_;
+		ShaderObject* linearize_depth_so_;
 		PostProcess* linearize_depth_pp_;
 		Texture* depth_tex_;
 		Texture* linear_depth_tex_;
@@ -73,14 +73,13 @@ namespace vEngine
 
 		Texture* shadow_blur_;
 
-		//TODO: create own shader object
-		D3DShaderobject* shadow_map_blur_so_;
+		ShaderObject* shadow_map_blur_so_;
 		PostProcess* shadow_map_xblur_pp_;
 		PostProcess* shadow_map_yblur_pp_;
 		Texture* shadow_blur_X_;
 		Texture* shadow_blur_Y_;
 
-		D3DShaderobject* linearize_shadow_map_so_;
+		ShaderObject* linearize_shadow_map_so_;
 		PostProcess* linearize_shadow_map_pp_;
 		FrameBuffer* shadow_map_buffer_;
 		Texture* shadow_depth_;
@@ -91,9 +90,9 @@ namespace vEngine
 
 		//RenderBuffer* depth_srv_;
 
-		D3DShaderobject* ssdo_so_;
+		ShaderObject* ssdo_so_;
 		PostProcess* ssdo_pp_;
-		D3DShaderobject* occlusion_blur_so_;
+		ShaderObject* occlusion_blur_so_;
 		PostProcess* occlusion_xblur_pp_;
 		PostProcess* occlusion_yblur_pp_;
  		Texture* occlusion_tex_;
@@ -107,7 +106,7 @@ namespace vEngine
 
 		//debug
 		PostProcess* output_to_tex_pp_;
-		D3DShaderobject* output_to_tex_so_;
+		ShaderObject* output_to_tex_so_;
 
 	};
 }

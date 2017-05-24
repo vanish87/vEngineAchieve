@@ -101,7 +101,7 @@ namespace vEngine
 		HRESULT result = d3d_re->D3DDevice()->CreateBuffer(&buffer_desc, &data, &buffer);
 		if(FAILED(result))
 		{
-			PRINT("Cannot create Buffer");
+			PRINT_ERROR("Cannot create Buffer");
 		}
 		D3DRenderBuffer* d3d_render_buffer = new D3DRenderBuffer(buffer, usage, access_type);
 		return d3d_render_buffer;
@@ -121,11 +121,16 @@ namespace vEngine
 			init_data);
 	}
 
-	vEngine::Texture* D3DRenderFactory::MakeTexture2D(void* TextureData)
+	Texture* D3DRenderFactory::MakeTexture2D(void* TextureData)
 	{
 		CHECK_ASSERT(TextureData != nullptr);
 		ID3D11Texture2D* ptr = static_cast<ID3D11Texture2D*>(TextureData);
 		return new D3DTexture2D(ptr);
+	}
+
+	ShaderObject* D3DRenderFactory::MakeShaderObject()
+	{
+		return new D3DShaderobject();
 	}
 
 	/*RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)

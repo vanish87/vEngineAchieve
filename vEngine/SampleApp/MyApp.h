@@ -31,7 +31,7 @@ public:
 
 private:
 
-	static void SacleCallBack(void* UserData);
+	static void LoadCallback(void* UserData);
 	vEngine::PointLight* point_light_;
 	vEngine::SpotLight* spot_light_;
 

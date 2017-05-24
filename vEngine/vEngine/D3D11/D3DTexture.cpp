@@ -118,7 +118,7 @@ namespace vEngine
 		default:
 			{
 				this->usage_ = TU_SHADER_RES;
-				PRINT("Check Texture BindFlags here");
+				PRINT_ERROR("Check Texture BindFlags here");
 				break;
 			}
 		}
@@ -134,26 +134,7 @@ namespace vEngine
 	{
 	}
 
-	ID3D11RenderTargetView* D3DTexture2D::GetRenderTargetView( int array_size, int mip_level , TextureType type)
-	{
-		if(d3d_rt_view_ == nullptr)
-		{
-			//check it first
-			D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
-			D3D11_RENDER_TARGET_VIEW_DESC desc;
-			CHECK_ASSERT(array_size == 1);
-			if(array_size == 1)
-			{
-				desc.Format = d3d_re->MapFormat(this->format_);
-				desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-				desc.Texture2D.MipSlice = mip_level;
-			}
-			HRESULT result = d3d_re->D3DDevice()->CreateRenderTargetView(this->D3DTexture(), &desc, &d3d_rt_view_);
-			if(FAILED(result))
-				PRINT("Cannot create D3DRenderTargetView");
-		}
-		return d3d_rt_view_;
-	}
+	
 
 	uint32_t D3DTexture2D::GetWidth()
 	{
@@ -173,6 +154,27 @@ namespace vEngine
 	void D3DTexture2D::SetD3DTexture( ID3D11Texture2D* d3d_texture )
 	{
 		this->d3d_texture2D_ = d3d_texture;
+	}
+
+	ID3D11RenderTargetView* D3DTexture2D::GetRenderTargetView(int array_size, int mip_level, TextureType type)
+	{
+		if (d3d_rt_view_ == nullptr)
+		{
+			//check it first
+			D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+			D3D11_RENDER_TARGET_VIEW_DESC desc;
+			CHECK_ASSERT(array_size == 1);
+			if (array_size == 1)
+			{
+				desc.Format = d3d_re->MapFormat(this->format_);
+				desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+				desc.Texture2D.MipSlice = mip_level;
+			}
+			HRESULT result = d3d_re->D3DDevice()->CreateRenderTargetView(this->d3d_texture2D_, &desc, &d3d_rt_view_);
+			if (FAILED(result))
+				PRINT_ERROR("Cannot create D3DRenderTargetView");
+		}
+		return d3d_rt_view_;
 	}
 
 	ID3D11ShaderResourceView* D3DTexture2D::GetShaderResourceView( int array_size, int mip_level , TextureType type)
@@ -210,7 +212,7 @@ namespace vEngine
 				break;
 			}
 			
-			HRESULT res = d3d_re->D3DDevice()->CreateShaderResourceView(this->D3DTexture(), &sr_desc, &d3d_sr_view_);
+			HRESULT res = d3d_re->D3DDevice()->CreateShaderResourceView(this->d3d_texture2D_, &sr_desc, &d3d_sr_view_);
 			if(FAILED(res))
 				PRINT_AND_BREAK("Cannot create Shader Resource View");
 		}
@@ -230,9 +232,9 @@ namespace vEngine
 			dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//d3d_re->MapFormat(d3d_texture->GetFormat());
 			dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 			dsvd.Texture2D.MipSlice = mip_level;
-			HRESULT result = d3d_re->D3DDevice()->CreateDepthStencilView(d3d_texture2D_, &dsvd, &d3d_ds_view_);
+			HRESULT result = d3d_re->D3DDevice()->CreateDepthStencilView(this->d3d_texture2D_, &dsvd, &d3d_ds_view_);
 			if (FAILED(result))
-				PRINT("depth_stencil_view create Failed!");
+				PRINT_ERROR("depth_stencil_view create Failed!");
 		}
 		return d3d_ds_view_;
 	}
@@ -252,7 +254,7 @@ namespace vEngine
 		//TODO : According to access_type, decide D3D_MAP_TYPE
 		HRESULT result = d3d_re->D3DDeviceImmContext()->Map(d3d_texture2D_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		if (FAILED(result))
-			PRINT("Failed to map resource");
+			PRINT_ERROR("Failed to map resource");
 		data_ = mappedResource.pData;
 	}
 

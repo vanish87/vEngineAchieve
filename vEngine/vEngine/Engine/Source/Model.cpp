@@ -53,7 +53,7 @@ namespace vEngine
 		ai_scene_ = importer.ReadFile(file_name_, flags);
 		if (!ai_scene_)
 		{
-			PRINT(importer.GetErrorString());
+			PRINT_ERROR(importer.GetErrorString());
 			return;
 		}
 

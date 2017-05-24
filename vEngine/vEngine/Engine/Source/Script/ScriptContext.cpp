@@ -159,7 +159,7 @@ namespace vEngine
 			NULL);
 
 		if (hDir == INVALID_HANDLE_VALUE) {
-			PRINT("CreateFile failed.");
+			PRINT_ERROR("CreateFile failed.");
 			return RCFailure();
 		}
 
@@ -185,7 +185,7 @@ namespace vEngine
 				NULL);
 
 			if (!bRet) {
-				PRINT("ReadDirectoryChangesW failed.");
+				PRINT_ERROR("ReadDirectoryChangesW failed.");
 				break;
 			}
 
