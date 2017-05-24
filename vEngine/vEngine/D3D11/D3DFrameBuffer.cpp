@@ -29,19 +29,16 @@ namespace vEngine
 		std::vector<ID3D11RenderTargetView*> rtvs;
 		for(size_t i = 0; i< render_texture_.size(); i++)
 			rtvs.push_back(static_cast<D3DTexture2D*>(this->render_texture_[i])->GetRenderTargetView(1,0,TEXTURE2D));
-		D3DDepthStencilRenderView* depth_view = static_cast<D3DTexture2D*>(this->depth_texture_).GetShaderResourceView(1,0,TEXTURE2D);
-		ID3D11DepthStencilView* dsv = depth_view->D3DDSV();
-		CHECK_ASSERT(dsv != nullptr);
+		D3DTexture2D* depth_tex = static_cast<D3DTexture2D*>(this->depth_texture_);
 		
-		dsv = depth_view->D3DDSV();
 		//only draw depth
 		if(rtvs.size() == 0)
 		{
-			render_engine->D3DDeviceImmContext()->OMSetRenderTargets(0, NULL, dsv);
+			render_engine->D3DDeviceImmContext()->OMSetRenderTargets(0, NULL, depth_tex->GetDepthStencilView(1, 0, TEXTURE2D));
 		}
 		else
 		{
-			render_engine->D3DDeviceImmContext()->OMSetRenderTargets((uint32_t)rtvs.size(), &rtvs.front(), dsv);
+			render_engine->D3DDeviceImmContext()->OMSetRenderTargets((uint32_t)rtvs.size(), &rtvs.front(), depth_tex->GetDepthStencilView(1, 0, TEXTURE2D));
 		}
 
 		D3D11_VIEWPORT d3d_viewport;
@@ -61,11 +58,12 @@ namespace vEngine
 		D3DRenderEngine* render_engine = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		if ((mask & CBM_COLOR) != 0)
 		{
-			for (size_t i = 0; i < this->D3DRTViewSize(); i++)
-				render_engine->D3DDeviceImmContext()->ClearRenderTargetView(D3DRTView(i)->D3DRTV(), c);
+			for (size_t i = 0; i < this->render_texture_.size(); i++)
+				render_engine->D3DDeviceImmContext()->ClearRenderTargetView(static_cast<D3DTexture2D*>(this->render_texture_[i])->GetRenderTargetView(1, 0, TEXTURE2D), c);
 		}
+		D3DTexture2D* depth_tex = static_cast<D3DTexture2D*>(this->depth_texture_);
 
-		render_engine->D3DDeviceImmContext()->ClearDepthStencilView(D3DDSView()->D3DDSV(), mask, depth, 0);
+		render_engine->D3DDeviceImmContext()->ClearDepthStencilView(depth_tex->GetDepthStencilView(1, 0, TEXTURE2D), mask, depth, 0);
 	}
 
 }
