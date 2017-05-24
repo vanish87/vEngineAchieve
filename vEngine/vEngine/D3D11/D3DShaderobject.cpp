@@ -147,7 +147,7 @@ namespace vEngine
 		else//Shader Resource*/
 		{
 			D3DTexture2D* d3d_tex = static_cast<D3DTexture2D*>(data);
-			HRESULT res = sr_var->SetResource(d3d_tex->GetShaderResourceView(1, 0, TEXTURE2D));
+			HRESULT res = sr_var->SetResource(d3d_tex->GetShaderResourceView(1, 1, TEXTURE2D));
 			if(FAILED(res))
 				PRINT("Cannot set Resource");
 		}

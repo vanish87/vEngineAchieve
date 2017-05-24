@@ -3,6 +3,7 @@
 #include "Engine\Header\ScriptContext.h"
 #include "Engine\Header\Window.h"
 
+
 namespace vEngine
 {
 	App::App(void)

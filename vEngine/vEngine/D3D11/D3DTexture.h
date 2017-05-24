@@ -32,6 +32,11 @@ namespace vEngine
 		uint32_t GetHeight();
 		Format GetFormat();
 		void SetD3DTexture( ID3D11Texture2D* texture );
+
+	protected:
+
+		virtual void DoMap(AccessType access_type);
+		virtual void UnMap();
 	private:
 		D3D11_TEXTURE2D_DESC desc_;
 		ID3D11Texture2D* d3d_texture2D_;

@@ -55,7 +55,8 @@ namespace vEngine
 		{
 			if (render_texture_[i] == render_tex)
 			{
-				PRINT_AND_BREAK("render view exists");
+				PRINT_WARNING("render view exists");
+				return;
 			}
 		}
 		render_texture_.push_back(render_tex);

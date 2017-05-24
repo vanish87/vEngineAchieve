@@ -32,11 +32,6 @@ namespace vEngine
 	NTexture::NTexture()
 		:Texture(AT_GPU_READ_WRITE, 0, R32G32B32A32_U, 0, 0, 0, TU_SHADER_RES, TEXTURE2D)
 	{};
-
-	NTexture::~NTexture()
-	{
-
-	}
 	Texture& Texture::NullTexture()
 	{
 		static NTexture Instance;

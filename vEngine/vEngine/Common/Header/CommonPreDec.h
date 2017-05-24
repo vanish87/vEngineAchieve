@@ -9,7 +9,10 @@
 
 //debug and assert
 #include <iostream>
+//TODO Print colored warning with this
+void WarningText(std::string text);
 #define PRINT(x) std::cout<<x<<std::endl;
+#define PRINT_WARNING(x) WarningText(x);
 #define PRINT_AND_RETURN(x, returnVal) {PRINT(x);return returnVal;}
 #define PRINT_FILE_AND_FUCTION PRINT("in File "<<__FILE__<<" Line "<<__LINE__<<" Function "<<__FUNCTION__);
 #define PRINT_AND_BREAK(x) \

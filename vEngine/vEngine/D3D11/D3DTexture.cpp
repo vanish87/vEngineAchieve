@@ -237,4 +237,23 @@ namespace vEngine
 		return d3d_ds_view_;
 	}
 
+
+	void D3DTexture2D::UnMap()
+	{
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		d3d_re->D3DDeviceImmContext()->Unmap(d3d_texture2D_, 0);
+
+	}
+
+	void D3DTexture2D::DoMap(AccessType access_type)
+	{
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		//TODO : According to access_type, decide D3D_MAP_TYPE
+		HRESULT result = d3d_re->D3DDeviceImmContext()->Map(d3d_texture2D_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		if (FAILED(result))
+			PRINT("Failed to map resource");
+		data_ = mappedResource.pData;
+	}
+
 }

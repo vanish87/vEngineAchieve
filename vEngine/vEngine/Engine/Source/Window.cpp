@@ -1,6 +1,24 @@
 #include "Engine\Header\Window.h"
 #include "Engine\Header\GameState.h"
 
+void WarningText(std::string text)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	WORD saved_attributes;
+
+	/* Save current attributes */
+	GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+	saved_attributes = consoleInfo.wAttributes;
+
+	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "WARNING: " << text << std::endl;
+	//printf("This is some nice COLORFUL text, isn't it?");
+	/* Restore original attributes */
+	SetConsoleTextAttribute(hConsole, saved_attributes);
+	//printf("Back to normal");
+};
+
 namespace vEngine
 {
 	Window::Window(void)
@@ -17,6 +35,7 @@ namespace vEngine
 		std::wstring win_name_w = std::wstring(win_name_.begin(), win_name_.end());
 
 		HINSTANCE hInstance = ::GetModuleHandle(NULL);
+
 
 		WNDCLASS wcex;
 		wcex.style = CS_HREDRAW | CS_VREDRAW;

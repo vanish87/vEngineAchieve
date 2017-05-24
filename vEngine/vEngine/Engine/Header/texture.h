@@ -19,8 +19,21 @@ namespace vEngine
 		void SetUsage(TextureUsage usage);
 		TextureType GetType();
 
+		void* Map(AccessType access_type)
+		{
+			this->DoMap(access_type);
+			CHECK_ASSERT(data_);
+			return data_;
+		};
+		virtual void UnMap() = 0;
+
 		static Texture& NullTexture();
 	protected:
+		//assign data_ with mapped resource
+		virtual void DoMap(AccessType access_type) = 0;
+
+	protected:
+
 		AccessType access_type_;
 		uint32_t array_size_;
 		Format format_;
@@ -29,13 +42,27 @@ namespace vEngine
 		uint32_t sample_quality_;
 		TextureUsage usage_;
 		TextureType type_;
+
+		//optional cpu data
+		void* data_;
 	};
 
 	class NTexture :public Texture
 	{
 	public:
 		NTexture();
-		~NTexture();
+
+		~NTexture()
+		{
+
+		};
+
+
+	protected:
+
+		virtual void DoMap(AccessType access_type) { CHECK_ASSERT(false); };
+		virtual void UnMap() { CHECK_ASSERT(false); };
+
 	};
 
 }

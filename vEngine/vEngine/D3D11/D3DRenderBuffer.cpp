@@ -51,9 +51,6 @@ namespace vEngine
 		data_ = mappedResource.pData;
 	}
 
-
-
-
 	void D3DShaderResourceView::UnMap()
 	{
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
