@@ -271,7 +271,7 @@ namespace vEngine
 		}
 
 		//TODO : Use new size of window to resize FrameBuffer
-		result = d3d_swap_chain_->ResizeBuffers(1, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+		result = d3d_swap_chain_->ResizeBuffers(2, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 		if(FAILED(result))
 			PRINT_ERROR("ResizeBuffer Failed!");
 
