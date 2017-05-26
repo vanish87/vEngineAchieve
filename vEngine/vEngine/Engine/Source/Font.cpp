@@ -6,7 +6,7 @@
 
 namespace vEngine
 {
-	static int2 TextureSize(1280,720);
+	static int2 TextureSize(1280,800);
 
 	Font::Font(void)
 	{
@@ -54,9 +54,9 @@ namespace vEngine
 		{
 			uint32_t index = i * 4;
 			data[index] = 0;
-			data[index + 1] = 150;
+			data[index + 1] = 0;
 			data[index + 2] = 0;
-			data[index + 3] = 255;
+			data[index + 3] = 0;
 		}
 		bitmap_texture_->UnMap();
 
@@ -90,6 +90,8 @@ namespace vEngine
 	{
 		FT_Error error;
 		int offset = 0;
+		data = static_cast<byte*>(bitmap_texture_->Map(AT_CPU_WRITE_GPU_READ));
+		CHECK_ASSERT(data != nullptr);
 		for (auto c : Text)
 		{
 			FT_UInt gindex = FT_Get_Char_Index(face, c);
@@ -101,10 +103,16 @@ namespace vEngine
 
 				if (face->glyph->bitmap.buffer == nullptr)
 				{
+					//space or other unknown char
+					offset += face->glyph->metrics.horiAdvance >> 6;
 					continue;
 				}
 
-				//RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
+				int2 Size = int2(face->glyph->bitmap.pitch, face->glyph->bitmap.rows);
+				int2 Pos = int2(Position.x() + offset + face->glyph->bitmap_left, Position.y() - face->glyph->bitmap_top);
+				this->FillBitmap(face->glyph->bitmap.buffer, Size, Pos);
+				offset += face->glyph->metrics.horiAdvance >> 6;
+				/*//RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
 				byte* data = static_cast<byte*>(bitmap_texture_->Map(AT_CPU_WRITE_GPU_READ));
 				CHECK_ASSERT(data != nullptr);
 
@@ -150,9 +158,9 @@ namespace vEngine
 						}
 					}
 				}
-				bitmap_texture_->UnMap();
+				bitmap_texture_->UnMap();*/
 
-				std::ofstream LogFile;
+				/*std::ofstream LogFile;
 				LogFile.open("bitmap.txt", std::fstream::out);
 				if (LogFile.is_open())
 				{
@@ -174,9 +182,31 @@ namespace vEngine
 						LogFile << std::endl;
 					}
 					LogFile.close();
-				}
+				}*/
 			}
 		}
+		bitmap_texture_->UnMap();
+	}
+
+	void Font::FillBitmap(byte* Buffer, int2 Size, int2 Position)
+	{
+		int StartPos = Position.x() + TextureSize.x() * Position.y();
+		for (int32_t i = 0; i < Size.y(); ++i)
+		{
+			for (int32_t j = 0; j < Size.x(); ++j)
+			{
+				uint32_t index = i * Size.x() + j;
+				int color = Buffer[index];
+
+				uint32_t bitmap_index = StartPos + (i * TextureSize.x()) + j;
+				bitmap_index *= 4;
+				data[bitmap_index] = color;
+				data[bitmap_index + 1] = color;
+				data[bitmap_index + 2] = color;
+				data[bitmap_index + 3] = color>0?color:0;
+			}
+		}
+
 	}
 
 	void Font::DumpToScreen()

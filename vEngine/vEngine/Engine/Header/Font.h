@@ -24,6 +24,7 @@ namespace vEngine
 
 		void DrawD3DText(std::wstring Text, int2 Position);
 
+		void FillBitmap(byte* Buffer, int2 Size, int2 Position);
 		void DumpToScreen();
 		
 	private:
@@ -35,7 +36,7 @@ namespace vEngine
 		FT_Library  library;
 		FT_Face     face;
 
-
+		byte* data;
 
 	};
 }

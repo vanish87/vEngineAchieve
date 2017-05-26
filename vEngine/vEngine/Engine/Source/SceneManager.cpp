@@ -20,20 +20,6 @@ namespace vEngine
 
 	void SceneManager::Flush()
 	{
-		//Do UI and Font here
-		if (inited == false)
-		{
-
-			vfont.LoadFontFile("Media/fonts/chinese.msyh.ttf");
-			vfont.DrawD3DText(L"\u6771", vEngine::int2(0, 0));
-			inited = true;
-		}
-
-		vfont.DumpToScreen();
-		Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
-		return;
-
-
 		if(render_list_.empty()) 
 		{
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
@@ -77,8 +63,16 @@ namespace vEngine
 			//Forward Rendering End
 			//========================================================================================================================
 		}
+		//Do UI and Font here
+		if (inited == false)
+		{
+			vfont.LoadFontFile("Media/fonts/chinese.msyh.ttf");
+			std::wstring Test = L"\u6771 I have a pen ";
+			vfont.DrawD3DText(Test, vEngine::int2(50, 50));
+			inited = true;
+		}
 
-		
+		vfont.DumpToScreen();
 
 		Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 

@@ -418,7 +418,6 @@ namespace vEngine
 			fullscreen_mesh_->Render(2);
 			fullscreen_mesh_->EndRender();
 
-
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd(); 
 			RenderingProfiler.End(Profiler::PE_FUNCTION_CALL, "Pass 2: Final ");
 
