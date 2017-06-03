@@ -239,6 +239,9 @@
     <ClCompile Include="Engine\Source\Font.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Text.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -440,6 +443,9 @@
       <Filter>Common\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Header\Font.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Text.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

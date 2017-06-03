@@ -75,6 +75,7 @@
     <ClCompile Include="Engine\Source\Script\ScriptTest.cpp" />
     <ClCompile Include="Engine\Source\ShaderObject.cpp" />
     <ClCompile Include="Engine\Source\StateManager.cpp" />
+    <ClCompile Include="Engine\Source\Text.cpp" />
     <ClCompile Include="Engine\Source\Texture.cpp" />
     <ClCompile Include="Engine\Source\Viewport.cpp" />
     <ClCompile Include="Engine\Source\Window.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Engine\Header\ScriptTest.h" />
     <ClInclude Include="Engine\Header\ShaderObject.h" />
     <ClInclude Include="Engine\Header\StateManager.h" />
+    <ClInclude Include="Engine\Header\Text.h" />
     <ClInclude Include="Engine\Header\texture.h" />
     <ClInclude Include="Engine\Header\TypeAndFormat.h" />
     <ClInclude Include="Engine\Header\Viewport.h" />

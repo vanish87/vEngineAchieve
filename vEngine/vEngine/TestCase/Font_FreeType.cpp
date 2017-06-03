@@ -82,7 +82,7 @@ void RunFontTest()
 	FT_Face     face;
 
 	//error = FT_New_Face(library, "Media/fonts/arial.ttf", 0, &face);
-	error = FT_New_Face(library, "Media/fonts/chinese.msyh.ttf", 0, &face);
+	error = FT_New_Face(library, "Media/fonts/msyh.ttf", 0, &face);
 	CHECK_ASSERT(error == FT_Err_Ok);
 
 	FT_UInt index = FT_Get_Char_Index(face, 'A');	

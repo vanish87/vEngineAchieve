@@ -2,16 +2,18 @@
 #include "Engine\Header\Context.h"
 
 #include "Engine\Header\PostProcess.h"
-#include "D3D11\D3DShaderobject.h"
+#include "Engine\Header\Shaderobject.h"
 
 namespace vEngine
 {
 	static int2 TextureSize(1280,800);
+	static std::unordered_map<std::string, Font*> FontMaps;
 
 	Font::Font(void)
 	{
 		FT_Error error = FT_Init_FreeType(&library);
 		CHECK_ASSERT(error == FT_Err_Ok);
+
 	}
 
 
@@ -22,8 +24,23 @@ namespace vEngine
 	} 
 	
 
+	Font& Font::GetFontByName(std::string name)
+	{
+		if (FontMaps.find(name) == FontMaps.end())
+		{
+			FontMaps[name] = new Font();
+			FontMaps[name]->LoadFontFile("Media/fonts/"+ name + ".ttf");
+		}
+
+		return *FontMaps[name];
+	}
+
 	void Font::LoadFontFile(std::string file_name)
 	{
+
+		
+
+
 		//"Media/fonts/chinese.msyh.ttf"
 		FT_Error error = FT_New_Face(library, file_name.c_str(), 0, &face);
 		CHECK_ASSERT(error == FT_Err_Ok);
@@ -37,7 +54,7 @@ namespace vEngine
 		//horz_resolution: Standard values are 72 or 96 dpi for display devices like the screen. 
 		CHECK_ASSERT(error == FT_Err_Ok);
 		
-		InitData init_data;
+		/*InitData init_data;
 		init_data.data = new uint32_t[TextureSize.x() * TextureSize.y()];
 		init_data.row_pitch = sizeof(uint32_t) * TextureSize.x();
 		init_data.slice_pitch = 0;
@@ -58,14 +75,9 @@ namespace vEngine
 			data[index + 2] = 0;
 			data[index + 3] = 0;
 		}
-		bitmap_texture_->UnMap();
+		bitmap_texture_->UnMap();*/
 
-		ShaderObject* output_to_tex_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
-		output_to_tex_so_->LoadBinaryFile("FxFiles/DebugShader.cso");
-		output_to_tex_so_->SetTechnique("PPTech");
-
-		output_to_tex_pp_ = new PostProcess();
-		output_to_tex_pp_->SetPPShader(output_to_tex_so_);
+		
 	}
 
 	void Font::SetPPShader(ShaderObject* shander_object)
@@ -86,11 +98,11 @@ namespace vEngine
 
 	}
 
-	void Font::DrawD3DText(std::wstring Text, int2 Position)
+	void Font::DrawD3DText(std::wstring Text, int2 Position, Texture* BitmapTexture)
 	{
 		FT_Error error;
 		int offset = 0;
-		data = static_cast<byte*>(bitmap_texture_->Map(AT_CPU_WRITE_GPU_READ));
+		data = static_cast<byte*>(BitmapTexture->Map(AT_CPU_WRITE_GPU_READ));
 		CHECK_ASSERT(data != nullptr);
 		for (auto c : Text)
 		{
@@ -111,81 +123,10 @@ namespace vEngine
 				int2 Size = int2(face->glyph->bitmap.pitch, face->glyph->bitmap.rows);
 				int2 Pos = int2(Position.x() + offset + face->glyph->bitmap_left, Position.y() - face->glyph->bitmap_top);
 				this->FillBitmap(face->glyph->bitmap.buffer, Size, Pos);
-				offset += face->glyph->metrics.horiAdvance >> 6;
-				/*//RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
-				byte* data = static_cast<byte*>(bitmap_texture_->Map(AT_CPU_WRITE_GPU_READ));
-				CHECK_ASSERT(data != nullptr);
-
-				uint32_t* new_bit = new uint32_t[face->glyph->bitmap.rows * face->glyph->bitmap.pitch];
-
-				for (uint32_t i = 0; i < face->glyph->bitmap.rows; ++i)
-				{
-					for (int32_t j = 0; j < face->glyph->bitmap.pitch; ++j)
-					{
-						uint32_t index = i * face->glyph->bitmap.pitch + j ;
-						int color = face->glyph->bitmap.buffer[index];
-						byte r = color == 0 ? 0 : 255;
-						byte g = color == 0 ? 0 : 255;
-						byte b = color == 0 ? 0 : 255;
-						byte a = 255;
-						new_bit[index] = r;
-					}
-				}
-				
-				
-				for (int32_t i = 0; i < TextureSize.y(); i++)
-				{
-					for (int32_t j = 0; j < TextureSize.x(); j ++)
-					{
-						uint32_t index = (i * TextureSize.x() + j) * 4;
-						if (face->glyph->bitmap.pitch > j && face->glyph->bitmap.rows > (uint32_t)i)
-						{
-							uint32_t bitmap_index = i * face->glyph->bitmap.pitch + j;
-							CHECK_ASSERT(bitmap_index < face->glyph->bitmap.pitch * face->glyph->bitmap.rows);
-							int color = face->glyph->bitmap.buffer[bitmap_index];
-
-							data[index]		= color;
-							data[index + 1] = color;
-							data[index + 2] = color;
-							data[index + 3] = 255;
-						}
-						else
-						{
-							data[index] = 50;
-							data[index + 1] = 0;
-							data[index + 2] = 0;
-							data[index + 3] = 255;
-						}
-					}
-				}
-				bitmap_texture_->UnMap();*/
-
-				/*std::ofstream LogFile;
-				LogFile.open("bitmap.txt", std::fstream::out);
-				if (LogFile.is_open())
-				{
-					for (uint32_t i = 0; i < face->glyph->bitmap.rows; ++i)
-					{
-						for (int32_t j = 0; j < face->glyph->bitmap.pitch; ++j)
-						{
-							uint32_t index = i * face->glyph->bitmap.pitch + j;
-							int color = face->glyph->bitmap.buffer[index];
-							if (color == 0 )
-							{
-								LogFile << ' ';
-							}
-							else
-							{
-								LogFile << '*';
-							}
-						}
-						LogFile << std::endl;
-					}
-					LogFile.close();
-				}*/
+				offset += face->glyph->metrics.horiAdvance >> 6;				
 			}
 		}
-		bitmap_texture_->UnMap();
+		BitmapTexture->UnMap();
 	}
 
 	void Font::FillBitmap(byte* Buffer, int2 Size, int2 Position)
@@ -209,16 +150,25 @@ namespace vEngine
 
 	}
 
-	void Font::DumpToScreen()
+	void Font::DumpToScreen(Texture* BitmapTexture)
 	{
 		static bool inited = false;
+		static PostProcess* output_to_tex_pp_;
 		if (!inited)
 		{
-			output_to_tex_pp_->SetInput(bitmap_texture_, 0);
+			ShaderObject* output_to_tex_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+			output_to_tex_so_->LoadBinaryFile("FxFiles/DebugShader.cso");
+			output_to_tex_so_->SetTechnique("PPTech");
+
+
+			output_to_tex_pp_ = new PostProcess();
+			output_to_tex_pp_->SetPPShader(output_to_tex_so_);
+
+			output_to_tex_pp_->SetInput(BitmapTexture, 0);
 			output_to_tex_pp_->SetOutput(Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetTexture(0), 0);
 			inited = true;
 		}
-		output_to_tex_pp_->Apply();
+		output_to_tex_pp_->Apply(false);
 	}
 
 }
