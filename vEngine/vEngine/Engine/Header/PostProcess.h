@@ -20,7 +20,7 @@ namespace vEngine
 		void SetInput(Texture* tex, size_t index);
 		void SetOutput(Texture* tex, size_t index);
 		void SetCamera(Camera* camera);
-		void Apply();
+		void Apply(bool ClearFrameBuffer = true);
 
 	private:
 		Mesh* fullscreen_mesh_;

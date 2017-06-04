@@ -5,6 +5,7 @@
 #include "Engine\Header\ResourceLoader.h"
 #include "Engine\Header\ScriptTest.h"
 #include "Engine\Header\ScriptContext.h"
+#include "Engine\Header\Text.h"
 
 #include "D3D11\D3DSkyDome.h"
 
@@ -112,7 +113,9 @@ void MyApp::InitObjects()
 
 	DebugTracking::GetInstance().PrintALL();
 
-
+	//text_.init with font name etc.
+	newtext_ = new Text();
+	//newtext_->AddToScene();
 
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
@@ -160,6 +163,12 @@ void MyApp::Update()
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
     spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+
+	//text.setcontent("xxxx");
+	//text.setposition();
+
+	std::wstring Test = L"\u6771 \u3042 I have a pen ";
+	newtext_->Draw(Test);
 }
 
 

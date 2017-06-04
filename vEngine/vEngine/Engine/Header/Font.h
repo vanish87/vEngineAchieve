@@ -18,20 +18,21 @@ namespace vEngine
 		Font(void);
 		~Font(void);
 
+		static Font& GetFontByName(std::string name);
+
 		void LoadFontFile(std::string file_name);
 		//temp solution for d3d shader object
 		void SetPPShader(ShaderObject* shander_object);
 
-		void DrawD3DText(std::wstring Text, int2 Position);
+		void DrawD3DText(std::wstring Text, int2 Position, Texture* BitmapTexture);
 
 		void FillBitmap(byte* Buffer, int2 Size, int2 Position);
-		void DumpToScreen();
+		static void DumpToScreen(Texture* BitmapTexture);
 		
 	private:
-		Mesh* font_mesh_;
-		Texture* bitmap_texture_;
+		//Mesh* font_mesh_;
+		//Texture* bitmap_texture_;
 
-		PostProcess* output_to_tex_pp_;
 
 		FT_Library  library;
 		FT_Face     face;
