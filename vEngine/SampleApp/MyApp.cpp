@@ -5,6 +5,7 @@
 #include "Engine\Header\ResourceLoader.h"
 #include "Engine\Header\ScriptTest.h"
 #include "Engine\Header\ScriptContext.h"
+#include "Engine\Header\Text.h"
 
 #include "D3D11\D3DSkyDome.h"
 
@@ -13,6 +14,9 @@
 using namespace vEngine;
 
 static MyApp app;
+
+static Text t1 = L"this is a text";
+static Text t2 = L"this is a text1";
 
 MyApp::MyApp(void) : App("vEngine")
 {
@@ -52,7 +56,7 @@ void MyApp::InitObjects()
 	RunFontTest();
 
 	//set up lights
-	for(int i = 0; i < 1 ; ++i)
+	for(int i = 0; i < 0 ; ++i)
 	{
 		point_light_ = new PointLight();
 		point_light_->SetPos(float3(50.f + i*20 ,10.f, 0.f));	
@@ -83,7 +87,7 @@ void MyApp::InitObjects()
 
 
 	//model = new D3DModel();
-	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::SacleCallBack);
+	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
 	//model->LoadShaderFile("FxFiles/DeferredLighting.cso");
@@ -112,14 +116,20 @@ void MyApp::InitObjects()
 
 	DebugTracking::GetInstance().PrintALL();
 
+	//text_.init with font name etc.
+	newtext_ = new Text(L"test new");
+	newtext_->SetRect(int4(200, 300, 0, 0));
+	//newtext_->AddToScene();
 
+	t1.SetRect(int4(50, 50, 0, 0));
+	t2.SetRect(int4(100, 100, 0, 0));
 
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
 
 
-void MyApp::SacleCallBack(void* UserData)
+void MyApp::LoadCallback(void* UserData)
 {
 	D3DModel* model = static_cast<D3DModel*>(UserData);
 	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
@@ -157,9 +167,21 @@ void MyApp::Update()
 		Math::Translate(trans,0,10,0);
 		Math::YRotation(rotate,Math::PI/2 *Math::Cos(timer_->Timef()/1000.0f));
 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
+
+		std::wstring Test = L"\u6771 \u3042 I have a pen ";
+		Test += std::to_wstring(cam_pos_.x()) + L" " + std::to_wstring(cam_pos_.y());
+		newtext_->SetContent(Test);
+		newtext_->Draw();
+		t1.Draw();
+		t2.Draw();
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
     spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+
+	//text.setcontent("xxxx");
+	//text.setposition();
+
+
 }
 
 
@@ -212,7 +234,7 @@ void MyState::OnKeyDown(WPARAM key_para)
 	switch (key_para)
 	{
 	case 'F':
-		app_->first_person_ = true;
+		app_->first_person_ = !app_->first_person_;
 		break;
 	case '1':
 		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleGbuffer(0);

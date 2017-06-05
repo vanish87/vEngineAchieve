@@ -101,18 +101,18 @@ namespace vEngine
 		HRESULT result = d3d_re->D3DDevice()->CreateBuffer(&buffer_desc, &data, &buffer);
 		if(FAILED(result))
 		{
-			PRINT("Cannot create Buffer");
+			PRINT_ERROR("Cannot create Buffer");
 		}
 		D3DRenderBuffer* d3d_render_buffer = new D3DRenderBuffer(buffer, usage, access_type);
 		return d3d_render_buffer;
 		
 	}
 
-	RenderBuffer* D3DRenderFactory::MakeRenderBuffer( Texture* texture, AccessType access_type, BufferUsage usage )
+	/*RenderBuffer* D3DRenderFactory::MakeRenderBuffer( Texture* texture, AccessType access_type, BufferUsage usage )
 	{
 		//TODO init AccessType access_type, BufferUsage usage and other render buffer varibles
 		return new D3DShaderResourceView(*texture, 1, 1);
-	}
+	}*/
 
 	Texture* D3DRenderFactory::MakeTexture2D( InitData const * init_data, uint32_t width, uint32_t height, uint32_t numMipMaps, uint32_t array_size, Format format, uint32_t sample_count, uint32_t sample_quality, AccessType access_type, TextureUsage texture_usage )
 	{		
@@ -121,14 +121,19 @@ namespace vEngine
 			init_data);
 	}
 
-	vEngine::Texture* D3DRenderFactory::MakeTexture2D(void* TextureData)
+	Texture* D3DRenderFactory::MakeTexture2D(void* TextureData)
 	{
 		CHECK_ASSERT(TextureData != nullptr);
 		ID3D11Texture2D* ptr = static_cast<ID3D11Texture2D*>(TextureData);
 		return new D3DTexture2D(ptr);
 	}
 
-	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)
+	ShaderObject* D3DRenderFactory::MakeShaderObject()
+	{
+		return new D3DShaderobject();
+	}
+
+	/*RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)
 	{
 		return new D3DRenderTargetView(*texture, array_size, mip_level );
 	}
@@ -136,6 +141,6 @@ namespace vEngine
 	RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level, DepthStencilUsage usage)
 	{
 		return new D3DDepthStencilRenderView(*texture, array_size, mip_level, usage);
-	}
+	}*/
 
 }

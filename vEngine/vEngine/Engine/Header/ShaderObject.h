@@ -21,7 +21,8 @@ namespace vEngine
 		virtual void SetMatrixVariable(std::string name, float4x4 & matrix) = 0;
 		virtual void SetRawData(std::string name, void* data, uint32_t size) = 0;
 		virtual void SetShaderResourceVariable(std::string name) = 0;
-		virtual void SetReource(std::string name, RenderBuffer* data, uint32_t size) = 0;
+		//virtual void SetReource(std::string name, RenderBuffer* data, uint32_t size) = 0;
+		virtual void SetReource(std::string name, Texture* data, uint32_t size) = 0;
 
 		virtual void SetBool(std::string) = 0;
 		virtual void SetBool(std::string, bool value) = 0;
@@ -29,6 +30,8 @@ namespace vEngine
 		virtual void SetTechnique(std::string name) = 0;
 		virtual size_t GetPass() = 0;
 		virtual void Apply(size_t pass_index) = 0;
+		
+		virtual void LoadBinaryFile(std::string file_name);
 	};
 }
 

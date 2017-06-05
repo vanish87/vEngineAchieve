@@ -9,10 +9,15 @@
 
 //debug and assert
 #include <iostream>
+//TODO Print colored warning with this
+void WarningText(std::string text);
+void ErrorText(std::string text);
 #define PRINT(x) std::cout<<x<<std::endl;
+#define PRINT_WARNING(x) WarningText(x);
+#define PRINT_ERROR(x) ErrorText(x);
 #define PRINT_AND_RETURN(x, returnVal) {PRINT(x);return returnVal;}
 #define PRINT_FILE_AND_FUCTION PRINT("in File "<<__FILE__<<" Line "<<__LINE__<<" Function "<<__FUNCTION__);
-#define PRINT_AND_ASSERT(x) \
+#define PRINT_AND_BREAK(x) \
 {\
 	PRINT(x); \
 	PRINT_FILE_AND_FUCTION;\
@@ -56,6 +61,7 @@ namespace vEngine
 	typedef __int16 int16_t;
 	typedef __int32 int32_t;
 	typedef __int64 int64_t;
+	typedef unsigned char	 byte;
 	typedef unsigned __int8  uint8_t;
 	typedef unsigned __int16 uint16_t;
 	typedef unsigned __int32 uint32_t;
@@ -85,6 +91,13 @@ namespace vEngine
 	template <typename T>
 	class Sphere;
 	typedef Sphere<float> sphere;
+
+	#ifdef _DEBUG
+	class StringHash;
+	typedef StringHash string_hash;
+	#else
+	typedef size_t string_hash;
+	#endif
 
 	class Ray;
 	class AABBox;

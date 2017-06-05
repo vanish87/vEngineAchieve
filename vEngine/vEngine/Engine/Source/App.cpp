@@ -1,6 +1,11 @@
 #include "Engine\Header\App.h"
 #include "Engine\Header\Context.h"
+#include "Engine\Header\ScriptContext.h"
 #include "Engine\Header\Window.h"
+
+#include "Engine\Header\Font.h"
+#include "Engine\Header\Text.h"
+
 
 namespace vEngine
 {
@@ -59,6 +64,7 @@ namespace vEngine
 				loops = 0;
 				//while( GetTickCount() > next_game_tick && loops < MAX_CYCLES_PER_FRAME ) 
 				{
+					Font::GetFontByName("msyh").ClearCPUBuffer();
 					this->Update();//do user's update
 
 					Context::Instance().GetStateManager().Update();
@@ -82,6 +88,9 @@ namespace vEngine
 
 			}
 		}
+
+		//TODO: Shutdown all threads now
+		Context::Instance().GetScriptContext().Quit();
 	}
 
 	const Window& App::GetWindow() const

@@ -20,17 +20,18 @@ namespace vEngine
 			InitData const * init_data);
 		D3DTexture2D(ID3D11Texture2D* & texture);
 
-		ID3D11Texture2D* const & D3DTexture() const
-		{
-			return d3d_texture2D_;
-		}
-
-		ID3D11RenderTargetView* GetRenderTargetView( int array_size, int mip_level , TextureType type);
-		ID3D11ShaderResourceView* GetShaderResourceView( int array_size, int mip_level , TextureType type);
+		ID3D11RenderTargetView* GetRenderTargetView(int array_size, int mip_level, TextureType type);
+		ID3D11ShaderResourceView* GetShaderResourceView(int array_size, int mip_level, TextureType type);
+		ID3D11DepthStencilView* GetDepthStencilView(int array_size, int mip_level, TextureType type);
 		uint32_t GetWidth();
 		uint32_t GetHeight();
 		Format GetFormat();
 		void SetD3DTexture( ID3D11Texture2D* texture );
+
+	protected:
+
+		virtual void DoMap(AccessType access_type);
+		virtual void UnMap();
 	private:
 		D3D11_TEXTURE2D_DESC desc_;
 		ID3D11Texture2D* d3d_texture2D_;

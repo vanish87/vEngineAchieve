@@ -58,6 +58,18 @@ PSOutput PS(VertexOut pin)
 	return ret;
 }
 
+BlendState lighing_acc
+{
+	BlendEnable[0] = TRUE;
+	SrcBlend = One;
+	DestBlend = One;
+	BlendOp[0] = ADD;
+	SrcBlendAlpha = One;
+	DestBlendAlpha = Zero;
+	BlendOpAlpha[0] = ADD;
+	RenderTargetWriteMask[0] = 0x0f;
+
+};
 technique11 PPTech
 {
     pass P0
@@ -65,5 +77,6 @@ technique11 PPTech
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
 		SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS() ) );
+		SetBlendState(lighing_acc, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
     }
 }

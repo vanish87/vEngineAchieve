@@ -10,7 +10,7 @@
 
 namespace vEngine
 {
-	class D3DRenderTargetView :		public RenderView
+	/*class D3DRenderTargetView :		public RenderView
 	{
 	public:
 		D3DRenderTargetView(void);
@@ -24,9 +24,9 @@ namespace vEngine
 
 	private:
 		ID3D11RenderTargetView* render_target_view_;
-	};
+	};*/
 
-	class D3DDepthStencilRenderView : public RenderView
+	/*class D3DDepthStencilRenderView : public RenderView
 	{
 	public:
 		D3DDepthStencilRenderView(void);
@@ -38,7 +38,7 @@ namespace vEngine
 		void SetD3DDSV( ID3D11DepthStencilView* depth_stencil_view );
 	private:
 		ID3D11DepthStencilView* depth_stencil_view_;
-	};
+	};*/
 
 
 

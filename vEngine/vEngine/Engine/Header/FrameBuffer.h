@@ -28,8 +28,8 @@ namespace vEngine
 
 		virtual void OnBind() = 0;
 		virtual void Clear(float4 color, float depth, uint32_t mask) = 0;
-		virtual void AddRenderView(RenderView* render_view);
-		virtual RenderView* GetRenderView(size_t index);
+		virtual void AddTexture(Texture* render_tex);
+		virtual Texture* GetTexture(size_t index);
 		Texture* GetDepthTexture(){return depth_texture_;};
 
 	private:
@@ -41,9 +41,9 @@ namespace vEngine
 
 		Viewport viewport_;
 
-		std::vector<RenderView*> render_views_;
+		std::vector<Texture*> render_texture_;
 		Texture* depth_texture_;
-		RenderView* depth_stencil_view_;
+		//RenderView* depth_stencil_view_;
 	};
 }
 

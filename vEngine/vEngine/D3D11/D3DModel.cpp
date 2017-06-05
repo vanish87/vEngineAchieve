@@ -24,7 +24,7 @@ namespace vEngine
 		shader_object_->SetMatrixVariable("g_world_matrix", model_matrix_);
 		//TODO : use texture array to store every pom texture of mesh
 		if(pom_enabled_)
-			shader_object_->SetReource("normal_map_tex", pom_srv_, 1);
+			shader_object_->SetReource("normal_map_tex", pom_texture_, 1);
 	}
 
 	void D3DModel::Render(int pass_index)
@@ -47,13 +47,13 @@ namespace vEngine
 			Material* mat = materials_[meshes_[i]->GetMaterialID()];
 			if(mat->diffuse_tex != 0)
 			{
-				shader_object_->SetReource("mesh_diffuse",tex_srvs_[mat->diffuse_tex-1], 1);
+				shader_object_->SetReource("mesh_diffuse",textures_[mat->diffuse_tex-1], 1);
 			}
 			if(mat->normalmap_tex != 0)
 			{
 				shader_object_->SetBool("g_normal_map", true);
 				//set normal map there
-				shader_object_->SetReource("normal_map_tex",tex_srvs_[mat->normalmap_tex-1], 1);
+				shader_object_->SetReource("normal_map_tex", textures_[mat->normalmap_tex-1], 1);
 			}
 			else
 			{
@@ -74,9 +74,9 @@ namespace vEngine
 
 	void D3DModel::LoadShaderFile( std::string file_name )
 	{
-		shader_object_ = new D3DShaderobject();
+		shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		d3d_shader_object->LoadFxoFile(file_name);
+		d3d_shader_object->LoadBinaryFile(file_name);
 
 		//set all meshes' shader file to this one
 		for(size_t i =0; i < meshes_.size(); i++)
@@ -163,17 +163,17 @@ namespace vEngine
 		{
 			HRESULT result = DirectX::LoadFromTGAFile(std::wstring(file_name.begin(), file_name.end()).c_str(), &metadata, image);
 			if (FAILED(result))
-				PRINT("Cannot Load Texture File" + file_name);
+				PRINT_ERROR("Cannot Load Texture File" + file_name);
 		}
 		else
 		{
 			HRESULT result = DirectX::LoadFromWICFile(std::wstring(file_name.begin(), file_name.end()).c_str(), NULL, &metadata, image);
 			if (FAILED(result))
-				PRINT("Cannot Load Texture File" + file_name);
+				PRINT_ERROR("Cannot Load Texture File" + file_name);
 		}
 		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
-			PRINT("Cannot Load Texture File");
+			PRINT_ERROR("Cannot Load Texture File");
 
 		D3D11_RESOURCE_DIMENSION dimension;
 		texture->GetType(&dimension);
@@ -190,7 +190,7 @@ namespace vEngine
 		//TODO: write a add material fun to add pom texture
 		pom_enabled_ = true;
 		pom_texture_ = LoadTexture(file_name);
-		pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
+		//pom_srv_ = Context::Instance().GetRenderFactory().MakeRenderBuffer(pom_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES);
 	}
 
 

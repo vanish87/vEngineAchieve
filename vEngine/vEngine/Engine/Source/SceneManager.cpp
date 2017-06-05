@@ -1,11 +1,14 @@
 #include "Engine\Header\SceneManager.h"
 #include "Engine\Header\Context.h"
 
+#include "Engine\Header\Font.h"
+#include "Engine\Header\Text.h"
+
 namespace vEngine
 {
-
 	SceneManager::SceneManager(void)
 	{
+
 	}
 
 
@@ -57,7 +60,11 @@ namespace vEngine
 			Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();*/
 			//Forward Rendering End
 			//========================================================================================================================
-		}
+		}		
+
+		Font::GetFontByName("msyh").DumpToScreen();
+
+		Context::Instance().GetRenderFactory().GetRenderEngine().SwapBuffers();
 
 	}
 
@@ -90,7 +97,7 @@ namespace vEngine
 	{
 		if (this->cameras_.empty())
 		{
-			PRINT_AND_ASSERT("Add a camera first");
+			PRINT_AND_BREAK("Add a camera first");
 			this->cameras_.push_back(new Camera());
 		}
 

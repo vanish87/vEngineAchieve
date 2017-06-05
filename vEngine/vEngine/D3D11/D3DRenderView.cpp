@@ -4,7 +4,7 @@
 namespace vEngine
 {
 
-	D3DRenderTargetView::D3DRenderTargetView(void)
+	/*D3DRenderTargetView::D3DRenderTargetView(void)
 		:render_target_view_(nullptr)
 	{
 	}
@@ -62,5 +62,6 @@ namespace vEngine
 	{
 		this->depth_stencil_view_=depth_stencil_view;
 	}
+*/
 
 }

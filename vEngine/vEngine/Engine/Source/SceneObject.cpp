@@ -22,7 +22,7 @@ namespace vEngine
 		}
 	}
 
-	RenderElement* & SceneObject::GetRenderElement()
+	RenderElement* SceneObject::GetRenderElement()
 	{
 		return render_element_;
 	}

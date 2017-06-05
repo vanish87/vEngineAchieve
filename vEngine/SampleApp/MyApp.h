@@ -30,8 +30,7 @@ public:
 	static bool ToBeCalledFromLua(void* UserData);
 
 private:
-
-	static void SacleCallBack(void* UserData);
+	static void LoadCallback(void* UserData);
 	vEngine::PointLight* point_light_;
 	vEngine::SpotLight* spot_light_;
 
@@ -47,6 +46,7 @@ private:
 	float pitch_angle_;
 	float speed_;
 
+	vEngine::Text* newtext_;
 	vEngine::GameStateSharedPtr newstate_;
 };
 

@@ -17,5 +17,6 @@ struct EnsureConst
 };
 
 #define CT_HASH(x) (EnsureConst<_Hash(x, 0)>::value)
+#define RT_HASH(x) _Hash(x, 0)
 
 #endif

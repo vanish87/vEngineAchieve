@@ -17,7 +17,8 @@ namespace vEngine
 		state_type_ = RST_RASTERIZER;		
 		D3DRenderEngine* d3d_re =static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		HRESULT res = d3d_re->D3DDevice()->CreateRasterizerState(&desc, &rasterizer_state_);
-		if(FAILED(res))PRINT("CreateRasterizerState Failed");
+		if(FAILED(res))
+			PRINT_ERROR("CreateRasterizerState Failed");
 	}
 
 	D3DRenderState::D3DRenderState( D3D11_DEPTH_STENCIL_DESC desc )
@@ -26,14 +27,15 @@ namespace vEngine
 		state_type_ = RST_DEPTH;	
 		D3DRenderEngine* d3d_re =static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		HRESULT res = d3d_re->D3DDevice()->CreateDepthStencilState(&desc, &depth_stencil_state_);
-		if (FAILED(res))PRINT("CreateDepthStencilState Failed");
+		if (FAILED(res))
+			PRINT_ERROR("CreateDepthStencilState Failed");
 	}
 
 	D3DRenderState::D3DRenderState( D3D11_BLEND_DESC desc )
 	{
 		D3DRenderState();
 		state_type_ = RST_BLEND;	
-		PRINT_AND_ASSERT("not implemented");
+		PRINT_AND_BREAK("not implemented");
 	}
 
 

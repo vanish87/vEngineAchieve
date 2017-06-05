@@ -31,7 +31,7 @@ namespace vEngine
 		virtual void DoMap( AccessType access_type );
 	};
 
-	//Only for Texture
+	/*//Only for Texture
 	class D3DShaderResourceView : public RenderBuffer
 	{
 	public:
@@ -49,7 +49,7 @@ namespace vEngine
 	private:
 		D3DTexture2D* d3d_texture_;
 		ID3D11ShaderResourceView* shader_resource_view_;
-	};
+	};*/
 
 
 }

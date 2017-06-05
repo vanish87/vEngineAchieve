@@ -1,6 +1,42 @@
 #include "Engine\Header\Window.h"
 #include "Engine\Header\GameState.h"
 
+void WarningText(std::string text)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	WORD saved_attributes;
+
+	/* Save current attributes */
+	GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+	saved_attributes = consoleInfo.wAttributes;
+
+	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "WARNING: " << text << std::endl;
+	//printf("This is some nice COLORFUL text, isn't it?");
+	/* Restore original attributes */
+	SetConsoleTextAttribute(hConsole, saved_attributes);
+	//printf("Back to normal");
+};
+
+void ErrorText(std::string text)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	WORD saved_attributes;
+
+	/* Save current attributes */
+	GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+	saved_attributes = consoleInfo.wAttributes;
+
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "ERROR: " << text << std::endl;
+	//printf("This is some nice COLORFUL text, isn't it?");
+	/* Restore original attributes */
+	SetConsoleTextAttribute(hConsole, saved_attributes);
+	//printf("Back to normal");
+};
+
 namespace vEngine
 {
 	Window::Window(void)
@@ -14,11 +50,12 @@ namespace vEngine
 			PRINT_AND_RETURN("Window has been Initied", );
 
 		this->win_name_ = app_name;
+		std::wstring win_name_w = std::wstring(win_name_.begin(), win_name_.end());
 
 		HINSTANCE hInstance = ::GetModuleHandle(NULL);
 
-		WNDCLASSEX wcex;
-		wcex.cbSize = sizeof( WNDCLASSEX );
+
+		WNDCLASS wcex;
 		wcex.style = CS_HREDRAW | CS_VREDRAW;
 		wcex.lpfnWndProc = WndProc;
 		wcex.cbClsExtra = 0;
@@ -28,10 +65,11 @@ namespace vEngine
 		wcex.hCursor = ::LoadCursor(nullptr, IDC_ARROW );
 		wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 		wcex.lpszMenuName = nullptr;
-		wcex.lpszClassName = win_name_.c_str();
-		wcex.hIconSm = nullptr;
-		if( !RegisterClassEx( &wcex ) )
-			PRINT_AND_RETURN("Register Window Failed",);
+		wcex.lpszClassName = win_name_w.c_str();
+
+		RegisterClass(&wcex);
+		HRESULT Res = GetLastError();
+		CHECK_AND_ASSERT(Res == S_OK, "Register Window Failed");
 
 		RECT rc = { 0, 0, render_setting.width, render_setting.height };
 		//get real window size; should slightly bigger than rendering resolution
@@ -42,12 +80,17 @@ namespace vEngine
 		window_rect_.left	= static_cast<uint16_t>(render_setting.left);
 		window_rect_.width  = static_cast<uint16_t>(rc.right - rc.left);
 		window_rect_.height = static_cast<uint16_t>(rc.bottom - rc.top);
-		this->wnd_ = CreateWindow( win_name_.c_str(), win_name_.c_str(), WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		this->wnd_ = CreateWindow(win_name_w.c_str(), win_name_w.c_str(),
+							WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 							window_rect_.left, window_rect_.top, window_rect_.width, window_rect_.height,
 							nullptr, nullptr, hInstance, nullptr);
 
-		if( !this->wnd_ )
-			PRINT_AND_RETURN("Create Window Failed",);
+		if (!this->wnd_)
+		{
+			Res = GetLastError();
+			CHECK_ASSERT(false);
+			PRINT_AND_RETURN("Create Window Failed", );
+		}
 
 		::SetWindowLongPtr(this->wnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 		

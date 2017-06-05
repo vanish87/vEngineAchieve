@@ -53,7 +53,7 @@ namespace vEngine
 		ai_scene_ = importer.ReadFile(file_name_, flags);
 		if (!ai_scene_)
 		{
-			PRINT(importer.GetErrorString());
+			PRINT_ERROR(importer.GetErrorString());
 			return;
 		}
 
@@ -263,7 +263,7 @@ namespace vEngine
 				if(tex)
 				{
 					textures_.push_back(tex);
-					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
+					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
 					//index 0 reserved for null
 					mat->diffuse_tex = (uint32_t)textures_.size();
 				}
@@ -281,7 +281,7 @@ namespace vEngine
 				if(tex)
 				{
 					textures_.push_back(tex);
-					tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
+					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
 					//index 0 reserved for null
 					mat->normalmap_tex = (uint32_t)textures_.size();
 				}

@@ -10,4 +10,10 @@ namespace vEngine
 	ShaderObject::~ShaderObject(void)
 	{
 	}
+
+	void ShaderObject::LoadBinaryFile(std::string file_name)
+	{
+		CHECK_ASSERT(false);
+	}
+
 }

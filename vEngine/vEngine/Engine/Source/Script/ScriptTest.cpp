@@ -10,7 +10,7 @@ namespace vEngine
 	void ScriptTest::PrintError(lua_State* state)
 	{
 		const char* ErrorMessage = lua_tostring(state, -1);
-		PRINT_AND_ASSERT(ErrorMessage);
+		PRINT_AND_BREAK(ErrorMessage);
 		lua_pop(state, 1);
 	}
 	void ScriptTest::CheckAndPrintError(lua_State* state, int Result)

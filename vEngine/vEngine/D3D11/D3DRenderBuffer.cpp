@@ -19,13 +19,13 @@ namespace vEngine
 			//D3D11_SHADER_RESOURCE_VIEW_DESC sr_desc;
 			//sr_desc.Format = TEXTURE2D;
 			if(FAILED(d3d_re->D3DDevice()->CreateShaderResourceView(d3d_buffer_, 0, &d3d_shader_resource_view_)))
-				PRINT("Cannot create Shader Resource View");
+				PRINT_ERROR("Cannot create Shader Resource View");
 		}
 		else
-			if(usage_ == BU_SHADER_CONST)
-			{
-				PRINT_AND_ASSERT("Not implemented");
-			}
+		if(usage_ == BU_SHADER_CONST)
+		{
+			PRINT_AND_BREAK("Not implemented");
+		}
 	}
 
 
@@ -47,27 +47,31 @@ namespace vEngine
 		//TODO : According to access_type, decide D3D_MAP_TYPE
 		HRESULT result =  d3d_re->D3DDeviceImmContext()->Map(d3d_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		if(FAILED(result))
-			PRINT("Failed to map resource");
+			PRINT_ERROR("Failed to map resource");
 		data_ = mappedResource.pData;
 	}
 
-
-
-
-	void D3DShaderResourceView::UnMap()
+	/*void D3DShaderResourceView::UnMap()
 	{
-		throw std::exception("The method or operation is not implemented.");
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		d3d_re->D3DDeviceImmContext()->Unmap(d3d_texture_->D3DTexture(), 0);
 	}
 
 	void D3DShaderResourceView::DoMap( AccessType access_type )
 	{
-		throw std::exception("The method or operation is not implemented.");
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
+		//TODO : According to access_type, decide D3D_MAP_TYPE
+		HRESULT result = d3d_re->D3DDeviceImmContext()->Map(d3d_texture_->D3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		if (FAILED(result))
+			PRINT_AND_BREAK("Failed to map resource");
+		data_ = mappedResource.pData;
 	}
 
 	D3DShaderResourceView::D3DShaderResourceView( Texture& texture, int array_size, int mip_level )
 	{
 		d3d_texture_= static_cast<D3DTexture2D*>(&texture);
 		shader_resource_view_ = d3d_texture_->GetShaderResourceView(array_size, mip_level, texture.GetType());
-	}
+	}*/
 
 }

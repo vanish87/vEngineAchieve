@@ -46,6 +46,7 @@
     <ClCompile Include="Engine\Source\Camera.cpp" />
     <ClCompile Include="Engine\Source\Context.cpp" />
     <ClCompile Include="Engine\Source\DeferredRendering.cpp" />
+    <ClCompile Include="Engine\Source\Font.cpp" />
     <ClCompile Include="Engine\Source\FrameBuffer.cpp" />
     <ClCompile Include="Engine\Source\GameEventHandler.cpp" />
     <ClCompile Include="Engine\Source\GameObject.cpp" />
@@ -54,6 +55,7 @@
     <ClCompile Include="Engine\Source\Mesh.cpp" />
     <ClCompile Include="Engine\Source\Model.cpp" />
     <ClCompile Include="Engine\Source\PostProcess.cpp" />
+    <ClCompile Include="Engine\Source\Profiler.cpp" />
     <ClCompile Include="Engine\Source\RenderBuffer.cpp" />
     <ClCompile Include="Engine\Source\RenderElement.cpp" />
     <ClCompile Include="Engine\Source\RenderEngine.cpp" />
@@ -73,6 +75,7 @@
     <ClCompile Include="Engine\Source\Script\ScriptTest.cpp" />
     <ClCompile Include="Engine\Source\ShaderObject.cpp" />
     <ClCompile Include="Engine\Source\StateManager.cpp" />
+    <ClCompile Include="Engine\Source\Text.cpp" />
     <ClCompile Include="Engine\Source\Texture.cpp" />
     <ClCompile Include="Engine\Source\Viewport.cpp" />
     <ClCompile Include="Engine\Source\Window.cpp" />
@@ -92,6 +95,7 @@
     <ClInclude Include="Common\Header\Ray.h" />
     <ClInclude Include="Common\Header\ReturnCode.h" />
     <ClInclude Include="Common\Header\Sphere.h" />
+    <ClInclude Include="Common\Header\StringHash.h" />
     <ClInclude Include="Common\Header\Thread.h" />
     <ClInclude Include="Common\Header\Timer.h" />
     <ClInclude Include="Common\Header\UUID.h" />
@@ -114,6 +118,7 @@
     <ClInclude Include="Engine\Header\Context.h" />
     <ClInclude Include="Engine\Header\DeferredRendering.h" />
     <ClInclude Include="Engine\Header\EnginePreDec.h" />
+    <ClInclude Include="Engine\Header\Font.h" />
     <ClInclude Include="Engine\Header\FrameBuffer.h" />
     <ClInclude Include="Engine\Header\GameEventHandler.h" />
     <ClInclude Include="Engine\Header\GameObject.h" />
@@ -125,6 +130,7 @@
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
     <ClInclude Include="Engine\Header\PostProcess.h" />
+    <ClInclude Include="Engine\Header\Profiler.h" />
     <ClInclude Include="Engine\Header\RenderBuffer.h" />
     <ClInclude Include="Engine\Header\RenderElement.h" />
     <ClInclude Include="Engine\Header\RenderEngine.h" />
@@ -140,6 +146,7 @@
     <ClInclude Include="Engine\Header\ScriptTest.h" />
     <ClInclude Include="Engine\Header\ShaderObject.h" />
     <ClInclude Include="Engine\Header\StateManager.h" />
+    <ClInclude Include="Engine\Header\Text.h" />
     <ClInclude Include="Engine\Header\texture.h" />
     <ClInclude Include="Engine\Header\TypeAndFormat.h" />
     <ClInclude Include="Engine\Header\Viewport.h" />
@@ -162,6 +169,11 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)FxFiles\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shader\Font.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)FxFiles\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\GaussianBlurXFilterPostProcess.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
@@ -240,7 +252,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>

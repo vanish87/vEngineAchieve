@@ -1,0 +1,78 @@
+#include "Engine\Header\Text.h"
+#include "Engine\Header\Context.h"
+#include "Engine\Header\texture.h"
+#include "Engine\Header\Font.h"
+
+namespace vEngine
+{
+	static TextRenderElement TextElement;
+	static Texture* BitmapTexture = nullptr;
+	static int2 TextureSize(1280, 800);
+
+	TextRenderElement::TextRenderElement()
+	{
+
+	}
+
+	RenderLayout* TextRenderElement::GetRenderLayout()
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	void TextRenderElement::SetRenderParameters()
+	{
+		if (this->shader_object_ == nullptr)
+		{
+			this->shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+			this->shader_object_->LoadBinaryFile("FxFiles/DebugShader.cso");
+		}
+		//throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	void TextRenderElement::Render(int pass_index)
+	{
+		if (pass_index == 3)
+		{
+
+		}
+		//throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	void TextRenderElement::EndRender()
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	static byte* data;
+	
+	Text::Text()
+		:SceneObject(&TextElement)
+	{
+
+	}
+
+	Text::Text(std::wstring text_to_display)
+		:Text()
+	{
+		contents_ = text_to_display;
+		text_field_ = int4(0, 0, 100, 100);
+		font_name_ = "msyh";
+	}
+
+	void Text::Draw()
+	{
+		Font::GetFontByName(this->font_name_).DrawD3DText(this->contents_, int2(this->text_field_.x(), this->text_field_.y()));
+	}
+		
+	void Text::SetRect(const int4& rect)
+	{
+		this->text_field_ = rect;
+	}
+
+	void Text::SetContent(std::wstring new_text)
+	{
+		this->contents_ = new_text;
+	}
+
+}
+

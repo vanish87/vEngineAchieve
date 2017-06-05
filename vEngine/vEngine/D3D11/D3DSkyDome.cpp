@@ -37,7 +37,7 @@ namespace vEngine
 		DirectX::LoadFromDDSFile(widestr.c_str(), NULL, &metadata, image);
 		HRESULT result = DirectX::CreateTexture(d3d_re->D3DDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		if(FAILED(result))
-			PRINT("Cannot Load Texture File");
+			PRINT_ERROR("Cannot Load Texture File");
 
 		D3D11_RESOURCE_DIMENSION dimension;
 		texture->GetType(&dimension);
@@ -50,9 +50,9 @@ namespace vEngine
 
 	void D3DSkyDome::LoadShaderFile( std::string file_name )
 	{
-		shader_object_ = new D3DShaderobject();
+		shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		d3d_shader_object->LoadFxoFile(file_name);
+		d3d_shader_object->LoadBinaryFile(file_name);
 
 		//Default init for SkyDome shader
 		d3d_shader_object->SetTechnique("SkyDomeTech");
@@ -86,8 +86,8 @@ namespace vEngine
 		Math::Translate(model_matrix_, cam_pos.x(), cam_pos.y(), cam_pos.z());
 		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
 		d3d_re->TrunoffCull();
-		RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
-		shader_object_->SetReource("background_tex", cude_srv , 1);
+		//RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
+		shader_object_->SetReource("background_tex", cube_texture_, 1);
 		//throw std::exception("The method or operation is not implemented.");
 	}
 

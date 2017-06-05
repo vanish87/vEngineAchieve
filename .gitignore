@@ -242,3 +242,4 @@ ModelManifest.xml
 *.stackdump
 vEngine/External/lib/LuaLib.lib
 vEngine/External/lib/LuaLibd.lib
+vEngine/External/lib/FreeType2Libd.lib

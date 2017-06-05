@@ -1,4 +1,4 @@
-#include "TestCase.h"
+﻿#include "TestCase.h"
 #include "Common/Header/CommonPreDec.h"
 
 #include "freetype2/include/ft2build.h"
@@ -9,6 +9,11 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <locale>
+#include <codecvt>
+
+#include "Engine\Header\Font.h"
+#include "Common\Header\Vector.h"
 
 typedef unsigned char uint8;
 typedef unsigned short uint16;
@@ -76,15 +81,32 @@ void RunFontTest()
 	
 	FT_Face     face;
 
-	error = FT_New_Face(library, "Media/fonts/arial.ttf", 0, &face);
+	//error = FT_New_Face(library, "Media/fonts/arial.ttf", 0, &face);
+	error = FT_New_Face(library, "Media/fonts/msyh.ttf", 0, &face);
 	CHECK_ASSERT(error == FT_Err_Ok);
 
 	FT_UInt index = FT_Get_Char_Index(face, 'A');	
+	wchar_t ChineseCha = L'\u6771';
+	ChineseCha = L'\x4e1c';
+	wchar_t Char = L'\u00fc';
+
+	//std::string newtest = "d东や";
+
+	//std::wstring_convert<std::codecvt_utf8<char>, wchar_t> conv;
+	//std::wstring utf32str = conv.from_bytes(newtest);
+
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	//std::wstring newwstring = converter.from_bytes(newtest);
+
+	ChineseCha = L'h';
+
+
 
 	// Dump out a single glyph to a tga.
 	WriteGlyphAsTGA(library,
 		"Media/output/font_test.tga",
-		L'B',
+		ChineseCha,
 		face,
 		100,
 		Pixel32(255, 90, 30),
@@ -214,11 +236,13 @@ WriteGlyphAsTGA(FT_Library &library,
 	float outlineWidth)
 {
 	// Set the size to use.
-	if (FT_Set_Char_Size(face, size << 6, size << 6, 90, 90) == 0)
+	//if (FT_Set_Char_Size(face, size << 6, size << 6, 90, 90) == 0)
+	if (FT_Set_Pixel_Sizes(face, 227, 128) == 0)
 	{
 		// Load the glyph we are looking for.
-		FT_UInt gindex = FT_Get_Char_Index(face, ch);
-		if (FT_Load_Glyph(face, gindex, FT_LOAD_NO_BITMAP) == 0)
+		FT_UInt gindex = FT_Get_Char_Index(face, (FT_ULong)ch);
+		CHECK_ASSERT(gindex > 0);
+		if (gindex != 0 && FT_Load_Glyph(face, gindex, FT_LOAD_NO_BITMAP) == 0)
 		{
 			// Need an outline for this to work.
 			if (face->glyph->format == FT_GLYPH_FORMAT_OUTLINE)
@@ -260,18 +284,15 @@ WriteGlyphAsTGA(FT_Library &library,
 					if (!spans.empty())
 					{
 						// Figure out what the bounding rect is for both the span lists.
-						Rect rect((float)spans.front().x,
-							(float)spans.front().y,
-							(float)spans.front().x,
-							(float)spans.front().y);
-						for (Spans::iterator s = spans.begin();
-						s != spans.end(); ++s)
+						Rect rect((float)spans.front().x, (float)spans.front().y,
+								  (float)spans.front().x, (float)spans.front().y);
+
+						for (Spans::iterator s = spans.begin();	s != spans.end(); ++s)
 						{
 							rect.Include(Vec2((float)s->x, (float)s->y));
 							rect.Include(Vec2((float)s->x + s->width - 1, (float)s->y));
 						}
-						for (Spans::iterator s = outlineSpans.begin();
-						s != outlineSpans.end(); ++s)
+						for (Spans::iterator s = outlineSpans.begin(); s != outlineSpans.end(); ++s)
 						{
 							rect.Include(Vec2((float)s->x, (float)s->y));
 							rect.Include(Vec2((float)s->x + s->width - 1, (float)s->y));
@@ -296,30 +317,29 @@ WriteGlyphAsTGA(FT_Library &library,
 
 						// Loop over the outline spans and just draw them into the
 						// image.
-						for (Spans::iterator s = outlineSpans.begin();
-						s != outlineSpans.end(); ++s)
+						for (Spans::iterator s = outlineSpans.begin(); s != outlineSpans.end(); ++s)
+						{
 							for (int w = 0; w < s->width; ++w)
-								pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth
-									+ s->x - rect.xmin + w)] =
-								Pixel32(outlineCol.r, outlineCol.g, outlineCol.b,
-									s->coverage);
+							{
+								pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth + s->x - rect.xmin + w)] 
+									= Pixel32(outlineCol.r, outlineCol.g, outlineCol.b,	s->coverage);
+							}
+						}
 
 						// Then loop over the regular glyph spans and blend them into
 						// the image.
-						for (Spans::iterator s = spans.begin();
-						s != spans.end(); ++s)
+						for (Spans::iterator s = spans.begin(); s != spans.end(); ++s)
+						{
 							for (int w = 0; w < s->width; ++w)
 							{
-								Pixel32 &dst =
-									pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth
-										+ s->x - rect.xmin + w)];
-								Pixel32 src = Pixel32(fontCol.r, fontCol.g, fontCol.b,
-									s->coverage);
+								Pixel32 &dst =	pxl[(int)((imgHeight - 1 - (s->y - rect.ymin)) * imgWidth + s->x - rect.xmin + w)];
+								Pixel32 src = Pixel32(fontCol.r, fontCol.g, fontCol.b, s->coverage);
 								dst.r = (int)(dst.r + ((src.r - dst.r) * src.a) / 255.0f);
 								dst.g = (int)(dst.g + ((src.g - dst.g) * src.a) / 255.0f);
 								dst.b = (int)(dst.b + ((src.b - dst.b) * src.a) / 255.0f);
 								dst.a = std::min(255, dst.a + src.a);
 							}
+						}
 
 						// Dump the image to disk.
 						WriteTGA(fileName, pxl, imgWidth, imgHeight);

@@ -38,7 +38,7 @@ namespace vEngine
 
 		if( FAILED(result) )
 		{
-			PRINT("D3D11CreateDevice Failed.");
+			PRINT_ERROR("D3D11CreateDevice Failed.");
 		}
 
 		if( d3d_feature_level_ < D3D_FEATURE_LEVEL_11_0)
@@ -61,7 +61,7 @@ namespace vEngine
 		result = d3d_device_->CheckMultisampleQualityLevels(swap_chain_desc.BufferDesc.Format, 4, &msaa_quality);
 		if (FAILED(result) || msaa_quality == 0)
 		{
-			PRINT("msaa_quality Failed.");
+			PRINT_ERROR("msaa_quality Failed.");
 		}
 
 		// Use 4X MSAA? 
@@ -87,21 +87,21 @@ namespace vEngine
 		result = d3d_device_->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgi_device);
 		if( FAILED(result) )
 		{
-			PRINT("dxgiDevice Failed.");
+			PRINT_ERROR("dxgiDevice Failed.");
 		}
 
 		IDXGIAdapter* dxgi_adapter = 0;
 		result = dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgi_adapter);
 		if( FAILED(result) )
 		{
-			PRINT("dxgiAdapter Failed.");
+			PRINT_ERROR("dxgiAdapter Failed.");
 		}
 
 		IDXGIFactory1* dxgiFactory = 0;
 		result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory1), (void**)&dxgiFactory);
 		if( FAILED(result) )
 		{
-			PRINT("dxgiFactory Failed.");
+			PRINT_ERROR("dxgiFactory Failed.");
 		}
 		//optional IDXGIFactory2 not used until D3D11.1 or later feature
 		IDXGIFactory2* dxgiFactory2 = nullptr;
@@ -111,7 +111,7 @@ namespace vEngine
 
 		if( FAILED(result) )
 		{
-			PRINT("d3d_swap_chain Failed.");
+			PRINT_ERROR("d3d_swap_chain Failed.");
 		}
 
 		dxgi_device->Release();
@@ -191,14 +191,15 @@ namespace vEngine
 		// Create the input layout
 		D3DX11_PASS_DESC pass_desc;
 		result = d3d_shader_object->GetTechnique()->GetPassByIndex(pass_index)->GetDesc( &pass_desc );
-		if(FAILED(result))PRINT("Cannot Get Pass Desc");
+		if(FAILED(result))
+			PRINT_ERROR("Cannot Get Pass Desc");
 		ID3D11InputLayout* input_layout;
 		result = d3d_device_->CreateInputLayout(input_layout_desc, (uint32_t)vertex_layout.size(), pass_desc.pIAInputSignature, 
 			pass_desc.IAInputSignatureSize, &input_layout);
 		if(FAILED(result))
 		{
 			result = d3d_device_->GetDeviceRemovedReason();
-			PRINT("Cannot Create Input Layout");
+			PRINT_ERROR("Cannot Create Input Layout");
 		}
 		d3d_imm_context_->IASetInputLayout(input_layout);
 		input_layout->Release();
@@ -245,7 +246,7 @@ namespace vEngine
 		if(FAILED(result))
 		{
 			result = d3d_device_->GetDeviceRemovedReason();
-			PRINT("d3d_swap_chain->Present Failed");
+			PRINT_ERROR("d3d_swap_chain->Present Failed");
 		}
 	}
 
@@ -262,27 +263,27 @@ namespace vEngine
 		{
 			//check it
 			d3d_frame_buffer= static_cast<D3DFrameBuffer*>(cur_frame_buffer_);
-			d3d_frame_buffer->D3DRTView()->D3DRTV()->Release();
-			d3d_frame_buffer->D3DDSView()->D3DDSV()->Release();
+			//d3d_frame_buffer->D3DRTView()->D3DRTV()->Release();
+			//d3d_frame_buffer->D3DDSView()->D3DDSV()->Release();
 			//
-			PRINT_AND_ASSERT("This should be check and make a new MakeFrameBuffer here");
+			PRINT_AND_BREAK("This should be check and make a new MakeFrameBuffer here");
 			//then the rest of this function should only handle render targets
 		}
 
 		//TODO : Use new size of window to resize FrameBuffer
-		result = d3d_swap_chain_->ResizeBuffers(1, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+		result = d3d_swap_chain_->ResizeBuffers(2, this->render_setting_.width, this->render_setting_.height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 		if(FAILED(result))
-			PRINT("ResizeBuffer Failed!");
+			PRINT_ERROR("ResizeBuffer Failed!");
 
 		ID3D11Texture2D* back_buffer = nullptr;
 		ID3D11RenderTargetView* render_target_view = nullptr;
 		result = d3d_swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&back_buffer));
 		if(FAILED(result))
-			PRINT("Get back Buffer Failed!");
+			PRINT_ERROR("Get back Buffer Failed!");
 		
 		Texture* d3d_tex = Context::Instance().GetRenderFactory().MakeTexture2D(back_buffer);
-		RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(d3d_tex, 1, 0);
-		d3d_frame_buffer->AddRenderView(render_view);
+		//RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(d3d_tex, 1, 0);
+		d3d_frame_buffer->AddTexture(d3d_tex);
 		//it could be used later
 		//back_buffer->Release();
 
@@ -393,6 +394,7 @@ namespace vEngine
 		case R24G8_TYPELESS:
 			return DXGI_FORMAT_R24G8_TYPELESS;
 		default:
+			PRINT_AND_BREAK("Unknown format");
 			return DXGI_FORMAT_R32G32B32A32_UINT;
 		}
 	}
@@ -414,7 +416,7 @@ namespace vEngine
 		case DXGI_FORMAT_R24G8_TYPELESS:
 			return R24G8_TYPELESS;
 		default:
-			PRINT_AND_ASSERT("Should handle this");
+			PRINT_AND_BREAK("Should handle this");
 			return R32G32B32A32_U;
 		}
 	}

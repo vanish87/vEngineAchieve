@@ -20,14 +20,16 @@ namespace vEngine
 		void SetInput(Texture* tex, size_t index);
 		void SetOutput(Texture* tex, size_t index);
 		void SetCamera(Camera* camera);
-		void Apply();
+		//ClearFrameBuffer is intent to used in a situation where adding a texture to current 
+		//backbuffer, if it is true, postprocess will not clear backbuffer.
+		void Apply(bool ClearFrameBuffer = true);
 
 	private:
 		Mesh* fullscreen_mesh_;
 		//for Render Target
 		FrameBuffer* output_buffer_;
 		//for Shader Resource
-		std::vector<RenderBuffer*> input_srv_;
+		std::vector<Texture*> input_tex_;
 	};
 }
 #endif
