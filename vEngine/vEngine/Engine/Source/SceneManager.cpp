@@ -15,7 +15,7 @@ namespace vEngine
 	SceneManager::~SceneManager(void)
 	{
 	}
-	bool dump = false;
+
 	void SceneManager::Flush()
 	{
 		if(render_list_.empty()) 

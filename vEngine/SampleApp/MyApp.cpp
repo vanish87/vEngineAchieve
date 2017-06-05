@@ -15,6 +15,9 @@ using namespace vEngine;
 
 static MyApp app;
 
+static Text t1 = L"this is a text";
+static Text t2 = L"this is a text1";
+
 MyApp::MyApp(void) : App("vEngine")
 {
 
@@ -114,8 +117,12 @@ void MyApp::InitObjects()
 	DebugTracking::GetInstance().PrintALL();
 
 	//text_.init with font name etc.
-	newtext_ = new Text();
+	newtext_ = new Text(L"test new");
+	newtext_->SetRect(int4(200, 300, 0, 0));
 	//newtext_->AddToScene();
+
+	t1.SetRect(int4(50, 50, 0, 0));
+	t2.SetRect(int4(100, 100, 0, 0));
 
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
@@ -163,7 +170,10 @@ void MyApp::Update()
 
 		std::wstring Test = L"\u6771 \u3042 I have a pen ";
 		Test += std::to_wstring(cam_pos_.x()) + L" " + std::to_wstring(cam_pos_.y());
-		newtext_->Draw(Test);
+		newtext_->SetContent(Test);
+		newtext_->Draw();
+		t1.Draw();
+		t2.Draw();
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
     spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));

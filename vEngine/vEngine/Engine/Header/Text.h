@@ -28,16 +28,21 @@ namespace vEngine
 	class Text : public SceneObject
 	{
 	public:
-		Text();
+		Text(std::wstring text_to_display);
 
 		//this is a temporary solution for text rendering
 		//it renders text to a full screen texture, then this texture will be blended with final frame buffer
 		//see TextRenderElement for better solution
-		void Draw(std::wstring text);
+		void Draw();
+		void SetRect(const int4& rect);
+		void SetContent(std::wstring new_text);
+
+	private:
+		Text();
 	protected:
 		std::string font_name_;
-		int2 text_field_size_;
-
+		int4 text_field_;
+		std::wstring contents_;
 	};
 }
 

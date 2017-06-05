@@ -6,7 +6,7 @@
 
 namespace vEngine
 {
-	static int2 TextureSize(1280,800);
+	static int2 TextureSize(1280,720);
 	static std::unordered_map<std::string, Font*> FontMaps;
 	static PostProcess* output_to_tex_pp_ = nullptr;
 
@@ -38,6 +38,9 @@ namespace vEngine
 
 	void Font::LoadFontFile(std::string file_name)
 	{
+		TextureSize.x() = Context::Instance().GetConfigure().render_setting.width;
+		TextureSize.y() = Context::Instance().GetConfigure().render_setting.height;
+
 		//"Media/fonts/chinese.msyh.ttf"
 		FT_Error error = FT_New_Face(library, file_name.c_str(), 0, &face);
 		CHECK_ASSERT(error == FT_Err_Ok);
@@ -134,10 +137,12 @@ namespace vEngine
 		{
 			for (int32_t j = 0; j < Size.x(); ++j)
 			{
-				uint32_t index = i * Size.x() + j;
+				int32_t index = i * Size.x() + j;
+				if(index < 0) continue;
 				int color = Buffer[index];
 
-				uint32_t bitmap_index = StartPos + (i * TextureSize.x()) + j;
+				int32_t bitmap_index = StartPos + (i * TextureSize.x()) + j;
+				if (bitmap_index < 0) continue;
 				bitmap_index *= 4;
 				this->cpu_data[bitmap_index] = color;
 				this->cpu_data[bitmap_index + 1] = color;

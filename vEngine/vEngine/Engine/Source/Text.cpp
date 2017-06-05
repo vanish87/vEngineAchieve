@@ -51,10 +51,28 @@ namespace vEngine
 
 	}
 
-	void Text::Draw(std::wstring text)
+	Text::Text(std::wstring text_to_display)
+		:Text()
 	{
-		Font::GetFontByName("msyh").DrawD3DText(text, vEngine::int2(50, 50));
+		contents_ = text_to_display;
+		text_field_ = int4(0, 0, 100, 100);
+		font_name_ = "msyh";
+	}
+
+	void Text::Draw()
+	{
+		Font::GetFontByName(this->font_name_).DrawD3DText(this->contents_, int2(this->text_field_.x(), this->text_field_.y()));
 	}
 		
+	void Text::SetRect(const int4& rect)
+	{
+		this->text_field_ = rect;
+	}
+
+	void Text::SetContent(std::wstring new_text)
+	{
+		this->contents_ = new_text;
+	}
+
 }
 
