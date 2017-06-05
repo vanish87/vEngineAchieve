@@ -160,6 +160,10 @@ void MyApp::Update()
 		Math::Translate(trans,0,10,0);
 		Math::YRotation(rotate,Math::PI/2 *Math::Cos(timer_->Timef()/1000.0f));
 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
+
+		std::wstring Test = L"\u6771 \u3042 I have a pen ";
+		Test += std::to_wstring(cam_pos_.x()) + L" " + std::to_wstring(cam_pos_.y());
+		newtext_->Draw(Test);
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
     spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
@@ -167,8 +171,7 @@ void MyApp::Update()
 	//text.setcontent("xxxx");
 	//text.setposition();
 
-	std::wstring Test = L"\u6771 \u3042 I have a pen ";
-	newtext_->Draw(Test);
+
 }
 
 
@@ -221,7 +224,7 @@ void MyState::OnKeyDown(WPARAM key_para)
 	switch (key_para)
 	{
 	case 'F':
-		app_->first_person_ = true;
+		app_->first_person_ = !app_->first_person_;
 		break;
 	case '1':
 		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleGbuffer(0);

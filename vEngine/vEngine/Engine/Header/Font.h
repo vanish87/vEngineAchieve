@@ -24,20 +24,21 @@ namespace vEngine
 		//temp solution for d3d shader object
 		void SetPPShader(ShaderObject* shander_object);
 
-		void DrawD3DText(std::wstring Text, int2 Position, Texture* BitmapTexture);
+		void DrawD3DText(std::wstring Text, int2 Position);
+		void ClearCPUBuffer();
 
 		void FillBitmap(byte* Buffer, int2 Size, int2 Position);
-		static void DumpToScreen(Texture* BitmapTexture);
+		void DumpToScreen();
 		
 	private:
 		//Mesh* font_mesh_;
-		//Texture* bitmap_texture_;
+		Texture* bitmap_texture_;
 
 
 		FT_Library  library;
 		FT_Face     face;
 
-		byte* data;
+		byte* cpu_data;
 
 	};
 }

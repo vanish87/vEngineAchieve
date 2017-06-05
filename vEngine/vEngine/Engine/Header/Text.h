@@ -34,7 +34,6 @@ namespace vEngine
 		//it renders text to a full screen texture, then this texture will be blended with final frame buffer
 		//see TextRenderElement for better solution
 		void Draw(std::wstring text);
-		static Texture* GetUITexture();
 	protected:
 		std::string font_name_;
 		int2 text_field_size_;

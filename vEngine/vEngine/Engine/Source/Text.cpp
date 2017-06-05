@@ -42,6 +42,8 @@ namespace vEngine
 	{
 		throw std::logic_error("The method or operation is not implemented.");
 	}
+
+	static byte* data;
 	
 	Text::Text()
 		:SceneObject(&TextElement)
@@ -51,26 +53,8 @@ namespace vEngine
 
 	void Text::Draw(std::wstring text)
 	{
-		if (BitmapTexture == nullptr)
-		{
-			InitData init_data;
-			init_data.data = new uint32_t[TextureSize.x() * TextureSize.y()];
-			init_data.row_pitch = sizeof(uint32_t) * TextureSize.x();
-			init_data.slice_pitch = 0;
-
-			BitmapTexture = Context::Instance().GetRenderFactory().MakeTexture2D(&init_data, TextureSize.x(), TextureSize.y(), 1, 1,
-				R8G8B8A8_U, 1, 0, AT_CPU_WRITE_GPU_READ, TU_SHADER_RES);
-
-			delete[] init_data.data;
-		}
-
-		Font::GetFontByName("msyh").DrawD3DText(text, vEngine::int2(50, 50), BitmapTexture);
+		Font::GetFontByName("msyh").DrawD3DText(text, vEngine::int2(50, 50));
 	}
-
-	Texture* Text::GetUITexture()
-	{
-		return BitmapTexture;
-	}
-
+		
 }
 

@@ -8,6 +8,7 @@ namespace vEngine
 {
 	static int2 TextureSize(1280,800);
 	static std::unordered_map<std::string, Font*> FontMaps;
+	static PostProcess* output_to_tex_pp_ = nullptr;
 
 	Font::Font(void)
 	{
@@ -37,10 +38,6 @@ namespace vEngine
 
 	void Font::LoadFontFile(std::string file_name)
 	{
-
-		
-
-
 		//"Media/fonts/chinese.msyh.ttf"
 		FT_Error error = FT_New_Face(library, file_name.c_str(), 0, &face);
 		CHECK_ASSERT(error == FT_Err_Ok);
@@ -54,15 +51,17 @@ namespace vEngine
 		//horz_resolution: Standard values are 72 or 96 dpi for display devices like the screen. 
 		CHECK_ASSERT(error == FT_Err_Ok);
 		
-		/*InitData init_data;
-		init_data.data = new uint32_t[TextureSize.x() * TextureSize.y()];
+		this->cpu_data = (byte*)(new uint32_t[TextureSize.x() * TextureSize.y()]);
+
+		InitData init_data;
+		init_data.data = this->cpu_data;
 		init_data.row_pitch = sizeof(uint32_t) * TextureSize.x();
 		init_data.slice_pitch = 0;
 
 		this->bitmap_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(&init_data, TextureSize.x(), TextureSize.y(), 1, 1,
 			R8G8B8A8_U, 1, 0, AT_CPU_WRITE_GPU_READ, TU_SHADER_RES);
 
-		delete[] init_data.data;
+		//delete[] init_data.data;
 
 		//RenderBuffer* render_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(bitmap_texture_, AT_CPU_WRITE_GPU_READ, BU_SHADER_RES);
 		byte* data = static_cast<byte*>(bitmap_texture_->Map(AT_CPU_WRITE_GPU_READ));
@@ -75,9 +74,8 @@ namespace vEngine
 			data[index + 2] = 0;
 			data[index + 3] = 0;
 		}
-		bitmap_texture_->UnMap();*/
-
-		
+		bitmap_texture_->UnMap();
+				
 	}
 
 	void Font::SetPPShader(ShaderObject* shander_object)
@@ -98,12 +96,13 @@ namespace vEngine
 
 	}
 
-	void Font::DrawD3DText(std::wstring Text, int2 Position, Texture* BitmapTexture)
+	void Font::DrawD3DText(std::wstring Text, int2 Position)
 	{
 		FT_Error error;
 		int offset = 0;
-		data = static_cast<byte*>(BitmapTexture->Map(AT_CPU_WRITE_GPU_READ));
-		CHECK_ASSERT(data != nullptr);
+		//data = static_cast<byte*>(BitmapTexture->Map(AT_CPU_WRITE_GPU_READ));
+
+		CHECK_ASSERT(this->cpu_data != nullptr);
 		for (auto c : Text)
 		{
 			FT_UInt gindex = FT_Get_Char_Index(face, c);
@@ -126,7 +125,6 @@ namespace vEngine
 				offset += face->glyph->metrics.horiAdvance >> 6;				
 			}
 		}
-		BitmapTexture->UnMap();
 	}
 
 	void Font::FillBitmap(byte* Buffer, int2 Size, int2 Position)
@@ -141,34 +139,65 @@ namespace vEngine
 
 				uint32_t bitmap_index = StartPos + (i * TextureSize.x()) + j;
 				bitmap_index *= 4;
-				data[bitmap_index] = color;
-				data[bitmap_index + 1] = color;
-				data[bitmap_index + 2] = color;
-				data[bitmap_index + 3] = color>0?color:0;
+				this->cpu_data[bitmap_index] = color;
+				this->cpu_data[bitmap_index + 1] = color;
+				this->cpu_data[bitmap_index + 2] = color;
+				this->cpu_data[bitmap_index + 3] = color>0?color:0;
 			}
 		}
 
 	}
 
-	void Font::DumpToScreen(Texture* BitmapTexture)
+	void Font::DumpToScreen()
 	{
 		static bool inited = false;
-		static PostProcess* output_to_tex_pp_;
 		if (!inited)
 		{
 			ShaderObject* output_to_tex_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
 			output_to_tex_so_->LoadBinaryFile("FxFiles/DebugShader.cso");
 			output_to_tex_so_->SetTechnique("PPTech");
 
-
 			output_to_tex_pp_ = new PostProcess();
 			output_to_tex_pp_->SetPPShader(output_to_tex_so_);
 
-			output_to_tex_pp_->SetInput(BitmapTexture, 0);
+			output_to_tex_pp_->SetInput(this->bitmap_texture_, 0);
 			output_to_tex_pp_->SetOutput(Context::Instance().GetRenderFactory().GetRenderEngine().CurrentFrameBuffer()->GetTexture(0), 0);
 			inited = true;
 		}
+
+		{
+			byte* data = static_cast<byte*>(this->bitmap_texture_->Map(AT_CPU_WRITE_GPU_READ));
+			CHECK_ASSERT(data != nullptr);
+
+			memcpy(data, this->cpu_data, TextureSize.x() * TextureSize.y() * sizeof(uint32_t));
+			/*for (int32_t i = 0; i < TextureSize.x() * TextureSize.y(); ++i)
+			{
+				uint32_t index = i * 4;
+				data[index] = this->cpu_data[index];
+				data[index + 1] = this->cpu_data[index + 1];
+				data[index + 2] = this->cpu_data[index + 2];
+				data[index + 3] = this->cpu_data[index + 3];
+			}*/
+			bitmap_texture_->UnMap();
+		}
 		output_to_tex_pp_->Apply(false);
+	}
+
+	void Font::ClearCPUBuffer()
+	{
+		//byte* data = static_cast<byte*>(BitmapTexture->Map(AT_CPU_WRITE_GPU_READ));
+		CHECK_ASSERT(this->cpu_data != nullptr);
+
+		memset(this->cpu_data, 0, TextureSize.x() * TextureSize.y() * sizeof(uint32_t));
+		/*for (int32_t i = 0; i < TextureSize.x() * TextureSize.y(); ++i)
+		{
+			uint32_t index = i * 4;
+			this->cpu_data[index] = 0;
+			this->cpu_data[index + 1] = 0;
+			this->cpu_data[index + 2] = 0;
+			this->cpu_data[index + 3] = 0;
+		}*/
+		//BitmapTexture->UnMap();
 	}
 
 }

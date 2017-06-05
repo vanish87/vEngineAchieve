@@ -20,6 +20,8 @@ namespace vEngine
 		void SetInput(Texture* tex, size_t index);
 		void SetOutput(Texture* tex, size_t index);
 		void SetCamera(Camera* camera);
+		//ClearFrameBuffer is intent to used in a situation where adding a texture to current 
+		//backbuffer, if it is true, postprocess will not clear backbuffer.
 		void Apply(bool ClearFrameBuffer = true);
 
 	private:

@@ -54,12 +54,12 @@ namespace vEngine
 		output_buffer_->AddTexture(tex);
 	}
 
-	void PostProcess::Apply(bool ClearFrameBuffer )
+	void PostProcess::Apply(bool ClearFrameBuffer)
 	{
 		RenderEngine* re = &Context::Instance().GetRenderFactory().GetRenderEngine();
 		re->SetDeferredRenderingState();
 		re->BindFrameBuffer(output_buffer_);
-		if(ClearFrameBuffer)Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
+		if(ClearFrameBuffer) Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 		ShaderObject* shander_object = fullscreen_mesh_->GetShaderObject();
 		for(size_t i = 0; i < input_tex_.size(); ++i)
 		{
