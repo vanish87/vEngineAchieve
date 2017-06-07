@@ -67,7 +67,7 @@ namespace vEngine
 			ProcessMaterials(ai_scene_->mMaterials);
 		}
 
-		Math::Identity(model_matrix_);
+		Math::Identity(this->local_matrix_);
 	}
 
 	void Model::LoadFile( std::string file_name, CompleteCallBack callback /*= nullptr*/ )
@@ -184,7 +184,7 @@ namespace vEngine
 			my_mat[2][0] = mat[2][0];my_mat[2][1] = mat[2][1];my_mat[2][2] = mat[2][2];my_mat[2][3] = mat[2][3];
 			my_mat[3][0] = mat[3][0];my_mat[3][1] = mat[3][1];my_mat[3][2] = mat[3][2];my_mat[3][3] = mat[3][3];
 			my_mat = Math::Transpose(my_mat);
-			std::cout<<"Vertex count = " <<v_size<<std::endl;
+			PRINT(name << ": Vertex count = " <<v_size);
 			this->AddMesh(new vEngine::Mesh(name, render_layout, my_mat, vb, v_size, ib, mesh->mMaterialIndex));
 		}
 
@@ -260,7 +260,7 @@ namespace vEngine
 			if(AI_SUCCESS == ai_mat.Get(AI_MATKEY_TEXTURE_DIFFUSE(0), szPath))
 			{
 				Texture *tex = LoadTexture(szPath.C_Str());
-				if(tex)
+				if(tex != nullptr)
 				{
 					textures_.push_back(tex);
 					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
@@ -278,7 +278,7 @@ namespace vEngine
 
 				Texture *tex = LoadTexture(szPath.C_Str());
 				//tex = LoadTexture(szPath.C_Str());
-				if(tex)
+				if(tex != nullptr)
 				{
 					textures_.push_back(tex);
 					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));

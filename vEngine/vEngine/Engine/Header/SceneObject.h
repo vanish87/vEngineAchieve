@@ -14,7 +14,7 @@ namespace vEngine
 	public:
 		SceneObject(void);
 		SceneObject(RenderElement* render_element)
-			:render_element_(render_element),model_matrix_(render_element->model_matrix_), visiable_(true)
+			:render_element_(render_element), local_matrix_(render_element->local_matrix_), visiable_(true)
 		{
 			
 		};
@@ -34,7 +34,7 @@ namespace vEngine
 	protected:
 
 		RenderElement* render_element_;
-		float4x4 model_matrix_;
+		float4x4 local_matrix_;
 
 		bool visiable_;
 	};

@@ -433,8 +433,8 @@ namespace vEngine
 		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
 		//output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
 
-		CHECK_ASSERT(false);
-		//output_to_tex_pp_->SetOutput(OutBuffer->GetRenderView(0)->GetTexture(), 0);
+		//CHECK_ASSERT(false);
+		output_to_tex_pp_->SetOutput(OutBuffer->GetTexture(0), 0);
 		output_to_tex_pp_->Apply();
 	}
 

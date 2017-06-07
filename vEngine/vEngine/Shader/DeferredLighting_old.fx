@@ -61,17 +61,17 @@ cbuffer cbPerObject
 
 struct VertexIn
 {
-	float3 position			: POSITION;
+	float3 pos				: POSITION;
     float3 normal			: NORMAL;	
-	float2 tex				: TEXCOORD0;	
-	float3 tangent			: TANGENT;
+	float2 tex_cood			: TEXCOORD;	
+	float3 tangent_cood		: TANGENT;
 	float3 binormal			: BINORMAL;
 };
 
 struct VertexOut
 {
-	float4 position			 : SV_POSITION;
-	float3 posWS             : POSITION;
+	float4 pos				 : SV_POSITION;
+	float3 posWS             : Position;
 	float2 tex_cood			 : TEXCOORD0;
 
 	float3 normalWS			 : NORMAL;
@@ -94,22 +94,23 @@ float decodeFromColorSpace(float value)
 
 VertexOut GbufferVS(VertexIn vin)
 {
+	float g_fHeightMapScale = 1.0f;
 	VertexOut vout;
 	
 	float4x4 world_matrix = mul(g_model_matrix, g_world_matrix);
 	float4x4 mvp_matrix = mul(world_matrix ,g_view_proj_matrix);
-	vout.position = mul(float4(vin.position, 1.0f), mvp_matrix);
+	vout.pos = mul(float4(vin.pos, 1.0f), mvp_matrix);
  	//vout.normalVS = normalize(mul(vin.normal, (float3x3)g_mwv_inv_transpose));
  	//vout.tangentVS = normalize(mul(vin.tangent_cood, (float3x3)g_mwv_inv_transpose));
 // 	//trust model input come with orthorch
 // 	vout.binormalVS = normalize(mul(vin.binormal, (float3x3)g_mwv_inv_transpose));
-	vout.tex_cood = vin.tex;    
+	vout.tex_cood = vin.tex_cood;    
 
 	float3 normalWS = mul(vin.normal, (float3x3)g_mw_inv_transpose);
-	float3 tangentWS = mul(vin.tangent, (float3x3)g_mw_inv_transpose);
+	float3 tangentWS = mul(vin.tangent_cood, (float3x3)g_mw_inv_transpose);
 	float3 binormalWS =  mul(vin.binormal, (float3x3)g_mw_inv_transpose);
 
-	float4 positionWS =  mul(float4(vin.position, 1.0f), world_matrix);
+	float4 positionWS =  mul(float4(vin.pos, 1.0f), world_matrix);
 	float3 viewWS = g_eye_pos - positionWS.xyz;
 
 	float3x3 mTtoW = float3x3( tangentWS, binormalWS, normalWS );
@@ -434,8 +435,8 @@ ShadowVSOut ShadowingVS(VertexIn vin)
 
 	float4x4 world_matrix = mul(g_model_matrix, g_world_matrix);
 	float4x4 mvp_matrix = mul(world_matrix ,g_view_proj_matrix);
-	vout.position_h = mul(float4(vin.position, 1.0f), mvp_matrix);
-	vout.tex  = vin.tex;
+	vout.position_h = mul(float4(vin.pos, 1.0f), mvp_matrix);
+	vout.tex  = vin.tex_cood;
 
 	return vout;
 }

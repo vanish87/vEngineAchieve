@@ -6,8 +6,8 @@ namespace vEngine
 {
 	PostProcess::PostProcess(void)
 	{
-		Configure::RenderSetting render_setting =  Context::Instance().GetRenderFactory().GetRenderEngine().GetRenderSetting();
-		output_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width,render_setting.height);
+		Configure::RenderSetting render_setting = Context::Instance().GetRenderFactory().GetRenderEngine().GetRenderSetting();
+		output_buffer_ = Context::Instance().GetRenderFactory().MakeFrameBuffer(render_setting.width, render_setting.height);
 		//make a full screen qua for lighting pass
 		fullscreen_mesh_ = RenderTools::GetInstance().MakeFullScreenMesh();
 	}
@@ -44,8 +44,8 @@ namespace vEngine
 	{
 		//TODO: Check size here
 		//RenderView* render_view = Context::Instance().GetRenderFactory().MakeRenderView(tex, 1, 0);
-		/*if (output_buffer_->GetViewport().Height() != tex->Height()
-			|| output_buffer_->GetViewport().Width() != tex->Width()
+		/*if (	output_buffer_->GetViewport().Height() != tex->Height()
+			||  output_buffer_->GetViewport().Width() != tex->Width()
 			)
 		{
 			delete this->output_buffer_;

@@ -21,7 +21,7 @@ namespace vEngine
 
 	void D3DModel::SetRenderParameters()
 	{
-		shader_object_->SetMatrixVariable("g_world_matrix", model_matrix_);
+		shader_object_->SetMatrixVariable("g_world_matrix", this->local_matrix_);
 		//TODO : use texture array to store every pom texture of mesh
 		if(pom_enabled_)
 			shader_object_->SetReource("normal_map_tex", pom_texture_, 1);
@@ -37,8 +37,8 @@ namespace vEngine
 			//set material
 			shader_object_->SetRawData("gMaterial", materials_[i], sizeof(Material));		
 			float4x4 view_mat = re->CurrentFrameBuffer()->GetViewport().GetCamera().GetViewMatirx();
-			float4x4 world_view_inv_transpose = Math::InverTranspose(meshes_[i]->GetModelMatrix()* model_matrix_ * view_mat);
-			float4x4 world_inv_transpose = Math::InverTranspose(meshes_[i]->GetModelMatrix()* model_matrix_);
+			float4x4 world_view_inv_transpose = Math::InverTranspose(meshes_[i]->GetModelMatrix()* this->local_matrix_ * view_mat);
+			float4x4 world_inv_transpose = Math::InverTranspose(meshes_[i]->GetModelMatrix()* this->local_matrix_);
 			shader_object_->SetMatrixVariable("g_mwv_inv_transpose", world_view_inv_transpose);
 			shader_object_->SetMatrixVariable("g_mw_inv_transpose", world_inv_transpose);
 			//set mesh's parameter

@@ -56,7 +56,7 @@ void MyApp::InitObjects()
 	RunFontTest();
 
 	//set up lights
-	for(int i = 0; i < 0 ; ++i)
+	for(int i = 0; i < 1 ; ++i)
 	{
 		point_light_ = new PointLight();
 		point_light_->SetPos(float3(50.f + i*20 ,10.f, 0.f));	
@@ -65,12 +65,12 @@ void MyApp::InitObjects()
 	}
 
 	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(50, 200, 0));
-	spot_light_->SetDir(float3(0, 10, 0) - float3(50, 500, 0));
+	spot_light_->SetPos(float3(0, 50, 0));
+	spot_light_->SetDir(float3(0, 10, 0) - float3(0, 50, 0));
 
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);
-	spot_light_->AddToScene();
+	//spot_light_->AddToScene();
 
 	float4x4 mat,trans;
 
@@ -108,8 +108,8 @@ void MyApp::InitObjects()
 	camera_ = new Camera(1280 / 800.0f);// Context::Instance().GetSceneManager().GetMainCamera();
 	cam_pos_ = float3(82.2f, 270.87f, -67.49f);
 	cam_look_ = float3(81.78f, 270.16f, -66.94f);
-	cam_pos_ = float3(235, 240, 16);
-	cam_look_ = float3(234, 239, 16);
+	cam_pos_ = float3(0, 0, 0);
+	cam_look_ = float3(0, 0, 1);
 	camera_->SetView(cam_pos_, cam_look_, float3(0,1,0));
 	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
 	camera_->AddToScene(true);
@@ -171,12 +171,12 @@ void MyApp::Update()
 		std::wstring Test = L"\u6771 \u3042 I have a pen ";
 		Test += std::to_wstring(cam_pos_.x()) + L" " + std::to_wstring(cam_pos_.y());
 		newtext_->SetContent(Test);
-		newtext_->Draw();
-		t1.Draw();
-		t2.Draw();
+		//newtext_->Draw();
+		//t1.Draw();
+		//t2.Draw();
 	}
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 
 	//text.setcontent("xxxx");
 	//text.setposition();

@@ -24,7 +24,7 @@ namespace vEngine
 
 	void Mesh::SetRenderParameters()
 	{
-		shader_object_->SetMatrixVariable("g_model_matrix", model_matrix_);
+		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_);
 	}
 
 	void Mesh::Render(int pass_index)

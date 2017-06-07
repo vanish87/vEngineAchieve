@@ -140,7 +140,7 @@ float4 CalPreLighting(	 in float3 normal,
 	
 	// Start with a sum of zero. 
 	// Default ambeint color = (0.2, 0.2 0.2)
-	float4 litColor = float4(0.1f, 0.1f, 0.1f, 0.0f);
+	float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 
 	//for(uint i = 0; i < lights_size; i++)
@@ -207,7 +207,7 @@ float4 CalPreLighting(	 in float3 normal,
 							diffuse = light_color * diffuse_angle * att;
 							//pow(N*H, alpha) * Clight * (N * Lc)
 							spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
-							spec = light_color.r * CalBlinnPhongBRDF_Specular(normal, pos_eye, pos_light, true, spec_factor);
+							//spec = light_color.r * CalBlinnPhongBRDF_Specular(normal, pos_eye, pos_light, true, spec_factor);
 						}
 
 						float inner = light.inner_outer.x;

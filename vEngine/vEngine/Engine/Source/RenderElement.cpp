@@ -29,12 +29,12 @@ namespace vEngine
 
 	float4x4 & RenderElement::GetModelMatrix()
 	{
-		return model_matrix_;
+		return local_matrix_;
 	}
 
 	void RenderElement::SetModelMatrix( float4x4 model_matrix )
 	{
-		this->model_matrix_ = model_matrix;
+		this->local_matrix_ = model_matrix;
 	}
 
 

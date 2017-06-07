@@ -42,9 +42,7 @@ namespace vEngine
 	{
 		throw std::logic_error("The method or operation is not implemented.");
 	}
-
-	static byte* data;
-	
+		
 	Text::Text()
 		:SceneObject(&TextElement)
 	{
@@ -62,6 +60,11 @@ namespace vEngine
 	void Text::Draw()
 	{
 		Font::GetFontByName(this->font_name_).DrawD3DText(this->contents_, int2(this->text_field_.x(), this->text_field_.y()));
+	}
+	void Text::Draw(const std::wstring& new_text)
+	{
+		this->contents_ = new_text;
+		this->Draw();
 	}
 		
 	void Text::SetRect(const int4& rect)

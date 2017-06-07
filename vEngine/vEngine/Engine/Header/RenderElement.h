@@ -14,8 +14,8 @@ namespace vEngine
 		friend class SceneObject;
 	public:
 		RenderElement(void);
-		RenderElement(float4x4 model_matrix)
-			:model_matrix_(model_matrix)
+		RenderElement(float4x4 local_matrix)
+			:local_matrix_(local_matrix)
 		{
 		
 		};
@@ -35,7 +35,7 @@ namespace vEngine
 		virtual void EndRender() = 0;
 
 	protected:
-		float4x4 model_matrix_;
+		float4x4 local_matrix_;
 
 		ShaderObject* shader_object_;
 
