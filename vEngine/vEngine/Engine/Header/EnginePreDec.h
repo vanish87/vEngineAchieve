@@ -44,13 +44,13 @@ namespace vEngine
 	class StateManager;
 
 	class Viewport;
-	class Camera;
+	CLASS_AND_SHARED_POINTER(Camera)
 	class Frustum;
 	
 	class Context;
 
-	class PointLight;
-	class SpotLight;
+	CLASS_AND_SHARED_POINTER(PointLight)
+	CLASS_AND_SHARED_POINTER(SpotLight)
 
 	class Configure;
 

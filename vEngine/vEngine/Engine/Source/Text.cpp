@@ -23,8 +23,9 @@ namespace vEngine
 	{
 		if (this->shader_object_ == nullptr)
 		{
-			this->shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
-			this->shader_object_->LoadBinaryFile("FxFiles/DebugShader.cso");
+			//this->shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+			//this->shader_object_->LoadBinaryFile("FxFiles/DebugShader.cso");
+			this->shader_object_ = ShaderObject::FindShaderByName("DebugShader");
 		}
 		//throw std::logic_error("The method or operation is not implemented.");
 	}

@@ -27,7 +27,7 @@ namespace vEngine
 		
 	}
 
-	float4x4 & RenderElement::GetModelMatrix()
+	float4x4 & RenderElement::GetLocalMatrix()
 	{
 		return local_matrix_;
 	}

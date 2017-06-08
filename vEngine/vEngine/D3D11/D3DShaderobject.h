@@ -61,10 +61,6 @@ namespace vEngine
 		//type: 0 for RenderBuffer; 1 for ShaderResource
 		virtual void SetReource( std::string name, Texture* data, uint32_t type );
 
-
-
-
-
 	private:
 
 		ID3DX11Effect* fx_;

@@ -158,8 +158,8 @@ namespace vEngine
 		static bool inited = false;
 		if (!inited)
 		{
-			ShaderObject* output_to_tex_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
-			output_to_tex_so_->LoadBinaryFile("FxFiles/DebugShader.cso");
+			//ShaderObject* output_to_tex_so_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+			ShaderObject* output_to_tex_so_= ShaderObject::FindShaderByName("DebugShader");
 			output_to_tex_so_->SetTechnique("PPTech");
 
 			output_to_tex_pp_ = new PostProcess();

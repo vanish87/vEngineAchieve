@@ -16,8 +16,7 @@
 
 namespace vEngine
 {
-	//Use LoadFile to load .dae file
-	//Use LoadShaderFile to load .fxo file, which is the compiled file of .fx file
+
 	class D3DModel : public Model
 	{
 	public:
@@ -25,18 +24,8 @@ namespace vEngine
 		~D3DModel(void);
 
 		DEBUG_CLASS_FILE_NAME
-
-		//Load .dae file
-		virtual void LoadFile(std::string file_name, CompleteCallBack callback = nullptr) override;
-		//use this to load .fxo file only
-		virtual void LoadShaderFile(std::string file_name);
-
-		virtual void SetRenderParameters();
-		virtual void Render(int pass_index);
-		virtual void EndRender();
-
+			
 		virtual Texture* LoadTexture( std::string file_name );
-
 		virtual void LoadPomTexture( std::string file_name_ );
 
 

@@ -50,24 +50,26 @@ namespace vEngine
 
 	void D3DSkyDome::LoadShaderFile( std::string file_name )
 	{
-		shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
-		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		d3d_shader_object->LoadBinaryFile(file_name);
+		//shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		//D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
+		//d3d_shader_object->LoadBinaryFile(file_name);
+
+		shader_object_ = ShaderObject::FindShaderByName(file_name);
 
 		//Default init for SkyDome shader
-		d3d_shader_object->SetTechnique("SkyDomeTech");
+		shader_object_->SetTechnique("SkyDomeTech");
 
-		d3d_shader_object->SetShaderResourceVariable("background_tex");
-		d3d_shader_object->SetMatrixVariable("g_world_matrix");
-		d3d_shader_object->SetMatrixVariable("g_view_proj_matrix");
-		d3d_shader_object->SetMatrixVariable("g_view_matrix");
-		d3d_shader_object->SetMatrixVariable("g_inv_proj_matrix");
-		d3d_shader_object->SetMatrixVariable("g_inv_view_matrix");
-		d3d_shader_object->SetMatrixVariable("g_model_matrix");
+		shader_object_->SetShaderResourceVariable("background_tex");
+		shader_object_->SetMatrixVariable("g_world_matrix");
+		shader_object_->SetMatrixVariable("g_view_proj_matrix");
+		shader_object_->SetMatrixVariable("g_view_matrix");
+		shader_object_->SetMatrixVariable("g_inv_proj_matrix");
+		shader_object_->SetMatrixVariable("g_inv_view_matrix");
+		shader_object_->SetMatrixVariable("g_model_matrix");
 		
-		d3d_shader_object->SetVectorVariable("g_eye_pos");
+		shader_object_->SetVectorVariable("g_eye_pos");
 
-		sky_mesh_->SetShaderObject(d3d_shader_object);
+		sky_mesh_->SetShaderObject(shader_object_);
 	}
 
 	void D3DSkyDome::Render( int pass_index )

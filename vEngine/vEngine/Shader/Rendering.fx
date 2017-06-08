@@ -25,6 +25,8 @@ struct Light
 cbuffer cbPerFrame
 {
 	float3 g_eye_pos;
+	float4x4 main_camera_inv_view;
+	float4x4 main_camera_inv_proj;
 	Light light;
 };
 
@@ -79,6 +81,117 @@ float CalBlinnPhongBRDF_Specular(float3 normal, float3 viewDir, float3 lightDir,
 	float NdotL = dot(normal, lightDir);
 	float NdotV = dot(normal, viewDir);
 	return f * g * d / (4 * NdotL * NdotV);
+}
+
+float4 CalulateLighting(in float3 normal,
+						in float3 position, //world space pos
+						in float  specularPower,
+						in float  shadow,
+						in float4 occlusion)
+{
+	float3 pos_eye = normalize(g_eye_pos - position);//V
+
+	// Start with a sum of zero. 
+	// Default ambeint color = (0.2, 0.2 0.2)
+	float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+
+	//for(uint i = 0; i < lights_size; i++)
+	{
+		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		float  spec = 0.0f;
+		float4 light_color = light.color;
+		float3 light_position = light.position;
+
+		// The vector from the surface to the light.
+		float3 pos_light = light_position - position;//Lc
+		float d = length(pos_light);
+		if (d > light.falloff.w)
+		{
+			return litColor;
+		}
+
+		float3 light_dir = light.direction;
+		int type = light.type;
+
+		//TODO : not good one, use different fx file to handle different light type
+		[branch]
+		switch (type)
+		{
+			//Point Light
+		case 0:
+		{
+			pos_light = normalize(pos_light);
+
+			float diffuse_angle = dot(pos_light, normal);//N * Lc (light vector = L)
+			[flatten]
+			if (diffuse_angle > 0.0f)
+			{
+				float3 H = normalize(pos_light + pos_eye);
+
+				float spec_factor = pow(max(dot(normal, H), 0.0f), specularPower);
+
+				float att = 1.0f / (light.falloff.x + light.falloff.y *d + light.falloff.z * d * d);
+				//Clight * (N * Lc)
+				diffuse = light_color * diffuse_angle * att;
+				//pow(N*H, alpha) * Clight * (N * Lc)
+				spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+			}
+
+			float4 acc_color = float4(diffuse.rgb, spec);
+			litColor = litColor + acc_color;
+			break;
+		}
+		//Spot Light
+		case 1:
+		{
+			pos_light = normalize(pos_light);
+
+			float diffuse_angle = dot(pos_light, normal);//N * Lc (light vector = L)
+			[flatten]
+			if (diffuse_angle > 0.0f)
+			{
+				float3 H = normalize(pos_light + pos_eye);
+
+				float spec_factor = pow(max(dot(normal, H), 0.0f), specularPower);
+
+				float att = 1.0f / (light.falloff.x + light.falloff.y *d + light.falloff.z * d * d);
+				//Clight * (N * Lc)
+				diffuse = light_color * diffuse_angle * att;
+				//pow(N*H, alpha) * Clight * (N * Lc)
+				spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+																		//spec = light_color.r * CalBlinnPhongBRDF_Specular(normal, pos_eye, pos_light, true, spec_factor);
+			}
+
+			float inner = light.inner_outer.x;
+			float outer = light.inner_outer.y;
+
+			float cosDirection = dot(-pos_light, normalize(light_dir));
+
+			//Hermite interpolation
+			float spot = smoothstep(outer, inner, cosDirection);
+			//float d = length(pos_light);
+			//spot/= d*d;
+
+
+			float light_occlusion = 1 - saturate(dot(float4(-normalize(pos_eye), 1), occlusion));
+
+			diffuse = diffuse * spot * shadow * light_occlusion;
+			spec = spec * spot * shadow;
+
+			float4 acc_color = float4(diffuse.rgb, spec);
+			litColor = litColor + acc_color;
+
+			break;
+		}
+		case 2:
+			break;
+		default:
+			break;
+		}
+
+	}
+	return litColor;
 }
 
 float4 CalLighting( in float3 normal, 

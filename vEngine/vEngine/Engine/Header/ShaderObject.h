@@ -14,6 +14,7 @@ namespace vEngine
 		ShaderObject(void);
 		~ShaderObject(void);
 
+		virtual void SetVariable(std::string name) = 0;
 		virtual void SetVectorVariable(std::string) = 0;
 		virtual void SetVectorVariable(std::string name, float3 & vec3) = 0;
 		virtual void SetVectorVariable(std::string name, float4 & vec4) = 0;
@@ -32,6 +33,10 @@ namespace vEngine
 		virtual void Apply(size_t pass_index) = 0;
 		
 		virtual void LoadBinaryFile(std::string file_name);
+
+		static ShaderObject* FindShaderByName(const std::string shader_name);
+		void SetupShaderVariable(const std::string shader_name);
+		void SetupCommonVariable();
 	};
 }
 

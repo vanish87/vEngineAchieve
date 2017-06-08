@@ -25,7 +25,7 @@ namespace vEngine
 		virtual RenderLayout* GetRenderLayout() = 0;
 
 		ShaderObject* GetShaderObject();
-		float4x4 & GetModelMatrix();
+		float4x4 & GetLocalMatrix();
 		void SetShaderObject(ShaderObject* shader_object);
 		void SetModelMatrix(float4x4 model_matrix);
 		virtual void LoadShaderFile(std::string file_name);
