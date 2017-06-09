@@ -30,8 +30,8 @@ namespace vEngine
 		for (size_t i = 0; i < render_texture_.size(); i++)
 		{
 			D3DTexture2D* tex = static_cast<D3DTexture2D*>(this->render_texture_[i]);
-			if (this->GetViewport().Height() != tex->GetHeight()
-				|| this->GetViewport().Width() != tex->GetWidth()
+			if (	this->GetViewport().Height() != tex->GetHeight()
+				||	this->GetViewport().Width() != tex->GetWidth()
 				)
 			{
 				delete this->depth_texture_;

@@ -16,6 +16,7 @@ namespace vEngine
 
 	static bool EnableGbufferDebug = false;
 	static bool EnableLightingDebug = false;
+	static bool EnableDepthDebug = false;
 	static uint32_t GbufferIndex = 0;
 
 	static const int2 ShadowMapSize = int2(2048, 2048);
@@ -279,6 +280,12 @@ namespace vEngine
 			//pass 0 end
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 
+			if (EnableDepthDebug)
+			{
+				this->OutputTexture(depth_tex_, back_buffer_);
+				return;
+			}
+
 			linearize_depth_pp_->Apply();
 
 			if (EnableGbufferDebug)
@@ -376,13 +383,16 @@ namespace vEngine
 				shader_object->SetMatrixVariable("main_camera_inv_view", Math::Inverse(main_view));
 				shader_object->SetMatrixVariable("main_camera_inv_proj", Math::Inverse(main_proj));
 
+				CHECK_ASSERT(Math::Inverse(main_proj)[3][3] == 1);
+
 				shader_object->SetVectorVariable("g_eye_pos", main_camera_->GetPos());
 
 				//set gbuffer as input textures		
-				shader_object->SetReource("depth_tex", depth_tex_, 1);
-				shader_object->SetReource("normal_tex", gbuffer_tex_[0], 1);
-				shader_object->SetReource("shadow_map_tex", shadow_blur_, 1);
-				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_tex_, 1);
+				shader_object->SetReource("depth_tex", linear_depth_tex_);
+				shader_object->SetReource("normal_tex", gbuffer_tex_[0]);
+				shader_object->SetReource("position_tex", gbuffer_tex_[2]);
+				shader_object->SetReource("shadow_map_tex", shadow_blur_);
+				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_tex_);
 
 				render_engine.BindFrameBuffer(lighting_buffer_);
 				render_engine.SetDeferredRenderingState();
@@ -409,8 +419,8 @@ namespace vEngine
 			//pass 2
 			render_engine.BindFrameBuffer(back_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
-			shader_object->SetReource("lighting_tex", lighting_tex_, 1);
-			shader_object->SetReource("diffuse_tex", gbuffer_tex_[1], 1);
+			shader_object->SetReource("lighting_tex", lighting_tex_);
+			shader_object->SetReource("diffuse_tex", gbuffer_tex_[1]);
 			//Set Shader file for quad
 			fullscreen_mesh_->SetShaderObject(shader_object);
 			fullscreen_mesh_->SetRenderParameters();
@@ -421,7 +431,22 @@ namespace vEngine
 			RenderingProfiler.End(Profiler::PE_FUNCTION_CALL, "Pass 2: Final ");
 
 	}
+	void DeferredRendering::OutputTexture(Texture* Tex, FrameBuffer* OutBuffer)
+	{
+		RenderEngine& render_engine = Context::Instance().GetRenderFactory().GetRenderEngine();
+		render_engine.BindFrameBuffer(OutBuffer);
+		//output_to_tex_pp_->SetInput(gbuffer_tex_[GBufferIndex], 0);
+		//output_to_tex_pp_->SetInput(shadow_depth_, 0);
+		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
+		//output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
+		output_to_tex_pp_->SetInput(Tex, 0);
 
+		//output_to_tex_pp_->SetInput(GBuffer->GetTexture(GBufferIndex), 0);
+
+		//CHECK_ASSERT(false);
+		output_to_tex_pp_->SetOutput(OutBuffer->GetTexture(0), 0);
+		output_to_tex_pp_->Apply();
+	}
 
 	void DeferredRendering::OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer)
 	{
@@ -431,8 +456,9 @@ namespace vEngine
 		//output_to_tex_pp_->SetInput(shadow_depth_, 0);
 		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
 		//output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
+		output_to_tex_pp_->SetInput(depth_tex_, 0);
 
-		output_to_tex_pp_->SetInput(GBuffer->GetTexture(GBufferIndex), 0);
+		//output_to_tex_pp_->SetInput(GBuffer->GetTexture(GBufferIndex), 0);
 
 		//CHECK_ASSERT(false);
 		output_to_tex_pp_->SetOutput(OutBuffer->GetTexture(0), 0);
@@ -450,6 +476,11 @@ namespace vEngine
 	{
 		EnableGbufferDebug = false;
 		EnableLightingDebug = !EnableLightingDebug;
+	}
+
+	void DeferredRendering::ToggleDepth()
+	{
+		EnableDepthDebug = !EnableDepthDebug;
 	}
 
 }

@@ -54,6 +54,7 @@ namespace vEngine
 			//init parameter here
 			this->SetShaderResourceVariable("diffuse_tex");
 			this->SetShaderResourceVariable("depth_tex");
+			this->SetShaderResourceVariable("position_tex");
 			this->SetShaderResourceVariable("normal_tex");
 			//this->SetShaderResourceVariable("position_tex");
 			this->SetShaderResourceVariable("shadow_map_tex");

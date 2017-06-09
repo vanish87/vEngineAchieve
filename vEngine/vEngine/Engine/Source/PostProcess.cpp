@@ -64,7 +64,7 @@ namespace vEngine
 		for(size_t i = 0; i < input_tex_.size(); ++i)
 		{
 			//TODO: temp solution
-			shander_object->SetReource("input_tex_" + std::to_string(static_cast<long long>(i)), input_tex_[i], 1);
+			shander_object->SetReource("input_tex_" + std::to_string(static_cast<long long>(i)), input_tex_[i]);
 		}
 		fullscreen_mesh_->SetRenderParameters();
 		fullscreen_mesh_->Render(0);

@@ -5,6 +5,8 @@ Texture2D diffuse_tex;
 Texture2D normal_tex;
 Texture2D depth_tex;
 
+Texture2D position_tex;
+
 //Shadow map
 Texture2D shadow_map_tex;
 
@@ -106,6 +108,7 @@ struct GbufferPSOutput
 {	
 	float4 Normal			: SV_Target0;
 	float4 Diffuse			: SV_Target1;
+	float4 PosWS			: SV_Target2;
 };
 GbufferPSOutput GbufferPS(GbufferVSOutput pin)
 {
@@ -139,6 +142,7 @@ GbufferPSOutput GbufferPS(GbufferVSOutput pin)
 	output.Normal = float4(normalWS, gMaterial.Shininess);
 	//combines Mat with Tex color
 	output.Diffuse  = float4( mat_diffuse* gMaterial.Diffuse.rgb, gMaterial.Specular.x);	
+	output.PosWS = float4(pin.posWS,1.0f);
 	
 	return output;
 }
@@ -157,8 +161,8 @@ LightingVout LightingVS(in LightingVin vin)
 {
 	LightingVout vout;
 	vout.pos = float4(vin.position, 1.0f);
-	float3 positionVS = mul( float4(vin.position,1.0f), main_camera_inv_proj).xyz;
-	vout.view_ray = float3( positionVS.xy / positionVS.z, 1.0f );
+	float4 positionVS = mul( float4(vin.position.xy, 1.0f, 1.0f), main_camera_inv_proj);
+	vout.view_ray = positionVS.xyz / positionVS.w;
 	return vout;
 }
 float linstep(float min, float max, float v)
@@ -167,15 +171,28 @@ float linstep(float min, float max, float v)
 }
 
 float4 LightingPS( in LightingVout pin): SV_Target
-{	
-	
+{		
 	int3 samplelndices = int3( pin.pos.xy, 0 );
-	float depth = depth_tex.Load( samplelndices ).r;
+	float depth = depth_tex.Load( samplelndices ).r/1000.0f;
 	float3 positionVS = pin.view_ray;
 	positionVS *= depth;
 
 	//shadowing
 	float4 world_pos = mul(float4(positionVS, 1.0f) , main_camera_inv_view);
+	float4 world_pos1 = position_tex.Load(samplelndices).rgba;
+
+	if (abs(world_pos1.x - world_pos.x)> 0.01)
+	{
+		return float4(1, 0, 0, 1);
+		//world_pos.x = 0;
+	}
+	else
+	{
+		return float4(0, 0, 0, 1);
+	}
+	//world_pos = world_pos1;
+	//float4 world_pos = mul(float4(positionVS, 1.0f), main_camera_inv_view);
+
 
 	//world_pos.y = 0;
 	float4 pos_light = mul(world_pos, g_light_view_proj);

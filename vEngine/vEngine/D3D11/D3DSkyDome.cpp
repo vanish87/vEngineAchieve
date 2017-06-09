@@ -89,7 +89,7 @@ namespace vEngine
 		d3d_shader_object->SetMatrixVariable("g_world_matrix", this->local_matrix_);
 		d3d_re->TrunoffCull();
 		//RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
-		shader_object_->SetReource("background_tex", cube_texture_, 1);
+		shader_object_->SetReource("background_tex", cube_texture_);
 		//throw std::exception("The method or operation is not implemented.");
 	}
 

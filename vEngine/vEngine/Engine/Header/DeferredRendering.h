@@ -31,10 +31,12 @@ namespace vEngine
 		void Update();
 
 		//debug functions
-		void OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer);
+		void OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer); 
+		void OutputTexture(Texture* Tex, FrameBuffer* OutBuffer);
 
 		void ToggleGbuffer(uint32_t gbuffer_index);
 		void ToggleLighting();
+		void ToggleDepth();
 
 	private:
 		//for Render Target

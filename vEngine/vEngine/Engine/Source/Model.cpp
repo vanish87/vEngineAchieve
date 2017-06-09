@@ -48,13 +48,13 @@ namespace vEngine
 			Material* mat = materials_[meshes_[i]->GetMaterialID()];
 			if (mat->diffuse_tex > 0)
 			{
-				shader_object_->SetReource("mesh_diffuse", textures_[mat->diffuse_tex - 1], 1);
+				shader_object_->SetReource("mesh_diffuse", textures_[mat->diffuse_tex - 1]);
 			}
 			if (mat->normalmap_tex > 0)
 			{
 				shader_object_->SetBool("g_normal_map", true);
 				//set normal map there
-				shader_object_->SetReource("normal_map_tex", textures_[mat->normalmap_tex - 1], 1);
+				shader_object_->SetReource("normal_map_tex", textures_[mat->normalmap_tex - 1]);
 			}
 			else
 			{
@@ -72,7 +72,7 @@ namespace vEngine
 		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_);
 		//TODO : use texture array to store every pom texture of mesh
 		if (pom_enabled_)
-			shader_object_->SetReource("normal_map_tex", pom_texture_, 1);
+			shader_object_->SetReource("normal_map_tex", pom_texture_);
 	}
 
 	void Model::EndRender()

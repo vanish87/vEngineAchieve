@@ -70,7 +70,7 @@ void MyApp::InitObjects()
 
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);
-	//spot_light_->AddToScene();
+	spot_light_->AddToScene();
 
 	float4x4 mat,trans;
 
@@ -176,7 +176,7 @@ void MyApp::Update()
 	newtext_->SetContent(Test);
 	newtext_->Draw();
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 
 	//text.setcontent("xxxx");
 	//text.setposition();
@@ -244,6 +244,9 @@ void MyState::OnKeyDown(WPARAM key_para)
 		break;
 	case '3':
 		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleLighting();
+		break;
+	case '4':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleDepth();
 		break;
 	default:
 		break;
