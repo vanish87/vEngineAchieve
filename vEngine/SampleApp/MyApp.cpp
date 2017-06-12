@@ -176,7 +176,7 @@ void MyApp::Update()
 	newtext_->SetContent(Test);
 	newtext_->Draw();
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 
 	//text.setcontent("xxxx");
 	//text.setposition();

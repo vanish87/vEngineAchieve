@@ -378,9 +378,7 @@ namespace vEngine
 				shader_object->SetMatrixVariable("main_camera_inv_proj", Math::Inverse(main_proj));
 
 				CHECK_ASSERT(Math::Inverse(main_proj)[3][3] == 1);
-
-				shader_object->SetVectorVariable("g_eye_pos", main_camera_->GetPos());
-
+				
 				if (EnableDepthDebug)
 				{
 					this->OutputTexture(linear_depth_tex_, back_buffer_);
@@ -394,6 +392,7 @@ namespace vEngine
 				shader_object->SetReource("shadow_map_tex", shadow_blur_Y_);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_tex_);
 
+				lighting_buffer_->GetViewport().SetCamera(main_camera_);
 				render_engine.BindFrameBuffer(lighting_buffer_);
 				render_engine.SetDeferredRenderingState();
 
