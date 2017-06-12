@@ -54,6 +54,11 @@
     <ClCompile Include="Engine\Source\Light.cpp" />
     <ClCompile Include="Engine\Source\Mesh.cpp" />
     <ClCompile Include="Engine\Source\Model.cpp" />
+    <ClCompile Include="Engine\Source\Physics\ConeRestriction.cpp" />
+    <ClCompile Include="Engine\Source\Physics\Particle.cpp" />
+    <ClCompile Include="Engine\Source\Physics\Restriction.cpp" />
+    <ClCompile Include="Engine\Source\Physics\SandParticle.cpp" />
+    <ClCompile Include="Engine\Source\Physics\SandSimulator.cpp" />
     <ClCompile Include="Engine\Source\PostProcess.cpp" />
     <ClCompile Include="Engine\Source\Profiler.cpp" />
     <ClCompile Include="Engine\Source\RenderBuffer.cpp" />
@@ -129,6 +134,11 @@
     <ClInclude Include="Engine\Header\Lua\LuaScriptStack.h" />
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
+    <ClInclude Include="Engine\Header\Physics\ConeRestriction.hpp" />
+    <ClInclude Include="Engine\Header\Physics\Particle.hpp" />
+    <ClInclude Include="Engine\Header\Physics\Restriction.hpp" />
+    <ClInclude Include="Engine\Header\Physics\SandParticle.hpp" />
+    <ClInclude Include="Engine\Header\Physics\SandSimulator.hpp" />
     <ClInclude Include="Engine\Header\PostProcess.h" />
     <ClInclude Include="Engine\Header\Profiler.h" />
     <ClInclude Include="Engine\Header\RenderBuffer.h" />

@@ -61,6 +61,8 @@ namespace vEngine
 			}
 			else
 			{
+
+
 				loops = 0;
 				//while( GetTickCount() > next_game_tick && loops < MAX_CYCLES_PER_FRAME ) 
 				{

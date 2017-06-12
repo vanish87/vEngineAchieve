@@ -6,6 +6,7 @@
 #include "Engine\Header\ScriptTest.h"
 #include "Engine\Header\ScriptContext.h"
 #include "Engine\Header\Text.h"
+#include "Engine\Header\Physics\SandSimulator.hpp"
 
 #include "D3D11\D3DSkyDome.h"
 
@@ -14,6 +15,7 @@
 using namespace vEngine;
 
 static MyApp app;
+static SandSimulator sand_sims_;
 
 static Text t1 = L"this is a text";
 static Text t2 = L"this is a text1";
@@ -124,6 +126,8 @@ void MyApp::InitObjects()
 	t1.SetRect(int4(50, 50, 0, 0));
 	t2.SetRect(int4(100, 100, 0, 0));
 
+	sand_sims_.Init();
+
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
@@ -152,6 +156,8 @@ void MyApp::ReleaseObjects()
 	delete spot_light_;
 	delete timer_;
 	delete camera_;
+	
+	sand_sims_.Deinit();
 }
 
 void MyApp::Update()
@@ -180,6 +186,8 @@ void MyApp::Update()
 
 	//text.setcontent("xxxx");
 	//text.setposition();
+
+	sand_sims_.Update();
 
 
 }

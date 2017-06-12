@@ -39,6 +39,16 @@ namespace vEngine
 		{
 			return 1.0f / Tan(x);
 		}
+		float Ln(float x)
+		{
+			return std::log(x);
+		}
+		float Pow(float base, float exp)
+		{
+			return pow(base, exp);
+		}
+
+
 		float InvSqrt(float number)
 		{
 			float xhalf = 0.5f*number;

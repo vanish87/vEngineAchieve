@@ -101,6 +101,8 @@ namespace vEngine
 
 	class Ray;
 	class AABBox;
+
+	class ReturnCode;
 }
 
 #endif

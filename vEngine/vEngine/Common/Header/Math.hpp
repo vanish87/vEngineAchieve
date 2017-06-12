@@ -7,7 +7,6 @@ namespace vEngine
 {
 	namespace Math
 	{
-
 		template <typename T>
 		bool IsNAN(T& x)
 		{
