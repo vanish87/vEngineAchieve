@@ -56,17 +56,17 @@ void MyApp::InitObjects()
 	RunFontTest();
 
 	//set up lights
-	for(int i = 0; i < 1 ; ++i)
+	for(int i = 0; i < 0 ; ++i)
 	{
 		point_light_ = new PointLight();
-		point_light_->SetPos(float3(50.f + i*20 ,10.f, 0.f));	
+		point_light_->SetPos(float3(50.f + i*20 ,30.f, 0.f));	
 		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
 		point_light_->AddToScene();
 	}
 
 	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(0, 50, 0));
-	spot_light_->SetDir(float3(0, 10, 0) - float3(0, 50, 0));
+	spot_light_->SetPos(float3(0, 250, 0));
+	spot_light_->SetDir(float3(5, 10, 0) - float3(0, 250, 0));
 
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);

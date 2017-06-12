@@ -280,12 +280,6 @@ namespace vEngine
 			//pass 0 end
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 
-			if (EnableDepthDebug)
-			{
-				this->OutputTexture(depth_tex_, back_buffer_);
-				return;
-			}
-
 			linearize_depth_pp_->Apply();
 
 			if (EnableGbufferDebug)
@@ -387,11 +381,17 @@ namespace vEngine
 
 				shader_object->SetVectorVariable("g_eye_pos", main_camera_->GetPos());
 
+				if (EnableDepthDebug)
+				{
+					this->OutputTexture(linear_depth_tex_, back_buffer_);
+					//this->OutputTexture(shadow_blur_Y_, back_buffer_);
+					return;
+				}
 				//set gbuffer as input textures		
-				shader_object->SetReource("depth_tex", linear_depth_tex_);
+				shader_object->SetReource("depth_tex", depth_tex_);
 				shader_object->SetReource("normal_tex", gbuffer_tex_[0]);
 				shader_object->SetReource("position_tex", gbuffer_tex_[2]);
-				shader_object->SetReource("shadow_map_tex", shadow_blur_);
+				shader_object->SetReource("shadow_map_tex", shadow_blur_Y_);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_tex_);
 
 				render_engine.BindFrameBuffer(lighting_buffer_);

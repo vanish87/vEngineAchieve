@@ -91,9 +91,8 @@ GbufferVSOutput GbufferVS(GbufferVSInput vin)
 {
 	GbufferVSOutput vout;
 	
-	float4x4 mvp_matrix = mul(g_model_matrix, g_view_proj_matrix);
-
-	vout.position = mul(float4(vin.position, 1.0f), mvp_matrix);
+	vout.position = mul(float4(vin.position, 1.0f), g_model_matrix);
+	vout.position = mul(vout.position			  , g_view_proj_matrix);
 	vout.tex_cood = vin.tex;
 	vout.posWS = mul(float4(vin.position, 1.0f), g_model_matrix).xyz;
 
@@ -154,7 +153,8 @@ struct LightingVin
 struct LightingVout
 {
 	float4 pos		   : SV_POSITION;//screen coordinates
-	float3 view_ray    : VIEWRAY;
+	float3 posVS	   : TEXCOORD0;
+	float3 posCS	   : TEXCOORD1;
 };
 
 LightingVout LightingVS(in LightingVin vin)
@@ -162,7 +162,8 @@ LightingVout LightingVS(in LightingVin vin)
 	LightingVout vout;
 	vout.pos = float4(vin.position, 1.0f);
 	float4 positionVS = mul( float4(vin.position.xy, 1.0f, 1.0f), main_camera_inv_proj);
-	vout.view_ray = positionVS.xyz / positionVS.w;
+	vout.posVS = positionVS.xyz / positionVS.w;
+	vout.posCS = float4(vin.position.xy, 1.0f, 1.0f);
 	return vout;
 }
 float linstep(float min, float max, float v)
@@ -173,9 +174,17 @@ float linstep(float min, float max, float v)
 float4 LightingPS( in LightingVout pin): SV_Target
 {		
 	int3 samplelndices = int3( pin.pos.xy, 0 );
-	float depth = depth_tex.Load( samplelndices ).r/1000.0f;
-	float3 positionVS = pin.view_ray;
+	//this one depends on View Space coord,
+	//so make sure xyz are in the same space
+	float depth = depth_tex.Load(samplelndices).r / pin.posVS.z;
+	float3 positionVS = pin.posVS;
 	positionVS *= depth;
+
+	//this one depends on Clip Space coord,
+	//so make sure xyz are in the same space
+	depth = depth_tex.Load(samplelndices).r;
+	float4 newPositionVS = mul(float4(pin.posCS.xy, depth, 1.0f), main_camera_inv_proj);
+	positionVS = newPositionVS.xyz / newPositionVS.w;
 
 	//shadowing
 	float4 world_pos = mul(float4(positionVS, 1.0f) , main_camera_inv_view);
@@ -183,12 +192,16 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 	if (abs(world_pos1.x - world_pos.x)> 0.01)
 	{
-		return float4(1, 0, 0, 1);
+		return float4(1,0,0, 1);
 		//world_pos.x = 0;
 	}
-	else
+	else if (abs(world_pos1.y - world_pos.y)> 0.01)
 	{
-		return float4(0, 0, 0, 1);
+		return float4(0, 1, 0, 1);
+	}
+	else if (abs(world_pos1.z - world_pos.z)> 0.01)
+	{
+		return float4(0, 0, 1, 1);
 	}
 	//world_pos = world_pos1;
 	//float4 world_pos = mul(float4(positionVS, 1.0f), main_camera_inv_view);
@@ -205,6 +218,8 @@ float4 LightingPS( in LightingVout pin): SV_Target
 	float q = zf/ (zf-zn);
 	float pos_depth = pos_light.z;
 	pos_depth = zn * q / (q - pos_depth);
+
+	pos_depth = mul(world_pos, g_light_view_proj).w;
 
 	//pos_depth = length(mul(light.position.xyz,g_inv_view_matrix)  - world_pos);
 
