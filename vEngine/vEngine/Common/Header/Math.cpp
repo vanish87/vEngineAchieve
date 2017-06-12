@@ -310,5 +310,34 @@ namespace vEngine
 			return CompareFloat(lhs, rhs);
 		}
 
+		bool IsFloatEqual(const float& lhs, const float& rhs)
+		{
+			return CompareFloat(lhs, rhs);
+		}
+
+		bool GetQuadraticRoot(float2& Roots, const float a, const float b, const float c)
+		{
+			if (IsFloatEqual (a, 0.0f))
+			{
+				Roots.x() = Roots.y() = (b != 0.0f) ? -c / b : 0;
+				return b == 0 ? false : true;
+			}
+			float Delta = (b * b) - (4 * a * c);
+			if (Delta == 0.0f)
+			{
+				Roots.x() = Roots.y() = -b / (2 * a);
+				return true;
+			}
+			if (Delta < 0)
+			{
+				Roots.x() = Roots.y() = 0;
+				return false;
+			}
+
+			Roots.x() = (-b - Delta) / (2 * a);
+			Roots.y() = (-b + Delta) / (2 * a);
+			return true;
+		}
+
 	}
 }

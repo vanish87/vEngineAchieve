@@ -2,6 +2,8 @@
 #define MATH_HPP_
 
 #pragma once
+#include <algorithm>
+#include <random>
 
 namespace vEngine
 {
@@ -314,6 +316,24 @@ namespace vEngine
 			ret.y() = std::min(lhs.y(), rhs.y());
 			ret.z() = std::min(lhs.z(), rhs.z());
 			return ret;
+		}
+
+		template <typename T>
+		T RandomInt(const T& from, const T& to)
+		{
+			std::random_device rd;
+			std::mt19937 generator(rd());
+			std::uniform_int_distribution<T> distribution(from, to);
+			return static_cast<T>(distribution(generator));
+		}
+
+		template <typename T>
+		T RandomReal(const T& from, const T& to)
+		{
+			std::random_device rd;
+			std::mt19937 generator(rd());
+			std::uniform_real_distribution<T> distribution(from, to);
+			return static_cast<T>(distribution(generator));
 		}
 	}
 }

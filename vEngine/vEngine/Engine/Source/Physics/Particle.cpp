@@ -20,7 +20,7 @@ namespace vEngine
 		};
 		ReturnCode Particle::Create()
 		{
-			CHECK_ASSERT(false);
+			//CHECK_ASSERT(false);
 			//this->RenderElement = new Mesh(Type);
 			return RCSuccess();
 		};
@@ -114,13 +114,14 @@ namespace vEngine
 			this->CurrentFrameInfo.Velocity = this->LastFrameInfo.Velocity + this->LastFrameInfo.Acceleration * NormalizedDeltaTimeFromLastFrame * MS_PER_UPDATE;
 			this->CurrentFrameInfo.Location = this->LastFrameInfo.Location + this->LastFrameInfo.Velocity;
 
-			CHECK_ASSERT(false);
+			//CHECK_ASSERT(false);
 			//this->RenderElement->SetLocation(this->CurrentFrameInfo.Location);
 
 			this->CurrentFrameInfo.Acceleration = float3(0, 0, 0);
 			this->LastFrameInfo = this->CurrentFrameInfo;
-			CHECK_ASSERT(false);
+			//CHECK_ASSERT(false);
 			//this->Update((1 - NormalizedDeltaTimeFromLastFrame) * MS_PER_UPDATE);
+			this->Update();
 		}
 
 

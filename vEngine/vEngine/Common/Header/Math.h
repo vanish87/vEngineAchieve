@@ -27,6 +27,7 @@ namespace vEngine
 
 		float Abs(float num);
 		bool IsFloatEqual(float& lhs, float& rhs);
+		bool IsFloatEqual(const float& lhs, const float& rhs);
 
 		template <typename T>
 		Matrix<T> Multiply(const Matrix<T> & lhs, const Matrix<T> & rhs);
@@ -113,6 +114,7 @@ namespace vEngine
 
 		bool IntersectRayAABB(Ray* ray, AABBox* aabb);
 		bool IntersectRayTriangle(Ray* ray, float3 a, float3 b, float3 c, float & t);
+		bool GetQuadraticRoot(float2& Roots, const float a, const float b, const float c);
 	}
 
 }

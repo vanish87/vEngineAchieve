@@ -43,8 +43,7 @@ namespace vEngine
 		{
 			it->Create();
 			it->AddToScene();
-			CHECK_ASSERT(false);
-			//it->SetLocation(float3(Math::RandomReal(-10.0, 10.0), 63, 100));
+			it->SetLocation(float3(Math::RandomReal(-10.0f, 10.0f), 63, 100));
 			it->SetScale(float3(1, 1, 1));
 		}
 
@@ -63,8 +62,7 @@ namespace vEngine
 			++it)
 		{
 			it->Reset();
-			CHECK_ASSERT(false);
-			//it->SetLocation(float3(Math::RandomReal(-10.0, 10.0), 63, 100));
+			it->SetLocation(float3(Math::RandomReal(-10.0f, 10.0f), 63, 100));
 			it->SetScale(float3(1, 1, 1));
 		}
 		return RCSuccess();
@@ -104,7 +102,9 @@ namespace vEngine
 
 			const float3 Position = it->GetLocation();
 			int3 HashId;
-			HashId.x() = (int32_t)Position.x();// = int3((int32_t)Position.x(), (int32_t)Position.y(), (int32_t)Position.z());// / SandSimulator::VOXEL_CELL_SIZE;
+			HashId.x() = (int32_t)Position.x() / SandSimulator::VOXEL_CELL_SIZE;// = int3((int32_t)Position.x(), (int32_t)Position.y(), (int32_t)Position.z());// / SandSimulator::VOXEL_CELL_SIZE;
+			HashId.y() = (int32_t)Position.y() / SandSimulator::VOXEL_CELL_SIZE; 
+			HashId.z() = (int32_t)Position.z() / SandSimulator::VOXEL_CELL_SIZE;
 
 			std::list<SandParticle*> plist = this->SpatialHashInstance.m[HashId.x()].m[HashId.y()].m[HashId.z()];
 			//check detection and apply contact force
@@ -130,8 +130,11 @@ namespace vEngine
 			++it)
 		{
 			const float3 Position = it->GetLocation();
-			int3 HashId;
-			HashId.x() = (int32_t)Position.x();// , (int32_t)Position.y(), (int32_t)Position.z()) / SandSimulator::VOXEL_CELL_SIZE;
+			int3 HashId;			
+			HashId.x() = (int32_t)Position.x() / SandSimulator::VOXEL_CELL_SIZE;// = int3((int32_t)Position.x(), (int32_t)Position.y(), (int32_t)Position.z());// / SandSimulator::VOXEL_CELL_SIZE;
+			HashId.y() = (int32_t)Position.y() / SandSimulator::VOXEL_CELL_SIZE;
+			HashId.z() = (int32_t)Position.z() / SandSimulator::VOXEL_CELL_SIZE;
+
 			this->SpatialHashInstance.m[HashId.x()].m[HashId.y()].m[HashId.z()].push_back(&*it);
 		}
 		return RCSuccess();
