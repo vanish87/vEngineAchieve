@@ -34,6 +34,7 @@ namespace vEngine
 		//it renders text to a full screen texture, then this texture will be blended with final frame buffer
 		//see TextRenderElement for better solution
 		void Draw();
+		void Draw(const std::wstring& new_text);
 		void SetRect(const int4& rect);
 		void SetContent(std::wstring new_text);
 

@@ -27,8 +27,21 @@ namespace vEngine
 	{
 		D3DRenderEngine* render_engine = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());
 		std::vector<ID3D11RenderTargetView*> rtvs;
-		for(size_t i = 0; i< render_texture_.size(); i++)
-			rtvs.push_back(static_cast<D3DTexture2D*>(this->render_texture_[i])->GetRenderTargetView(1,0,TEXTURE2D));
+		for (size_t i = 0; i < render_texture_.size(); i++)
+		{
+			D3DTexture2D* tex = static_cast<D3DTexture2D*>(this->render_texture_[i]);
+			if (	this->GetViewport().Height() != tex->GetHeight()
+				||	this->GetViewport().Width() != tex->GetWidth()
+				)
+			{
+				delete this->depth_texture_;
+				viewport_.SetWidth(tex->GetHeight());
+				viewport_.SetHeight(tex->GetWidth());
+				this->depth_texture_ = Context::Instance().GetRenderFactory().MakeTexture2D(nullptr, this->GetViewport().Width(), this->GetViewport().Height(), 1, 1, R24G8_TYPELESS, 1, 0, AT_GPU_READ_WRITE, TU_DEPTH_SR);
+			}
+
+			rtvs.push_back(tex->GetRenderTargetView(1, 0, TEXTURE2D));
+		}
 		D3DTexture2D* depth_tex = static_cast<D3DTexture2D*>(this->depth_texture_);
 		
 		//only draw depth

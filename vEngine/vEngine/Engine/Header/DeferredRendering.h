@@ -26,35 +26,26 @@ namespace vEngine
 		~DeferredRendering(void);
 		
 		FrameBuffer* & GetGBuffer(){return gbuffer_;};
-		//std::vector<RenderBuffer*> GetGBufferSRV(){return gbuffer_srv_;};
-
-		//Mesh* GetQuadMesh(){return fullscreen_mesh_;};
-		//Mesh* GetFullscreenQuad();
-
-		//void AddLightingBuffer( RenderBuffer* shader_resource);
-
 		FrameBuffer* & GetLighingBuffer(){return lighting_buffer_;};
-		//RenderBuffer* & GetLightingBufferSRV(){return lighting_srv_;};
 
 		void Update();
 
-
 		//debug functions
-		void OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer);
+		void OutputGBufferToFrame(FrameBuffer* GBuffer, uint32_t GBufferIndex, FrameBuffer* OutBuffer); 
+		void OutputTexture(Texture* Tex, FrameBuffer* OutBuffer);
 
 		void ToggleGbuffer(uint32_t gbuffer_index);
 		void ToggleLighting();
+		void ToggleDepth();
 
 	private:
 		//for Render Target
 		FrameBuffer* gbuffer_;
 		//for Shader Resource
-		//std::vector<RenderBuffer*> gbuffer_srv_;
 		std::vector<Texture*> gbuffer_tex_;
 		//for Lighting Buffer
 		FrameBuffer* lighting_buffer_;
 		Texture* lighting_tex_;
-		//RenderBuffer* lighting_srv_;
 
 		//depth buffer
 		ShaderObject* linearize_depth_so_;
@@ -63,8 +54,6 @@ namespace vEngine
 		Texture* linear_depth_tex_;
 
 		//for shadowing
-		//FrameBuffer* shadowing_buffer_;
-		//RenderBuffer* shadowing_srv_;
 		Texture* shadowing_tex_;
 
 		//back camera and buffer
@@ -84,11 +73,6 @@ namespace vEngine
 		FrameBuffer* shadow_map_buffer_;
 		Texture* shadow_depth_;
 		Texture* shadow_linear_depth_;
-
-		//final blur texture
-		//RenderBuffer* shadow_blur_srv_;
-
-		//RenderBuffer* depth_srv_;
 
 		ShaderObject* ssdo_so_;
 		PostProcess* ssdo_pp_;

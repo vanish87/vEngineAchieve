@@ -59,11 +59,7 @@ namespace vEngine
 		ID3DX11EffectShaderResourceVariable* GetShaderRourceVariable(std::string name){return shader_resource_variable_.find(name)->second;};
 		virtual void SetShaderResourceVariable(std::string name);
 		//type: 0 for RenderBuffer; 1 for ShaderResource
-		virtual void SetReource( std::string name, Texture* data, uint32_t type );
-
-
-
-
+		virtual void SetReource( std::string name, Texture* data);
 
 	private:
 

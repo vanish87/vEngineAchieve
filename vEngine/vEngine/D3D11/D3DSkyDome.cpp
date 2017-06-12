@@ -16,7 +16,7 @@ namespace vEngine
 		Math::Identity(model_matrix);
 		sky_mesh_ = RenderTools::GetInstance().MakeSphereMesh();
 
-		model_matrix_ = model_matrix;
+		local_matrix_ = model_matrix;
 	}
 
 
@@ -50,24 +50,26 @@ namespace vEngine
 
 	void D3DSkyDome::LoadShaderFile( std::string file_name )
 	{
-		shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
-		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
-		d3d_shader_object->LoadBinaryFile(file_name);
+		//shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		//D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
+		//d3d_shader_object->LoadBinaryFile(file_name);
+
+		shader_object_ = ShaderObject::FindShaderByName(file_name);
 
 		//Default init for SkyDome shader
-		d3d_shader_object->SetTechnique("SkyDomeTech");
+		shader_object_->SetTechnique("SkyDomeTech");
 
-		d3d_shader_object->SetShaderResourceVariable("background_tex");
-		d3d_shader_object->SetMatrixVariable("g_world_matrix");
-		d3d_shader_object->SetMatrixVariable("g_view_proj_matrix");
-		d3d_shader_object->SetMatrixVariable("g_view_matrix");
-		d3d_shader_object->SetMatrixVariable("g_inv_proj_matrix");
-		d3d_shader_object->SetMatrixVariable("g_inv_view_matrix");
-		d3d_shader_object->SetMatrixVariable("g_model_matrix");
+		shader_object_->SetShaderResourceVariable("background_tex");
+		shader_object_->SetMatrixVariable("g_world_matrix");
+		shader_object_->SetMatrixVariable("g_view_proj_matrix");
+		shader_object_->SetMatrixVariable("g_view_matrix");
+		shader_object_->SetMatrixVariable("g_inv_proj_matrix");
+		shader_object_->SetMatrixVariable("g_inv_view_matrix");
+		shader_object_->SetMatrixVariable("g_model_matrix");
 		
-		d3d_shader_object->SetVectorVariable("g_eye_pos");
+		shader_object_->SetVectorVariable("g_eye_pos");
 
-		sky_mesh_->SetShaderObject(d3d_shader_object);
+		sky_mesh_->SetShaderObject(shader_object_);
 	}
 
 	void D3DSkyDome::Render( int pass_index )
@@ -83,11 +85,11 @@ namespace vEngine
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	
 		D3DShaderobject* d3d_shader_object = static_cast<D3DShaderobject*>(shader_object_);
 		float3 cam_pos = d3d_re->CurrentFrameBuffer()->GetViewport().GetCamera().GetPos();
-		Math::Translate(model_matrix_, cam_pos.x(), cam_pos.y(), cam_pos.z());
-		d3d_shader_object->SetMatrixVariable("g_world_matrix", model_matrix_);
+		Math::Translate(this->local_matrix_, cam_pos.x(), cam_pos.y(), cam_pos.z());
+		d3d_shader_object->SetMatrixVariable("g_world_matrix", this->local_matrix_);
 		d3d_re->TrunoffCull();
 		//RenderBuffer* cude_srv = Context::Instance().GetRenderFactory().MakeRenderBuffer(cube_texture_, AT_GPU_READ_WRITE, BU_SHADER_RES); 
-		shader_object_->SetReource("background_tex", cube_texture_, 1);
+		shader_object_->SetReource("background_tex", cube_texture_);
 		//throw std::exception("The method or operation is not implemented.");
 	}
 

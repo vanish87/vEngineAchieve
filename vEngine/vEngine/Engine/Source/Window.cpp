@@ -35,6 +35,8 @@ void ErrorText(std::string text)
 	/* Restore original attributes */
 	SetConsoleTextAttribute(hConsole, saved_attributes);
 	//printf("Back to normal");
+
+	__debugbreak();
 };
 
 namespace vEngine

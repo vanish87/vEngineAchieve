@@ -18,7 +18,7 @@ namespace vEngine
 		CHECK_ASSERT(this->render_element_ != nullptr);
 		if (this->render_element_ != nullptr)
 		{
-			this->model_matrix_ = render_element_->model_matrix_;
+			this->local_matrix_ = render_element_->local_matrix_;
 		}
 	}
 

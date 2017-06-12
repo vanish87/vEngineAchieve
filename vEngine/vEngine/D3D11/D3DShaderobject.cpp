@@ -124,7 +124,7 @@ namespace vEngine
 			PRINT_ERROR("Cannot set RawData");
 	}
 
-	void D3DShaderobject::SetReource( std::string name, Texture* data, uint32_t type )
+	void D3DShaderobject::SetReource( std::string name, Texture* data)
 	{
 		ID3DX11EffectShaderResourceVariable* sr_var = this->GetShaderRourceVariable(name);
 		if(data == nullptr)

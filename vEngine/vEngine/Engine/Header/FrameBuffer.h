@@ -36,9 +36,6 @@ namespace vEngine
 		FrameBuffer(void);
 
 	protected:
-		uint32_t width_;
-		uint32_t height_;
-
 		Viewport viewport_;
 
 		std::vector<Texture*> render_texture_;

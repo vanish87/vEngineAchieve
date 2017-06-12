@@ -9,7 +9,6 @@ namespace vEngine
 	}
 
 	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height)
-		: width_(width), height_(height)
 	{
 		viewport_.SetWidth(width);
 		viewport_.SetHeight(height);

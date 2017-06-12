@@ -59,14 +59,14 @@ void MyApp::InitObjects()
 	for(int i = 0; i < 0 ; ++i)
 	{
 		point_light_ = new PointLight();
-		point_light_->SetPos(float3(50.f + i*20 ,10.f, 0.f));	
+		point_light_->SetPos(float3(50.f + i*20 ,30.f, 0.f));	
 		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
 		point_light_->AddToScene();
 	}
 
 	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(50, 200, 0));
-	spot_light_->SetDir(float3(0, 10, 0) - float3(50, 500, 0));
+	spot_light_->SetPos(float3(0, 250, 0));
+	spot_light_->SetDir(float3(5, 10, 0) - float3(0, 250, 0));
 
 	spot_light_->SetInnerAngle(Math::PI / 6);
 	spot_light_->SetOuterAngle(Math::PI / 4);
@@ -77,7 +77,7 @@ void MyApp::InitObjects()
 	D3DModel* model = new D3DModel();
 	//model->LoadFile("Media/suitcase_obj/suitcase_02.obj");
 	//model->LoadFile("Media/mitsuba/mitsuba.obj");
-	//model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	//model->LoadShaderFile("DeferredLighting");
 
 	//Math::Translate(trans, 0, 0.2f, 0);
 	//Math::Scale(mat, 10);
@@ -90,14 +90,14 @@ void MyApp::InitObjects()
 	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
-	//model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	//model->LoadShaderFile("DeferredLighting");
 	//Math::Scale(mat, 0.5);
 	//Math::Translate(trans, 0, 0.2f, 0);
 	//model->SetModelMatrix(mat);
 	//ship_ = new SceneObject(model);
 	//ship_->AddToScene();
 
-
+	//this->MakePlane();
 
 	timer_ = new Timer();
 	timer_->Retart();
@@ -105,11 +105,11 @@ void MyApp::InitObjects()
 	first_person_ = false;
 	pitch_angle_ = 0;
 	speed_ = 2.5;
-	camera_ = new Camera(1280 / 800.0f);// Context::Instance().GetSceneManager().GetMainCamera();
-	cam_pos_ = float3(82.2f, 270.87f, -67.49f);
+	camera_   = new Camera(1280 / 800.0f);// Context::Instance().GetSceneManager().GetMainCamera();
+	cam_pos_  = float3(82.2f, 270.87f, -67.49f);
 	cam_look_ = float3(81.78f, 270.16f, -66.94f);
-	cam_pos_ = float3(235, 240, 16);
-	cam_look_ = float3(234, 239, 16);
+	cam_pos_  = float3(205, 152, -73);
+	cam_look_ = float3(204, 151, -73);
 	camera_->SetView(cam_pos_, cam_look_, float3(0,1,0));
 	//camera->SetProjection(Math::PI/4, 1280.0f/800.0f,1,3000);
 	camera_->AddToScene(true);
@@ -118,7 +118,7 @@ void MyApp::InitObjects()
 
 	//text_.init with font name etc.
 	newtext_ = new Text(L"test new");
-	newtext_->SetRect(int4(200, 300, 0, 0));
+	newtext_->SetRect(int4(50, 300, 0, 0));
 	//newtext_->AddToScene();
 
 	t1.SetRect(int4(50, 50, 0, 0));
@@ -132,7 +132,7 @@ void MyApp::InitObjects()
 void MyApp::LoadCallback(void* UserData)
 {
 	D3DModel* model = static_cast<D3DModel*>(UserData);
-	model->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	model->LoadShaderFile("DeferredLighting");
 	float4x4 mat;
 	Math::Scale(mat, 0.5);
 	//Math::Translate(trans, 0, 0.2f, 0);
@@ -168,15 +168,15 @@ void MyApp::Update()
 		Math::YRotation(rotate,Math::PI/2 *Math::Cos(timer_->Timef()/1000.0f));
 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
 
-		std::wstring Test = L"\u6771 \u3042 I have a pen ";
-		Test += std::to_wstring(cam_pos_.x()) + L" " + std::to_wstring(cam_pos_.y());
-		newtext_->SetContent(Test);
-		newtext_->Draw();
-		t1.Draw();
-		t2.Draw();
+		//t1.Draw();
+		//t2.Draw();
 	}
+	std::wstring Test = L"cam pos ";
+	Test += std::to_wstring(cam_pos_.x()) + L" " + std::to_wstring(cam_pos_.y());
+	newtext_->SetContent(Test);
+	newtext_->Draw();
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 
 	//text.setcontent("xxxx");
 	//text.setposition();
@@ -201,11 +201,11 @@ void MyApp::MakePlane()
 	meshMat->shininess = 10;
 
 	D3DModel* meshModel = new D3DModel();
-	meshModel->LoadShaderFile("FxFiles/DeferredLighting.cso");
-	meshModel->SetModelMatrix(trans * rotaiton);
+	meshModel->LoadShaderFile("DeferredLighting");
+	//meshModel->SetModelMatrix(trans * rotaiton);
 	meshModel->AddMesh(newMesh);
 	meshModel->AddMaterial(meshMat);
-	//meshModel->SetShaderObject(model->GetShaderObject());
+	newMesh->SetShaderObject(meshModel->GetShaderObject());
 
 	SceneObject* newModel = new SceneObject(meshModel);
 	newModel->AddToScene();
@@ -244,6 +244,9 @@ void MyState::OnKeyDown(WPARAM key_para)
 		break;
 	case '3':
 		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleLighting();
+		break;
+	case '4':
+		Context::Instance().GetRenderFactory().GetRenderEngine().GetDeferredRendering()->ToggleDepth();
 		break;
 	default:
 		break;

@@ -27,19 +27,57 @@ namespace vEngine
 
 	void Model::Render(int pass_index)
 	{
-		//render each mesh
-		throw std::exception("The method or operation is not implemented.");
+		RenderEngine* re = &Context::Instance().GetRenderFactory().GetRenderEngine();
+		//for each mesh 
+		for (size_t i = 0; i < meshes_.size(); i++)
+		{
+			//set texture
+			//set material
+			float4x4 world_mat = meshes_[i]->GetLocalMatrix() * this->local_matrix_;
+			shader_object_->SetRawData("gMaterial", materials_[i], sizeof(Material));
+			float4x4 view_mat = re->CurrentFrameBuffer()->GetViewport().GetCamera().GetViewMatirx();
+// 			float4x4 world_view_inv_transpose = Math::InverTranspose(world_mat * view_mat);
+// 			shader_object_->SetMatrixVariable("g_mv_inv_transpose", world_view_inv_transpose);
+			float4x4 world_inv_transpose = Math::InverTranspose(world_mat);
+			shader_object_->SetMatrixVariable("g_m_inv_transpose", world_inv_transpose);
+			//set mesh's parameter
+			meshes_[i]->SetRenderParameters();
+			//rewrite g_model_matrix
+			shader_object_->SetMatrixVariable("g_model_matrix", world_mat);
+			//set mesh's texture
+			Material* mat = materials_[meshes_[i]->GetMaterialID()];
+			if (mat->diffuse_tex > 0)
+			{
+				shader_object_->SetReource("mesh_diffuse", textures_[mat->diffuse_tex - 1]);
+			}
+			if (mat->normalmap_tex > 0)
+			{
+				shader_object_->SetBool("g_normal_map", true);
+				//set normal map there
+				shader_object_->SetReource("normal_map_tex", textures_[mat->normalmap_tex - 1]);
+			}
+			else
+			{
+				shader_object_->SetBool("g_normal_map", false);
+			}
+			//render
+			meshes_[i]->Render(pass_index);
+			//end render
+			meshes_[i]->EndRender();
+		}
 	}
 
 	void Model::SetRenderParameters()
 	{
-		//only do the general setup
-		throw std::exception("The method or operation is not implemented.");
+		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_);
+		//TODO : use texture array to store every pom texture of mesh
+		if (pom_enabled_)
+			shader_object_->SetReource("normal_map_tex", pom_texture_);
 	}
 
 	void Model::EndRender()
 	{
-		throw std::exception("The method or operation is not implemented.");
+
 	}
 
 	void Model::Load()
@@ -67,7 +105,7 @@ namespace vEngine
 			ProcessMaterials(ai_scene_->mMaterials);
 		}
 
-		Math::Identity(model_matrix_);
+		Math::Identity(this->local_matrix_);
 	}
 
 	void Model::LoadFile( std::string file_name, CompleteCallBack callback /*= nullptr*/ )
@@ -87,7 +125,26 @@ namespace vEngine
 
 	void Model::LoadShaderFile( std::string file_name )
 	{
+		//shader_object_ = Context::Instance().GetRenderFactory().MakeShaderObject();
+		//shader_object_->LoadBinaryFile(file_name);
+		shader_object_ = ShaderObject::FindShaderByName(file_name);
 
+		//set all meshes' shader file to this one
+		for (size_t i = 0; i < meshes_.size(); i++)
+		{
+			meshes_[i]->SetShaderObject(shader_object_);
+		}
+
+		//Default init for Model shader
+		RenderEngine* render_engine = &Context::Instance().GetRenderFactory().GetRenderEngine();
+		if (render_engine->GetRenderSetting().deferred_rendering)
+		{
+			shader_object_->SetTechnique("GbufferTech");
+		}
+		else
+		{
+			shader_object_->SetTechnique("ColorTech");
+		}
 	}	
 
 	void Model::POM( bool enable )
@@ -97,7 +154,6 @@ namespace vEngine
 
 	void Model::ProcessMeshes(const aiNode* const & node , aiMatrix4x4 parent_mat)
 	{
-
 		aiMatrix4x4 mat = parent_mat * node->mTransformation;
 		for(size_t i =0; i < node->mNumMeshes; ++i)
 		{
@@ -130,8 +186,8 @@ namespace vEngine
 				aiVector3D tangent = hasTangents? mesh->mTangents[j]:aiVector3D(0,0,0);
 				aiVector3D bitangent = hasTangents? mesh->mBitangents[j]:aiVector3D(0,0,0);
 
-				vb[j].position.x()  =  pos.x;		 vb[j].position.y()  = pos.y;		vb[j].position.z()	= pos.z;
-				vb[j].normal.x()    =  normal.x;	 vb[j].normal.y()	 = normal.y;	vb[j].normal.z()	= normal.z;
+				vb[j].position.x()  = pos.x;		 vb[j].position.y()  = pos.y;		vb[j].position.z()	= pos.z;
+				vb[j].normal.x()    = normal.x;		 vb[j].normal.y()	 = normal.y;	vb[j].normal.z()	= normal.z;
 				vb[j].uv.x()        = tex.x;		 vb[j].uv.y()		 = tex.y;
 				vb[j].tangent.x()   = tangent.x;	 vb[j].tangent.y()	 = tangent.y;	vb[j].tangent.z()	= tangent.z;
 				vb[j].bitangent.x() = bitangent.x;	 vb[j].bitangent.y() = bitangent.y; vb[j].bitangent.z() = bitangent.z;
@@ -184,7 +240,7 @@ namespace vEngine
 			my_mat[2][0] = mat[2][0];my_mat[2][1] = mat[2][1];my_mat[2][2] = mat[2][2];my_mat[2][3] = mat[2][3];
 			my_mat[3][0] = mat[3][0];my_mat[3][1] = mat[3][1];my_mat[3][2] = mat[3][2];my_mat[3][3] = mat[3][3];
 			my_mat = Math::Transpose(my_mat);
-			std::cout<<"Vertex count = " <<v_size<<std::endl;
+			PRINT(name << ": Vertex count = " <<v_size);
 			this->AddMesh(new vEngine::Mesh(name, render_layout, my_mat, vb, v_size, ib, mesh->mMaterialIndex));
 		}
 
@@ -260,7 +316,7 @@ namespace vEngine
 			if(AI_SUCCESS == ai_mat.Get(AI_MATKEY_TEXTURE_DIFFUSE(0), szPath))
 			{
 				Texture *tex = LoadTexture(szPath.C_Str());
-				if(tex)
+				if(tex != nullptr)
 				{
 					textures_.push_back(tex);
 					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
@@ -278,7 +334,7 @@ namespace vEngine
 
 				Texture *tex = LoadTexture(szPath.C_Str());
 				//tex = LoadTexture(szPath.C_Str());
-				if(tex)
+				if(tex != nullptr)
 				{
 					textures_.push_back(tex);
 					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
