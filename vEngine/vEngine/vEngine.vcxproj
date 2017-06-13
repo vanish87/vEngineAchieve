@@ -157,7 +157,7 @@
     <ClInclude Include="Engine\Header\ShaderObject.h" />
     <ClInclude Include="Engine\Header\StateManager.h" />
     <ClInclude Include="Engine\Header\Text.h" />
-    <ClInclude Include="Engine\Header\texture.h" />
+    <ClInclude Include="Engine\Header\Texture.h" />
     <ClInclude Include="Engine\Header\TypeAndFormat.h" />
     <ClInclude Include="Engine\Header\Viewport.h" />
     <ClInclude Include="Engine\Header\Window.h" />

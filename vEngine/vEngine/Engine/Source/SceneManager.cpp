@@ -123,7 +123,7 @@ namespace vEngine
 
 	SceneObject* SceneManager::FindOjectByUUID(const UUID& uuid)
 	{
-		for (auto so: scene_object_list)
+		for (SceneObject* so: scene_object_list)
 		{
 			if (so->id() == uuid)
 			{

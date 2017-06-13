@@ -89,7 +89,10 @@ void MyApp::InitObjects()
 
 
 	//model = new D3DModel();
+	//model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
 	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
+
+	
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
 	//model->LoadShaderFile("DeferredLighting");
@@ -180,7 +183,7 @@ void MyApp::Update()
 	newtext_->SetContent(Test);
 	newtext_->Draw();
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 
 	//text.setcontent("xxxx");
 	//text.setposition();

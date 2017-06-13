@@ -328,9 +328,6 @@
     <ClInclude Include="Engine\Header\StateManager.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Header\texture.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Header\TypeAndFormat.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -483,6 +480,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Header\Physics\SandSimulator.hpp">
       <Filter>Header\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Texture.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

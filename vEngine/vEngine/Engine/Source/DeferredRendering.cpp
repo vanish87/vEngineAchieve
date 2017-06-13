@@ -21,8 +21,6 @@ namespace vEngine
 
 	static const int2 ShadowMapSize = int2(2048, 2048);
 
-
-	static ProfileStatsHandler LogHanlder;
 	static Profiler RenderingProfiler("RenderingProfiler");
 
 	DeferredRendering::DeferredRendering( const Configure::RenderSetting& render_setting )
