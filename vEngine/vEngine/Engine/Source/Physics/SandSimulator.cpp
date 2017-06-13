@@ -10,6 +10,7 @@
 #include "Common\Header\Vector.h"
 #include "Common\Header\Math.h"
 #include "Common\Header\ReturnCode.h"
+#include "Engine\Header\Profiler.h"
 
 namespace vEngine
 {
@@ -17,7 +18,7 @@ namespace vEngine
 
 	const float3	SandSimulator::GRAVITY_CONSTANT = float3(0, -9.8f, 0);
 	const float3	SandSimulator::FRICTION_CONSTANT = float3(0, 0.01f, 0);
-	const uint32_t	SandSimulator::VOXEL_CELL_SIZE = 10;
+	const uint32_t	SandSimulator::VOXEL_CELL_SIZE = 5;
 
 	float SandSimulator::Alpha = 0.5;
 	float SandSimulator::Beta = 1.5;
@@ -26,25 +27,31 @@ namespace vEngine
 	extern const float MS_PER_UPDATE;
 	const float MS_PER_UPDATE = 1 / 60.0f;
 
+	static Profiler SimulatorProfiler("SimulatorProfiler");
+
 	SandSimulator::SandSimulator()
 	{
-
 	};
 	SandSimulator::~SandSimulator()
 	{
 
 	};
+
+	void SandSimulator::Start()
+	{
+		SimulationThread.Create(this);
+	}
+
 	//Do main context init staffs
 	ReturnCode SandSimulator::Init()
 	{
-		for (std::array<SandParticle, SandSimulator::NUMBER_OF_PARTICLES>::iterator it = this->ParticlePool.begin();
-		it != this->ParticlePool.end();
-			++it)
+		for (SandParticle& it : this->ParticlePool)
 		{
-			it->Create();
-			it->AddToScene();
-			it->SetLocation(float3(Math::RandomReal(-10.0f, 10.0f), 63, 100));
-			it->SetScale(float3(1, 1, 1));
+			//SandParticle& it = this->ParticlePool[i];
+			it.Create();
+			it.AddToScene();
+			it.SetLocation(float3(Math::RandomReal(-50.0f, 50.0f), 63, 100));
+			it.SetScale(float3(1, 1, 1));
 		}
 
 		return RCSuccess();
@@ -57,24 +64,21 @@ namespace vEngine
 
 	ReturnCode SandSimulator::Reset()
 	{
-		for (std::array<SandParticle, SandSimulator::NUMBER_OF_PARTICLES>::iterator it = this->ParticlePool.begin();
-		it != this->ParticlePool.end();
-			++it)
+		for (SandParticle& it : this->ParticlePool)
 		{
-			it->Reset();
-			it->SetLocation(float3(Math::RandomReal(-10.0f, 10.0f), 63, 100));
-			it->SetScale(float3(1, 1, 1));
+			it.Reset();
+			it.SetLocation(float3(Math::RandomReal(-50.0f, 50.0f), 63, 100));
+			it.SetScale(float3(1, 1, 1));
 		}
 		return RCSuccess();
 	}
 	ReturnCode SandSimulator::SetConntactParameter(float Mass, float AlphaIn, float BetaIn, float NormalRestitutionIn)
 	{
 		this->Reset();
-		for (std::array<SandParticle, SandSimulator::NUMBER_OF_PARTICLES>::iterator it = this->ParticlePool.begin();
-		it != this->ParticlePool.end();
-			++it)
+		for (SandParticle& it : this->ParticlePool)
 		{
-			it->SetMass(Mass);
+			//SandParticle& it = this->ParticlePool[i];
+			it.SetMass(Mass);
 		}
 		SandSimulator::Alpha = AlphaIn;
 		SandSimulator::Beta = BetaIn;
@@ -87,20 +91,23 @@ namespace vEngine
 	//User update
 	ReturnCode SandSimulator::Update()
 	{
+		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 		this->UpdateSpatialHash();
+		SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SandSimulator UpdateSpatialHash");
 
-		for (std::array<SandParticle, SandSimulator::NUMBER_OF_PARTICLES>::iterator it = this->ParticlePool.begin();
-		it != this->ParticlePool.end();
-			++it)
+
+		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
+		for (SandParticle& it : this->ParticlePool)
 		{
+			//SandParticle& it = this->ParticlePool[i];
 			//apply gravity first
-			it->ApplyForce(SandSimulator::GRAVITY_CONSTANT*it->GetMass());
+			it.ApplyForce(SandSimulator::GRAVITY_CONSTANT * it.GetMass());
 
 			//Update first: calculate velocity and position
 			//do some time correction if particles collided this frame
-			it->Update();
+			it.Update();
 
-			const float3 Position = it->GetLocation();
+			const float3 Position = it.GetLocation();
 			int3 HashId;
 			HashId.x() = (int32_t)Position.x() / SandSimulator::VOXEL_CELL_SIZE;// = int3((int32_t)Position.x(), (int32_t)Position.y(), (int32_t)Position.z());// / SandSimulator::VOXEL_CELL_SIZE;
 			HashId.y() = (int32_t)Position.y() / SandSimulator::VOXEL_CELL_SIZE; 
@@ -108,10 +115,10 @@ namespace vEngine
 
 			std::list<SandParticle*> plist = this->SpatialHashInstance.m[HashId.x()].m[HashId.y()].m[HashId.z()];
 			//check detection and apply contact force
-			this->CheckDection(*it, plist);
+			this->CheckDection(it, plist);
 
 			//Apply other restrictions(e.g glass boarder, floor)
-			it->ApplyRestrictions();
+			it.ApplyRestrictions();
 
 			/*
 			float3 Friction = it->GetVelocity();
@@ -119,33 +126,33 @@ namespace vEngine
 			Math::Normalize(Friction);
 			Friction = Friction * SandSimulator::FRICTION_CONSTANT;*/
 		}
+		SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SandSimulator Update Particles");
 
 		return RCSuccess();
 	}
 	ReturnCode SandSimulator::UpdateSpatialHash()
 	{
 		this->SpatialHashInstance.m.clear();
-		for (std::array<SandParticle, SandSimulator::NUMBER_OF_PARTICLES>::iterator it = this->ParticlePool.begin();
-		it != this->ParticlePool.end();
-			++it)
+		for (SandParticle& it : this->ParticlePool)
 		{
-			const float3 Position = it->GetLocation();
+			//SandParticle& it = this->ParticlePool[i];
+			const float3 Position = it.GetLocation();
 			int3 HashId;			
 			HashId.x() = (int32_t)Position.x() / SandSimulator::VOXEL_CELL_SIZE;// = int3((int32_t)Position.x(), (int32_t)Position.y(), (int32_t)Position.z());// / SandSimulator::VOXEL_CELL_SIZE;
 			HashId.y() = (int32_t)Position.y() / SandSimulator::VOXEL_CELL_SIZE;
 			HashId.z() = (int32_t)Position.z() / SandSimulator::VOXEL_CELL_SIZE;
 
-			this->SpatialHashInstance.m[HashId.x()].m[HashId.y()].m[HashId.z()].push_back(&*it);
+			this->SpatialHashInstance.m[HashId.x()].m[HashId.y()].m[HashId.z()].push_back(&it);
 		}
 		return RCSuccess();
 	};
 
 	ReturnCode SandSimulator::CheckDection(SandParticle& PaticleIn, std::list<SandParticle*>& Cadidates)
 	{
-		for (std::list<SandParticle*>::iterator it = Cadidates.begin(); it != Cadidates.end(); ++it)
+		for (auto it: Cadidates)
 		{
-			if (&PaticleIn == *it) continue;
-			this->HandleCollisionWith(PaticleIn, **it);
+			if (&PaticleIn == it) continue;
+			this->HandleCollisionWith(PaticleIn, *it);
 		}
 		return RCSuccess();
 	}
@@ -235,9 +242,9 @@ namespace vEngine
 	}
 
 	float3 SandSimulator::GetContactForce(const float3 x1, const float3 x2,
-		const float m1, const float m2,
-		const float3 v1, const float3 v2,
-		const float r1, const float r2)
+		const float  m1 , const float  m2,
+		const float3 v1 , const float3 v2,
+		const float  r1 , const float  r2)
 	{
 		//if contacted, apply contact force
 		float3 VectorToX2 = x2 - x1;
@@ -259,6 +266,20 @@ namespace vEngine
 		//point to T2
 		float3 Fn = Normal * fn;
 		return Fn;
+	}
+
+	ReturnCode SimulatorThread::Main(void* para)
+	{
+		SimulatorProfiler.SetEnable(true);
+		SimulatorProfiler.RegisterEventHandler(&LogHanlder);
+
+		SandSimulator* sim = static_cast<SandSimulator*>(para);
+		sim->Init();
+		while (true)
+		{
+			sim->Update();
+		}
+		sim->Deinit();
 	}
 
 }

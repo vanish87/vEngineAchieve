@@ -24,6 +24,9 @@ namespace vEngine
 		virtual void AddComponent(GameObject* const GameObject_);
 		virtual GameObject& FindComponentByUUID(const UUID& UUID_);
 
+		//virtual void Serialize();
+		//virtual void UnSerialize();
+
 		virtual std::string GetName();
 
 		static GameObject& NullObject();

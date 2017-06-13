@@ -89,7 +89,10 @@ void MyApp::InitObjects()
 
 
 	//model = new D3DModel();
+	//model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
 	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
+
+	
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
 	//model->LoadShaderFile("DeferredLighting");
@@ -126,8 +129,8 @@ void MyApp::InitObjects()
 	t1.SetRect(int4(50, 50, 0, 0));
 	t2.SetRect(int4(100, 100, 0, 0));
 
-	sand_sims_.Init();
-
+	sand_sims_.Start();
+	
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
@@ -156,8 +159,6 @@ void MyApp::ReleaseObjects()
 	delete spot_light_;
 	delete timer_;
 	delete camera_;
-	
-	sand_sims_.Deinit();
 }
 
 void MyApp::Update()
@@ -182,14 +183,11 @@ void MyApp::Update()
 	newtext_->SetContent(Test);
 	newtext_->Draw();
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 
 	//text.setcontent("xxxx");
 	//text.setposition();
-
-	sand_sims_.Update();
-
-
+	
 }
 
 

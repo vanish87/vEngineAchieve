@@ -8,6 +8,7 @@ namespace vEngine
 	static TextRenderElement TextElement;
 	static Texture* BitmapTexture = nullptr;
 	static int2 TextureSize(1280, 800);
+	static std::mutex DRAW_MUTEX;
 
 	TextRenderElement::TextRenderElement()
 	{
@@ -60,6 +61,7 @@ namespace vEngine
 
 	void Text::Draw()
 	{
+		std::unique_lock<std::mutex> lk(DRAW_MUTEX);
 		Font::GetFontByName(this->font_name_).DrawD3DText(this->contents_, int2(this->text_field_.x(), this->text_field_.y()));
 	}
 	void Text::Draw(const std::wstring& new_text)

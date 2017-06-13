@@ -10,7 +10,7 @@
 #include <unordered_map>
 
 namespace vEngine
-{	
+{
 	class Profiler
 	{
 	public:
@@ -84,6 +84,7 @@ namespace vEngine
 		uint64_t Counter;
 
 	};
+	extern ProfileStatsHandler LogHanlder;
 }
 
 #endif

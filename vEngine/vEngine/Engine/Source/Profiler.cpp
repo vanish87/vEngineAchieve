@@ -7,8 +7,9 @@
 #include "Engine\Header\Text.h"
 
 namespace vEngine
-{	
+{
 	static std::mutex LOG_MUTEX;
+	ProfileStatsHandler LogHanlder;
 
 	Profiler::Profiler(const std::string ProfilerName)
 		:Name(ProfilerName), Enabled(false)
@@ -116,6 +117,7 @@ namespace vEngine
 
 	bool ProfileStatsHandler::Process(Profiler::PROFILER_EVENT Event, float Time, std::string Name)
 	{
+		std::unique_lock<std::mutex> lk(LOG_MUTEX);
 		switch (Event)
 		{
 		case vEngine::Profiler::PE_FUNCTION_CALL:
