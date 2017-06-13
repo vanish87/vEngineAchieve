@@ -126,8 +126,8 @@ void MyApp::InitObjects()
 	t1.SetRect(int4(50, 50, 0, 0));
 	t2.SetRect(int4(100, 100, 0, 0));
 
-	sand_sims_.Init();
-
+	sand_sims_.Start();
+	
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
@@ -156,8 +156,6 @@ void MyApp::ReleaseObjects()
 	delete spot_light_;
 	delete timer_;
 	delete camera_;
-	
-	sand_sims_.Deinit();
 }
 
 void MyApp::Update()
@@ -186,10 +184,7 @@ void MyApp::Update()
 
 	//text.setcontent("xxxx");
 	//text.setposition();
-
-	sand_sims_.Update();
-
-
+	
 }
 
 

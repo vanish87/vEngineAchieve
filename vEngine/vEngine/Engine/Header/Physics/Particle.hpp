@@ -15,7 +15,6 @@
 
 namespace vEngine
 {
-
 	namespace Physics {
 
 		class Particle : public SceneObject
