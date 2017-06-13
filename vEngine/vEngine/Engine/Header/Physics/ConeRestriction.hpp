@@ -3,7 +3,7 @@
 //  AppFrame
 //
 //  Created by Yuan Li on 2015/10/04.
-//  Copyright © 2015年 Yuan Li. All rights reserved.
+//  Copyright 2015 Yuan Li. All rights reserved.
 //
 
 #ifndef ConeRestriction_hpp

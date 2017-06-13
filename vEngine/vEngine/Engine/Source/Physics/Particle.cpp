@@ -3,7 +3,7 @@
 //  AppFrame
 //
 //  Created by Yuan Li on 2015/09/29.
-//  Copyright © 2015年 Yuan Li. All rights reserved.
+//  Copyright 2015 Yuan Li. All rights reserved.
 //
 
 #include "Engine\Header\Physics\Particle.hpp"
