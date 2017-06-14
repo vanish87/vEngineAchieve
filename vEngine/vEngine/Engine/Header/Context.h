@@ -5,12 +5,12 @@
 
 #include <string>
 
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\Configure.h"
-#include "Engine\Header\RenderFactory.h"
-#include "Engine\Header\SceneManager.h"
-#include "Engine\Header\StateManager.h"
-#include "Engine\Header\EnginePreDec.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/Configure.h"
+#include "Engine/Header/RenderFactory.h"
+#include "Engine/Header/SceneManager.h"
+#include "Engine/Header/StateManager.h"
+#include "Engine/Header/EnginePreDec.h"
 
 namespace vEngine
 {

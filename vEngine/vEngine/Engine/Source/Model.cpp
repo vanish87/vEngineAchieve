@@ -1,6 +1,6 @@
-#include "Engine\Header\Model.h"
-#include "Engine\Header\Context.h"
-#include "Engine\Header\ResourceLoader.h"
+#include "Engine/Header/Model.h"
+#include "Engine/Header/Context.h"
+#include "Engine/Header/ResourceLoader.h"
 #include <assimp/Importer.hpp>
 
 namespace vEngine
@@ -41,7 +41,7 @@ namespace vEngine
 			float4x4 world_inv_transpose = Math::InverTranspose(world_mat);
 			shader_object_->SetMatrixVariable("g_m_inv_transpose", world_inv_transpose);
 			//set mesh's parameter
-			meshes_[i]->SetRenderParameters();
+			meshes_[i]->SetRenderParameters(this->local_matrix_);
 			//rewrite g_model_matrix
 			shader_object_->SetMatrixVariable("g_model_matrix", world_mat);
 			//set mesh's texture
@@ -67,7 +67,7 @@ namespace vEngine
 		}
 	}
 
-	void Model::SetRenderParameters()
+	void Model::SetRenderParameters(const float4x4& parent)
 	{
 		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_);
 		//TODO : use texture array to store every pom texture of mesh

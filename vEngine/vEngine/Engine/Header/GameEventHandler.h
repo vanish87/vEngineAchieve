@@ -2,8 +2,8 @@
 #define GAME_EVENT_HANDLER_H_
 
 #pragma once
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\TypeAndFormat.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/TypeAndFormat.h"
 
 
 namespace vEngine

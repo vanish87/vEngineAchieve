@@ -4,9 +4,9 @@
 #pragma once
 #include <unordered_map>
 #include <typeinfo>
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\EnginePreDec.h"
-#include "Common\Header\UUID.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Common/Header/UUID.h"
 
 namespace vEngine
 {

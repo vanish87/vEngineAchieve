@@ -6,11 +6,11 @@
 //  Copyright  2015 Yuan Li. All rights reserved.
 //
 
-#include "Engine\Header\Physics\SandSimulator.hpp"
-#include "Common\Header\Vector.h"
-#include "Common\Header\Math.h"
-#include "Common\Header\ReturnCode.h"
-#include "Engine\Header\Profiler.h"
+#include "Engine/Header/Physics/SandSimulator.hpp"
+#include "Common/Header/Vector.h"
+#include "Common/Header/Math.h"
+#include "Common/Header/ReturnCode.h"
+#include "Engine/Header/Profiler.h"
 
 namespace vEngine
 {
@@ -20,9 +20,9 @@ namespace vEngine
 	const float3	SandSimulator::FRICTION_CONSTANT = float3(0, 0.01f, 0);
 	const uint32_t	SandSimulator::VOXEL_CELL_SIZE = 5;
 
-	float SandSimulator::Alpha = 0.5;
-	float SandSimulator::Beta = 1.5;
-	float SandSimulator::NormalRestitution = 1;
+	float SandSimulator::kAlpha = 0.5;
+	float SandSimulator::kBeta = 1.5;
+	float SandSimulator::kNormalRestitution = 1;
 	
 	extern const float MS_PER_UPDATE;
 	const float MS_PER_UPDATE = 1 / 60.0f;
@@ -72,17 +72,17 @@ namespace vEngine
 		}
 		return RCSuccess();
 	}
-	ReturnCode SandSimulator::SetConntactParameter(float Mass, float AlphaIn, float BetaIn, float NormalRestitutionIn)
+	ReturnCode SandSimulator::SetConntactParameter(float mass, float alpha, float beta, float normal_restitution)
 	{
 		this->Reset();
 		for (SandParticle& it : this->ParticlePool)
 		{
 			//SandParticle& it = this->ParticlePool[i];
-			it.SetMass(Mass);
+			it.SetMass(mass);
 		}
-		SandSimulator::Alpha = AlphaIn;
-		SandSimulator::Beta = BetaIn;
-		SandSimulator::NormalRestitution = NormalRestitutionIn;
+		SandSimulator::kAlpha = alpha;
+		SandSimulator::kBeta = beta;
+		SandSimulator::kNormalRestitution = normal_restitution;
 
 		return RCSuccess();
 	}
@@ -147,38 +147,38 @@ namespace vEngine
 		return RCSuccess();
 	};
 
-	ReturnCode SandSimulator::CheckDection(SandParticle& PaticleIn, std::list<SandParticle*>& Cadidates)
+	ReturnCode SandSimulator::CheckDection(SandParticle& paticle, std::list<SandParticle*>& cadidates)
 	{
-		for (auto it: Cadidates)
+		for (auto it: cadidates)
 		{
-			if (&PaticleIn == it) continue;
-			this->HandleCollisionWith(PaticleIn, *it);
+			if (&paticle == it) continue;
+			this->HandleCollisionWith(paticle, *it);
 		}
 		return RCSuccess();
 	}
-	ReturnCode SandSimulator::HandleCollisionWith(SandParticle & Target1, SandParticle & Target2)
+	ReturnCode SandSimulator::HandleCollisionWith(SandParticle & target1, SandParticle & target2)
 	{
 		//if contacted, apply contact force
 		//each sand particle has for sphere that centered on the points of tetrahedron
-		float m1 = Target1.GetMass();
-		float m2 = Target2.GetMass();
+		float m1 = target1.GetMass();
+		float m2 = target2.GetMass();
 
-		float3 v1 = Target1.GetVelocity();
-		float3 v2 = Target2.GetVelocity();
+		float3 v1 = target1.GetVelocity();
+		float3 v2 = target2.GetVelocity();
 
-		for (int i = 0; i < SandParticle::NumberOfSphere; ++i)
+		for (int i = 0; i < SandParticle::kNumberOfSphere; ++i)
 		{
-			float3 x1 = Target1.GetLocation() + Target1.TerahedronInstance.Position[i];
-			float3 x2 = Target2.GetLocation() + Target2.TerahedronInstance.Position[i];
+			float3 x1 = target1.GetLocation() + target1.terahedron_instance_.position[i];
+			float3 x2 = target2.GetLocation() + target2.terahedron_instance_.position[i];
 
 			float3 VectorToX2 = x2 - x1;
 
 			float Distance = Math::Dot(VectorToX2, VectorToX2);
-			float RadiusSum = Target1.GetRadius() + Target2.GetRadius();
+			float RadiusSum = target1.GetRadius() + target2.GetRadius();
 
 			if (Distance <= RadiusSum * RadiusSum && Distance > 0)
 			{
-				float3 Fn = SandSimulator::GetContactForce(x1, x2, m1, m2, v1, v2, Target1.GetRadius(), Target2.GetRadius());
+				float3 Fn = SandSimulator::GetContactForce(x1, x2, m1, m2, v1, v2, target1.GetRadius(), target2.GetRadius());
 				//fn points to t2
 				//Target2.ApplyForce(Fn);
 				//Target1.ApplyForce(Fn * -1);
@@ -202,23 +202,23 @@ namespace vEngine
 		return RCSuccess();
 	}
 
-	float SandSimulator::GetKd(float MassEff, float TimeContact)
+	float SandSimulator::GetKd(float mass_eff, float time_contact)
 	{
-		if (MassEff > 0 && TimeContact > 0)
+		if (mass_eff > 0 && time_contact > 0)
 		{
-			float NORMAL_RESTITUTION = SandSimulator::NormalRestitution;
-			return 2 * MassEff * -Math::Ln(NORMAL_RESTITUTION) / TimeContact;
+			float NORMAL_RESTITUTION = SandSimulator::kNormalRestitution;
+			return 2 * mass_eff * -Math::Ln(NORMAL_RESTITUTION) / time_contact;
 		}
 		return 0.0f;
 	}
 
-	float SandSimulator::GetKr(float MassEff, float TimeContact)
+	float SandSimulator::GetKr(float mass_eff, float time_contact)
 	{
-		if (MassEff > 0 && TimeContact > 0)
+		if (mass_eff > 0 && time_contact > 0)
 		{
-			float NORMAL_RESTITUTION = SandSimulator::NormalRestitution;
+			float NORMAL_RESTITUTION = SandSimulator::kNormalRestitution;
 			float lnE = Math::Ln(NORMAL_RESTITUTION);
-			return (MassEff / (TimeContact * TimeContact)) *(lnE * lnE + Math::PI * Math::PI);
+			return (mass_eff / (time_contact * time_contact)) *(lnE * lnE + Math::PI * Math::PI);
 		}
 		return 0.0f;
 	}
@@ -262,7 +262,7 @@ namespace vEngine
 
 		float Ov = Math::Dot(v1 - v2, Normal);
 
-		float fn = -Kd * Math::Pow(Overlap, SandSimulator::Alpha) * Ov - Kr * Math::Pow(Overlap, SandSimulator::Beta);
+		float fn = -Kd * Math::Pow(Overlap, SandSimulator::kAlpha) * Ov - Kr * Math::Pow(Overlap, SandSimulator::kBeta);
 		//point to T2
 		float3 Fn = Normal * fn;
 		return Fn;

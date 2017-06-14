@@ -4,10 +4,10 @@
 // <summary>Picking and Assembling gameplay</summary>
 
 #pragma once
-#include "Engine\Header\App.h"
-#include "Common\Header\Vector.h"
-#include "Engine\Header\EnginePreDec.h"
-#include "Engine\Header\GameState.h"
+#include "Engine/Header/App.h"
+#include "Common/Header/Vector.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Engine/Header/GameState.h"
 #include "D3D11\D3DModel.h"
 #include <vector>
 

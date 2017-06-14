@@ -5,9 +5,9 @@
 
 #include <string>
 
-#include "Engine\Header\EnginePreDec.h"
-#include "Common\Header\Configure.h"
-#include "Engine\Header\Window.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Common/Header/Configure.h"
+#include "Engine/Header/Window.h"
 
 namespace vEngine
 {

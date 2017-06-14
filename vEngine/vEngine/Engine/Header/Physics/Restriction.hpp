@@ -9,8 +9,8 @@
 #ifndef Restriction_hpp
 #define Restriction_hpp
 
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\Physics\Particle.hpp"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/Physics/Particle.hpp"
 
 namespace vEngine
 {

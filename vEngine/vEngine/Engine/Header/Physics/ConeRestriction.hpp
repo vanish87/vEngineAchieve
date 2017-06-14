@@ -9,8 +9,8 @@
 #ifndef ConeRestriction_hpp
 #define ConeRestriction_hpp
 
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\Physics\Restriction.hpp"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/Physics/Restriction.hpp"
 
 namespace vEngine
 {

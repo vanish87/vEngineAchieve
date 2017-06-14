@@ -130,7 +130,7 @@ namespace vEngine
 
 	ShaderObject* D3DRenderFactory::MakeShaderObject()
 	{
-		return new D3DShaderobject();
+		return new D3DShaderobject();// D3DShaderobject();
 	}
 
 	/*RenderView* D3DRenderFactory::MakeRenderView(Texture* texture, int array_size, int mip_level)

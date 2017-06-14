@@ -3,9 +3,9 @@
 
 #pragma once
 #include <string>
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\RenderElement.h"
-#include "Engine\Header\SceneObject.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/RenderElement.h"
+#include "Engine/Header/SceneObject.h"
 
 namespace vEngine
 {
@@ -20,7 +20,7 @@ namespace vEngine
 		DEBUG_CLASS_FILE_NAME
 
 		virtual RenderLayout* GetRenderLayout() override;
-		virtual void SetRenderParameters() override;
+		virtual void SetRenderParameters(const float4x4& parent) override;
 		virtual void Render(int pass_index) override;
 		virtual void EndRender() override;
 	};

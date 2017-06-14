@@ -2,10 +2,10 @@
 #define SCENEOBJECT_H_
 
 #pragma once
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\EnginePreDec.h"
-#include "Engine\Header\GameObject.h"
-#include "Engine\Header\RenderElement.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Engine/Header/GameObject.h"
+#include "Engine/Header/RenderElement.h"
 
 namespace vEngine
 {

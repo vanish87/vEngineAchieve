@@ -2,10 +2,10 @@
 #define RENDERELEMENT_H_
 
 #pragma once
-#include "Common\Header\Matrix.h"
-#include "Engine\Header\EnginePreDec.h"
-#include "Engine\Header\ShaderObject.h"
-#include "Engine\Header\GameObject.h"
+#include "Common/Header/Matrix.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Engine/Header/ShaderObject.h"
+#include "Engine/Header/GameObject.h"
 
 namespace vEngine
 {
@@ -30,7 +30,7 @@ namespace vEngine
 		void SetModelMatrix(float4x4 model_matrix);
 		virtual void LoadShaderFile(std::string file_name);
 
-		virtual void SetRenderParameters() = 0;
+		virtual void SetRenderParameters(const float4x4& parent) = 0;
 		virtual void Render(int pass_index) = 0;
 		virtual void EndRender() = 0;
 

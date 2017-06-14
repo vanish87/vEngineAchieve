@@ -1,6 +1,6 @@
-#include "Engine\Header\PostProcess.h"
-#include "Engine\Header\Context.h"
-#include "Engine\Header\RenderTools.h"
+#include "Engine/Header/PostProcess.h"
+#include "Engine/Header/Context.h"
+#include "Engine/Header/RenderTools.h"
 
 namespace vEngine
 {
@@ -66,14 +66,16 @@ namespace vEngine
 			//TODO: temp solution
 			shander_object->SetReource("input_tex_" + std::to_string(static_cast<long long>(i)), input_tex_[i]);
 		}
-		fullscreen_mesh_->SetRenderParameters();
+		float4x4 root;
+		Math::Identity(root);
+		fullscreen_mesh_->SetRenderParameters(root);
 		fullscreen_mesh_->Render(0);
 		fullscreen_mesh_->EndRender();
 		re->SetNormalState();
 		Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameEnd();
 	}
 
-	void PostProcess::SetPPShader( ShaderObject* shander_object )
+	void PostProcess::SetPPShader(ShaderObject* shander_object )
 	{
 		shander_object->SetMatrixVariable("g_model_matrix");
 		shander_object->SetMatrixVariable("g_world_matrix");

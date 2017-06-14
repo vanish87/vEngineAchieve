@@ -1,7 +1,7 @@
-#include "Engine\Header\Text.h"
-#include "Engine\Header\Context.h"
-#include "Engine\Header\texture.h"
-#include "Engine\Header\Font.h"
+#include "Engine/Header/Text.h"
+#include "Engine/Header/Context.h"
+#include "Engine/Header/texture.h"
+#include "Engine/Header/Font.h"
 
 namespace vEngine
 {
@@ -20,7 +20,7 @@ namespace vEngine
 		throw std::logic_error("The method or operation is not implemented.");
 	}
 
-	void TextRenderElement::SetRenderParameters()
+	void TextRenderElement::SetRenderParameters(const float4x4& parent)
 	{
 		if (this->shader_object_ == nullptr)
 		{

@@ -8,13 +8,13 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
-#include "Common\Header\CommonPreDec.h"
+#include "Common/Header/CommonPreDec.h"
 
-#include "Engine\Header\RenderElement.h"
-#include "Engine\Header\RenderLayout.h"
-#include "Engine\Header\TypeAndFormat.h"
-#include "Engine\Header\Mesh.h"
-#include "Engine\Header\Texture.h"
+#include "Engine/Header/RenderElement.h"
+#include "Engine/Header/RenderLayout.h"
+#include "Engine/Header/TypeAndFormat.h"
+#include "Engine/Header/Mesh.h"
+#include "Engine/Header/Texture.h"
 
 /*
 
@@ -44,8 +44,8 @@ namespace vEngine
 
 		virtual RenderLayout* GetRenderLayout();
 
+		virtual void SetRenderParameters(const float4x4& parent);
 		virtual void Render(int pass_index);
-		virtual void SetRenderParameters();
 		virtual void EndRender();
 
 		virtual void LoadFile(std::string file_name, CompleteCallBack callback = nullptr);

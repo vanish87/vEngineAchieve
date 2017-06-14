@@ -9,9 +9,9 @@
 #ifndef Particle_hpp
 #define Particle_hpp
 
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\Vector.h"
-#include "Engine\Header\SceneObject.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/Vector.h"
+#include "Engine/Header/SceneObject.h"
 
 namespace vEngine
 {
@@ -28,17 +28,17 @@ namespace vEngine
 			virtual void Render();
 			virtual void Reset();
 
-			void ApplyForce(const float3& Force_);
+			void ApplyForce(const float3& force);
 
-			void SetLocation(const float3& NewLocation);
+			void SetLocation(const float3& location);
 			const float3 GetLocation() const;
-			void SetScale(const float3& NewScale);
+			void SetScale(const float3& scale);
 
 			const float GetMass() const;
-			void  SetMass(const float& NewMass);
+			void  SetMass(const float& mass);
 
 			const float3 GetVelocity() const;
-			void SetVelocity(const float3& NewVelocity);
+			void SetVelocity(const float3& velocity);
 
 
 			const float GetRadius() const;
@@ -47,19 +47,19 @@ namespace vEngine
 		protected:
 			struct SpatialInfomation
 			{
-				float3 Location;//physics location that differs from render element's
-				float3 Velocity;
-				float3 Acceleration;
+				float3 location;//physics location that differs from render element's
+				float3 velocity;
+				float3 acceleration;
 				SpatialInfomation()
-					:Location(float3(0, 0, 0)), Velocity(float3(0, 0, 0)), Acceleration(float3(0, 0, 0)), Mass(1), Radius(1)
+					:location(float3(0, 0, 0)), velocity(float3(0, 0, 0)), acceleration(float3(0, 0, 0)), mass(1), radius(1)
 				{}
 
-				float Mass;
-				float Radius;
+				float mass;
+				float radius;
 			};
 
-			SpatialInfomation LastFrameInfo;
-			SpatialInfomation CurrentFrameInfo;
+			SpatialInfomation last_frame_info_;
+			SpatialInfomation current_frame_info_;
 		};
 	}
 }

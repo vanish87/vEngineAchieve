@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Common\Header\CommonPreDec.h"
+#include "Common/Header/CommonPreDec.h"
 
 namespace vEngine
 {
@@ -119,5 +119,5 @@ namespace vEngine
 
 }
 
-#include "Common\Header\Math.hpp"
+#include "Common/Header/Math.hpp"
 #endif

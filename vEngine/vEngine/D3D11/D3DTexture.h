@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "Engine\Header\EnginePreDec.h"
-#include "Engine\Header\Texture.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Engine/Header/Texture.h"
 #include "D3DPreDec.h"
 
 namespace vEngine

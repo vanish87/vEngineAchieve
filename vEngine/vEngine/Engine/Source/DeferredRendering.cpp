@@ -1,7 +1,7 @@
-#include "Engine\Header\DeferredRendering.h"
-#include "Engine\Header\RenderTools.h"
+#include "Engine/Header/DeferredRendering.h"
+#include "Engine/Header/RenderTools.h"
 #include "D3D11\D3DModel.h"
-#include "Engine\Header\Profiler.h"
+#include "Engine/Header/Profiler.h"
 
 
 namespace vEngine
@@ -258,6 +258,8 @@ namespace vEngine
 		//in deferred rendering, all render element should share same shader object, which is "DeferredLighting.fx"
 		ShaderObject* shader_object = render_list[0]->GetShaderObject();
 		
+		float4x4 root;
+		Math::Identity(root);
 		main_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
 		//main_camera_ = Context::Instance().GetSceneManager().GetLights()[0]->GetCamera();
 		//Deferred Lighting
@@ -270,7 +272,7 @@ namespace vEngine
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			for(auto it: render_list)
 			{
-				it->SetRenderParameters();
+				it->SetRenderParameters(root);
 				//Render to Gbuffer
 				it->Render(0);
 				it->EndRender();
@@ -350,7 +352,7 @@ namespace vEngine
 					{
 						//set shadowing 
 						(*re)->GetShaderObject()->SetTechnique("Shadowing");
-						(*re)->SetRenderParameters();
+						(*re)->SetRenderParameters(root);
 						(*re)->Render(0);
 						(*re)->EndRender();
 						//reset
@@ -395,7 +397,7 @@ namespace vEngine
 				render_engine.SetDeferredRenderingState();
 
 				fullscreen_mesh_->SetShaderObject(shader_object);
-				fullscreen_mesh_->SetRenderParameters();
+				fullscreen_mesh_->SetRenderParameters(root);
 				fullscreen_mesh_->Render(1);
 				fullscreen_mesh_->EndRender();
 			}
@@ -420,7 +422,7 @@ namespace vEngine
 			shader_object->SetReource("diffuse_tex", gbuffer_tex_[1]);
 			//Set Shader file for quad
 			fullscreen_mesh_->SetShaderObject(shader_object);
-			fullscreen_mesh_->SetRenderParameters();
+			fullscreen_mesh_->SetRenderParameters(root);
 			fullscreen_mesh_->Render(2);
 			fullscreen_mesh_->EndRender();
 

@@ -6,8 +6,8 @@
 //  Copyright 2015 Yuan Li. All rights reserved.
 //
 
-#include "Engine\Header\Physics\Particle.hpp"
-#include "Common\Header\ReturnCode.h"
+#include "Engine/Header/Physics/Particle.hpp"
+#include "Common/Header/ReturnCode.h"
 
 namespace vEngine
 {
@@ -34,15 +34,15 @@ namespace vEngine
 			float Delta = MS_PER_UPDATE;
 			if (Delta > 0)
 			{
-				this->LastFrameInfo = this->CurrentFrameInfo;
-				this->CurrentFrameInfo.Location = this->CurrentFrameInfo.Location + //S0
-					((this->CurrentFrameInfo.Velocity * Delta) +//V0*t 
-						(this->CurrentFrameInfo.Acceleration * 0.5 * Delta * Delta)); //0.5*a*t*t
-				this->CurrentFrameInfo.Velocity = this->CurrentFrameInfo.Velocity + this->CurrentFrameInfo.Acceleration * Delta;
+				this->last_frame_info_ = this->current_frame_info_;
+				this->current_frame_info_.location = this->current_frame_info_.location + //S0
+					((this->current_frame_info_.velocity * Delta) +//V0*t 
+						(this->current_frame_info_.acceleration * 0.5 * Delta * Delta)); //0.5*a*t*t
+				this->current_frame_info_.velocity = this->current_frame_info_.velocity + this->current_frame_info_.acceleration * Delta;
 
-				//this->render_element_->SetLocation(this->CurrentFrameInfo.Location);
+				//this->render_element_->SetLocation(this->current_frame_info_.location);
 
-				this->CurrentFrameInfo.Acceleration = float3(0, 0, 0);
+				this->current_frame_info_.acceleration = float3(0, 0, 0);
 			}
 		};
 		void Particle::Render()
@@ -52,43 +52,43 @@ namespace vEngine
 
 		void Particle::Reset()
 		{
-			this->CurrentFrameInfo.Location = float3(0, 0, 0);
-			this->CurrentFrameInfo.Velocity = float3(0, 0, 0);
-			this->CurrentFrameInfo.Acceleration = float3(0, 0, 0);
-			this->CurrentFrameInfo.Mass = 1;
-			this->CurrentFrameInfo.Radius = 1;
+			this->current_frame_info_.location = float3(0, 0, 0);
+			this->current_frame_info_.velocity = float3(0, 0, 0);
+			this->current_frame_info_.acceleration = float3(0, 0, 0);
+			this->current_frame_info_.mass = 1;
+			this->current_frame_info_.radius = 1;
 		};
 
 
-		void Particle::ApplyForce(const float3& Force_)
+		void Particle::ApplyForce(const float3& force)
 		{
-			float3 NewAcc = Force_ / this->CurrentFrameInfo.Mass;
-			this->CurrentFrameInfo.Acceleration = this->CurrentFrameInfo.Acceleration + NewAcc;
+			float3 NewAcc = force / this->current_frame_info_.mass;
+			this->current_frame_info_.acceleration = this->current_frame_info_.acceleration + NewAcc;
 		}
 
 
-		void Particle::SetLocation(const float3& NewLocation)
+		void Particle::SetLocation(const float3& location)
 		{
-			this->CurrentFrameInfo.Location = NewLocation;
+			this->current_frame_info_.location = location;
 		}
 		const float3 Particle::GetLocation() const
 		{
-			return this->CurrentFrameInfo.Location;
+			return this->current_frame_info_.location;
 		}
 
-		void Particle::SetScale(const float3& NewScale)
+		void Particle::SetScale(const float3& scale)
 		{
 			//this->RenderElement->SetScale(NewScale);
 		}
 		const float Particle::GetMass() const
 		{
-			return this->CurrentFrameInfo.Mass;
+			return this->current_frame_info_.mass;
 		}
-		void Particle::SetMass(const float & NewMass)
+		void Particle::SetMass(const float & mass)
 		{
-			if (this->CurrentFrameInfo.Mass > 0)
+			if (this->current_frame_info_.mass > 0)
 			{
-				this->CurrentFrameInfo.Mass = NewMass;
+				this->current_frame_info_.mass = mass;
 			}
 			else
 			{
@@ -97,28 +97,28 @@ namespace vEngine
 		}
 		const float3 Particle::GetVelocity() const
 		{
-			return this->CurrentFrameInfo.Velocity;
+			return this->current_frame_info_.velocity;
 		}
-		void Particle::SetVelocity(const float3& NewVelocity)
+		void Particle::SetVelocity(const float3& velocity)
 		{
-			this->CurrentFrameInfo.Velocity = NewVelocity;
+			this->current_frame_info_.velocity = velocity;
 		};
 
 		const float Particle::GetRadius() const
 		{
-			return this->CurrentFrameInfo.Radius;
+			return this->current_frame_info_.radius;
 		}
 
 		void Particle::ApplyCollisionCorrection(const float NormalizedDeltaTimeFromLastFrame)
 		{
-			this->CurrentFrameInfo.Velocity = this->LastFrameInfo.Velocity + this->LastFrameInfo.Acceleration * NormalizedDeltaTimeFromLastFrame * MS_PER_UPDATE;
-			this->CurrentFrameInfo.Location = this->LastFrameInfo.Location + this->LastFrameInfo.Velocity;
+			this->current_frame_info_.velocity = this->last_frame_info_.velocity + this->last_frame_info_.acceleration * NormalizedDeltaTimeFromLastFrame * MS_PER_UPDATE;
+			this->current_frame_info_.location = this->last_frame_info_.location + this->last_frame_info_.velocity;
 
 			//CHECK_ASSERT(false);
-			//this->RenderElement->SetLocation(this->CurrentFrameInfo.Location);
+			//this->RenderElement->SetLocation(this->current_frame_info_.location);
 
-			this->CurrentFrameInfo.Acceleration = float3(0, 0, 0);
-			this->LastFrameInfo = this->CurrentFrameInfo;
+			this->current_frame_info_.acceleration = float3(0, 0, 0);
+			this->last_frame_info_ = this->current_frame_info_;
 			//CHECK_ASSERT(false);
 			//this->Update((1 - NormalizedDeltaTimeFromLastFrame) * MS_PER_UPDATE);
 			this->Update();

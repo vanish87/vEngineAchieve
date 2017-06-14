@@ -2,9 +2,9 @@
 
 #include <fstream>
 #include <mutex>
-#include "Common\Header\CommonPreDec.h"
+#include "Common/Header/CommonPreDec.h"
 
-#include "Engine\Header\Text.h"
+#include "Engine/Header/Text.h"
 
 namespace vEngine
 {
@@ -98,7 +98,7 @@ namespace vEngine
 			switch (Event)
 			{
 			case vEngine::Profiler::PE_FUNCTION_CALL:
-				LogFile << "Function: " << Name << ',' << Time << " ms" <<std::endl;
+				LogFile << "Function: " << Name << ', ' << Time << " ms" <<std::endl;
 				break;
 			default:
 				break;
@@ -144,7 +144,7 @@ namespace vEngine
 			for (auto& it: this->EventStats)
 			{
 				//PRINT("Current average " << it.first << " :" << std::get<0>(it.second) / std::get<1>(it.second));
-				Text ProfileInfo = (L"Current average " + std::wstring(it.first.begin(), it.first.end()) + L" :" + std::to_wstring(std::get<0>(it.second) / std::get<1>(it.second)));
+				Text ProfileInfo = (L"Current average " + std::wstring(it.first.begin(), it.first.end()) + L": " + std::to_wstring(std::get<0>(it.second) / std::get<1>(it.second)));
 				ProfileInfo.SetRect(int4(20, InitPos+=20, 0, 0));
 				ProfileInfo.Draw();
 			}

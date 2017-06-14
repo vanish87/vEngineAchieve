@@ -9,12 +9,12 @@
 #ifndef SandSimulator_hpp
 #define SandSimulator_hpp
 
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\ReturnCode.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/ReturnCode.h"
 #include <unordered_map>
 #include <list>
-#include "Engine\Header\Physics\SandParticle.hpp"
-#include "Common\Header\Thread.h"
+#include "Engine/Header/Physics/SandParticle.hpp"
+#include "Common/Header/Thread.h"
 
 namespace vEngine
 {
@@ -39,7 +39,7 @@ namespace vEngine
 		ReturnCode Update();
 
 		ReturnCode Reset();
-		ReturnCode SetConntactParameter(float Mass, float Alpha, float Beta, float NormalRestitution);
+		ReturnCode SetConntactParameter(float mass, float alpha, float beta, float normal_restitution);
 
 		static const uint32_t	NUMBER_OF_PARTICLES = 500;
 		static const float3		GRAVITY_CONSTANT;
@@ -52,17 +52,17 @@ namespace vEngine
 
 	private:
 		ReturnCode UpdateSpatialHash();
-		ReturnCode CheckDection(SandParticle& PaticleIn, std::list<SandParticle*>& Cadidates);
-		ReturnCode HandleCollisionWith(SandParticle & Target1, SandParticle & Target2);
+		ReturnCode CheckDection(SandParticle& paticle, std::list<SandParticle*>& cadidates);
+		ReturnCode HandleCollisionWith(SandParticle& target1, SandParticle& target2);
 
 		static float GetKd(float MassEff = 0, float TimeContact = 1);
 		static float GetKr(float MassEff = 0, float TimeContact = 1);
 		static float GetKd(float3 T1, float3 T2);
 		static float GetKr(float3 T1, float3 T2);
 
-		static float Alpha;
-		static float Beta;
-		static float NormalRestitution;
+		static float kAlpha;
+		static float kBeta;
+		static float kNormalRestitution;
 
 		std::array<SandParticle, SandSimulator::NUMBER_OF_PARTICLES> ParticlePool;
 

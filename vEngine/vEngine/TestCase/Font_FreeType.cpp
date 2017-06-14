@@ -12,8 +12,8 @@
 #include <locale>
 #include <codecvt>
 
-#include "Engine\Header\Font.h"
-#include "Common\Header\Vector.h"
+#include "Engine/Header/Font.h"
+#include "Common/Header/Vector.h"
 
 typedef unsigned char uint8;
 typedef unsigned short uint16;

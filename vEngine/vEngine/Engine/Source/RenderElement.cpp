@@ -1,4 +1,4 @@
-#include "Engine\Header\RenderElement.h"
+#include "Engine/Header/RenderElement.h"
 
 namespace vEngine
 {
@@ -16,7 +16,7 @@ namespace vEngine
 		return shader_object_;
 	}
 
-	void RenderElement::SetShaderObject( ShaderObject* shader_object )
+	void RenderElement::SetShaderObject(ShaderObject* shader_object )
 	{
 		this->shader_object_ = shader_object;
 	}

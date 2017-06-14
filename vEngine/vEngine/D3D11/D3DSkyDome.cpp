@@ -3,7 +3,7 @@
 #include "D3DRenderEngine.h"
 #include "D3DTexture.h"
 #include "DirectXTex.h"
-#include "Engine\Header\RenderTools.h"
+#include "Engine/Header/RenderTools.h"
 
 namespace vEngine
 {
@@ -74,7 +74,9 @@ namespace vEngine
 
 	void D3DSkyDome::Render( int pass_index )
 	{
-		sky_mesh_->SetRenderParameters();
+		float4x4 root;
+		Math::Identity(root);
+		sky_mesh_->SetRenderParameters(root);
 		sky_mesh_->Render(pass_index);
 		sky_mesh_->EndRender();
 	}

@@ -8,10 +8,10 @@
 #include <map>
 #include <fstream>
 
-#include "Engine\Header\EnginePreDec.h"
+#include "Engine/Header/EnginePreDec.h"
 #include "D3DPreDec.h"
-#include "Engine\Header\Context.h"
-#include "Engine\Header\ShaderObject.h"
+#include "Engine/Header/Context.h"
+#include "Engine/Header/ShaderObject.h"
 #include "D3DRenderEngine.h"
 
 //external header

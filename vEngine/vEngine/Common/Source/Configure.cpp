@@ -1,5 +1,5 @@
-#include "Common\Header\Configure.h"
-#include "Common\Header\CommonPreDec.h"
+#include "Common/Header/Configure.h"
+#include "Common/Header/CommonPreDec.h"
 #include "TinyXML2\tinyxml2.h"
 
 using namespace tinyxml2;

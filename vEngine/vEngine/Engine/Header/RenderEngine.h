@@ -6,8 +6,8 @@
 #include <string>
 
 #include "EnginePreDec.h"
-#include "Engine\Header\Context.h"
-#include "Common\Header\Configure.h"
+#include "Engine/Header/Context.h"
+#include "Common/Header/Configure.h"
 #include "DeferredRendering.h"
 #include "FrameBuffer.h"
 #include "SceneObject.h"

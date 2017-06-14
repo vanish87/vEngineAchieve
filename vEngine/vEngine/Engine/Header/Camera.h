@@ -3,12 +3,12 @@
 
 #pragma once
 
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\Frustum.h"
-#include "Common\Header\Vector.h"
-#include "Common\Header\Matrix.h"
-#include "Common\Header\Math.h"
-#include "Engine\Header\SceneObject.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/Frustum.h"
+#include "Common/Header/Vector.h"
+#include "Common/Header/Matrix.h"
+#include "Common/Header/Math.h"
+#include "Engine/Header/SceneObject.h"
 
 namespace vEngine
 {

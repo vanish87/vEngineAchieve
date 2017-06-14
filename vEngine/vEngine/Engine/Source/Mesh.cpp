@@ -1,5 +1,5 @@
-#include "Engine\Header\Mesh.h"
-#include "Engine\Header\Context.h"
+#include "Engine/Header/Mesh.h"
+#include "Engine/Header/Context.h"
 
 namespace vEngine
 {
@@ -22,7 +22,7 @@ namespace vEngine
 		return render_layout_;
 	}
 
-	void Mesh::SetRenderParameters()
+	void Mesh::SetRenderParameters(const float4x4& parent)
 	{
 		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_);
 	}

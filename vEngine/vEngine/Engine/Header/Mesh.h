@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\RenderElement.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/RenderElement.h"
 #include "TypeAndFormat.h"
 
 namespace vEngine
@@ -27,7 +27,7 @@ namespace vEngine
 
 		virtual RenderLayout* GetRenderLayout();
 
-		virtual void SetRenderParameters();
+		virtual void SetRenderParameters(const float4x4& parent);
 
 		virtual void Render(int pass_index);
 

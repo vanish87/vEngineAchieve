@@ -2,9 +2,9 @@
 #define PROFILER_H_
 
 #pragma once
-#include "Common\Header\Timer.h"
-#include "Common\Header\StringHash.h"
-#include "Engine\Header\EnginePreDec.h"
+#include "Common/Header/Timer.h"
+#include "Common/Header/StringHash.h"
+#include "Engine/Header/EnginePreDec.h"
 #include <vector>
 #include <experimental\filesystem>
 #include <unordered_map>
