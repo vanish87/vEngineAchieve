@@ -33,19 +33,22 @@ namespace vEngine
 		{
 			//set texture
 			//set material
-			float4x4 world_mat = meshes_[i]->GetLocalMatrix() * this->local_matrix_;
-			shader_object_->SetRawData("gMaterial", materials_[i], sizeof(Material));
-			float4x4 view_mat = re->CurrentFrameBuffer()->GetViewport().GetCamera().GetViewMatirx();
+			//float4x4 world_mat = meshes_[i]->GetLocalMatrix() * this->local_matrix_;
+			//float4x4 view_mat = re->CurrentFrameBuffer()->GetViewport().GetCamera().GetViewMatirx();
 // 			float4x4 world_view_inv_transpose = Math::InverTranspose(world_mat * view_mat);
 // 			shader_object_->SetMatrixVariable("g_mv_inv_transpose", world_view_inv_transpose);
+			//float4x4 world_inv_transpose = Math::InverTranspose(world_mat);
+			//shader_object_->SetMatrixVariable("g_m_inv_transpose", world_inv_transpose);
+			float4x4 world_mat = meshes_[i]->GetLocalMatrix() * this->local_matrix_;
 			float4x4 world_inv_transpose = Math::InverTranspose(world_mat);
 			shader_object_->SetMatrixVariable("g_m_inv_transpose", world_inv_transpose);
 			//set mesh's parameter
 			meshes_[i]->SetRenderParameters(this->local_matrix_);
 			//rewrite g_model_matrix
-			shader_object_->SetMatrixVariable("g_model_matrix", world_mat);
-			//set mesh's texture
+			//shader_object_->SetMatrixVariable("g_model_matrix", world_mat);
 			Material* mat = materials_[meshes_[i]->GetMaterialID()];
+			shader_object_->SetRawData("gMaterial", mat, sizeof(Material));
+			//set mesh's texture
 			if (mat->diffuse_tex > 0)
 			{
 				shader_object_->SetReource("mesh_diffuse", textures_[mat->diffuse_tex - 1]);
@@ -69,7 +72,7 @@ namespace vEngine
 
 	void Model::SetRenderParameters(const float4x4& parent)
 	{
-		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_);
+		RenderElement::SetRenderParameters(parent);
 		//TODO : use texture array to store every pom texture of mesh
 		if (pom_enabled_)
 			shader_object_->SetReource("normal_map_tex", pom_texture_);

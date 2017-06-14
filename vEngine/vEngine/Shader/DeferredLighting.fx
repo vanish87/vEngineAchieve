@@ -19,6 +19,7 @@ Texture2D blur_occlusion_tex;
 //for lighting buffer
 Texture2D lighting_tex;
 
+//mesh diffuse texture
 Texture2D mesh_diffuse;
 
 SamplerState MeshTextureSampler
@@ -34,24 +35,12 @@ SamplerState ShadowMapSampler
     AddressU = CLAMP;
     AddressV = CLAMP;
 };
-cbuffer cbViewBuffer
-{
-	float4x4 g_view_proj_matrix;
-	float4x4 g_view_matrix;
-	float4x4 g_inv_proj_matrix;
-	float4x4 g_inv_view_matrix;
-};
 
 cbuffer cbPerObject
 {
-	//model matrix: it can be a model * world or only model matrix
-	float4x4 g_model_matrix;
 	float4x4 g_m_inv_transpose;
 
 	Material gMaterial;
-
-	//not use
-	//float4x4 g_shadow_transform; 
 
 	float4x4 g_light_view_proj;
 
@@ -305,6 +294,7 @@ float4 FinalPS( in FinalVout pin): SV_Target
 	//float4 DiffuseAlbedo = gMaterial.Diffuse;
 		
 	//cal lighting
+	//return float4(lighting.w>0.3?float3(1,1,1):0, 1.0f);
 	return float4(diffuse + specular , 1.0f);
 	//return float4(DiffuseAlbedo , 1.0f);
 

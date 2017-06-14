@@ -25,13 +25,13 @@ namespace vEngine
 
 		//virtual void AddToScene();
 
-		virtual RenderLayout* GetRenderLayout();
+		virtual RenderLayout* GetRenderLayout() override;
 
-		virtual void SetRenderParameters(const float4x4& parent);
+		//virtual void SetRenderParameters(const float4x4& parent) override;
 
-		virtual void Render(int pass_index);
+		virtual void Render(int pass_index) override;
 
-		virtual void EndRender();
+		virtual void EndRender() override;
 
 		VertexType* GetVertex(){return vb_;};
 		uint32_t* GetIndex(){return ib_;};

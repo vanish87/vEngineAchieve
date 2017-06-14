@@ -1,4 +1,5 @@
 #include "Engine/Header/RenderElement.h"
+#include "Common/Header/Math.h"
 
 namespace vEngine
 {
@@ -25,6 +26,11 @@ namespace vEngine
 	{
 		//load basic shader file for render element
 		
+	}
+
+	void RenderElement::SetRenderParameters(const float4x4& parent)
+	{
+		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_ * parent);
 	}
 
 	float4x4 & RenderElement::GetLocalMatrix()

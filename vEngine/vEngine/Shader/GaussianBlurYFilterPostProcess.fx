@@ -1,9 +1,9 @@
+#include "CommonHeader.fx"
+
 cbuffer cbPerObject
 {
 	float4x4 g_world_matrix;
-	float4x4 g_model_matrix;
 	float4x4 g_view_matrix;
-	float4x4 g_view_proj_matrix;
 	float4x4 g_mwv_inv_transpose;
 	float4x4 g_inv_proj_matrix;
 	float4x4 g_inv_view_matrix;
@@ -15,7 +15,6 @@ Texture2D input_tex_2;
 
 cbuffer cbPerFrame
 {
-	float3 g_eye_pos;
 	float3 g_eye_z;
 };
 

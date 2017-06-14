@@ -513,6 +513,9 @@
     <FxCompile Include="Shader\Font.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Shader\CommonHeader.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="LuaScript\HelloWorld.lua">

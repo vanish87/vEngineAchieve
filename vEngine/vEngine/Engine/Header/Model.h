@@ -44,12 +44,12 @@ namespace vEngine
 
 		virtual RenderLayout* GetRenderLayout();
 
-		virtual void SetRenderParameters(const float4x4& parent);
-		virtual void Render(int pass_index);
-		virtual void EndRender();
+		virtual void SetRenderParameters(const float4x4& parent) override;
+		virtual void Render(int pass_index) override;
+		virtual void EndRender() override;
 
 		virtual void LoadFile(std::string file_name, CompleteCallBack callback = nullptr);
-		virtual void Load();
+		virtual void Load() override;
 		void AddMesh( Mesh* mesh );
 		void AddMaterial( Material* mat );
 		virtual void LoadShaderFile(std::string file_name);

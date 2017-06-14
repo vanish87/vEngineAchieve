@@ -1,15 +1,15 @@
+
+#include "CommonHeader.fx"
+
 TextureCube  background_tex;
 cbuffer cbPerObject
 {
 	float4x4 g_world_matrix;
-	float4x4 g_model_matrix;
 	float4x4 g_view_matrix;
-	float4x4 g_view_proj_matrix;
 	float4x4 g_world_inv_transpose;
 	float4x4 g_inv_proj_matrix;
 	float4x4 g_inv_view_matrix;
 
-	float3 g_eye_pos;
 }
 SamplerState SampleType
 {

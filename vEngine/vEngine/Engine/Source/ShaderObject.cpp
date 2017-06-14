@@ -72,11 +72,9 @@ namespace vEngine
 	}
 
 	void ShaderObject::SetupCommonVariable()
-	{
+	{		
+		this->SetMatrixVariable("g_model_matrix");
 		this->SetMatrixVariable("g_view_proj_matrix");
-		this->SetMatrixVariable("g_view_matrix");
-		this->SetMatrixVariable("g_inv_proj_matrix");
-		this->SetMatrixVariable("g_inv_view_matrix");
 		this->SetVectorVariable("g_eye_pos");
 	}
 

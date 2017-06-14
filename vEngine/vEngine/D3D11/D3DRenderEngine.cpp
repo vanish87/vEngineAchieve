@@ -136,10 +136,12 @@ namespace vEngine
 		float3 camera_at =  d3d_frame_buffer->GetViewport().GetCamera().GetLookAt();
 
 		//Make sure every Shader has a constant named view_proj_matrix
+		//this should be same as ShaderObject::SetupCommonVariable()
 		shader_object->SetMatrixVariable("g_view_proj_matrix", view_mat*proj_mat);
+		/*
 		shader_object->SetMatrixVariable("g_view_matrix",view_mat);
 		shader_object->SetMatrixVariable("g_inv_proj_matrix", Math::Inverse(proj_mat));
-		shader_object->SetMatrixVariable("g_inv_view_matrix", Math::Inverse(view_mat));
+		shader_object->SetMatrixVariable("g_inv_view_matrix", Math::Inverse(view_mat));*/
 		shader_object->SetVectorVariable("g_eye_pos", camera_pos);
 		
 

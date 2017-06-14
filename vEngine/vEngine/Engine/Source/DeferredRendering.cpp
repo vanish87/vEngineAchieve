@@ -19,7 +19,7 @@ namespace vEngine
 	static bool EnableDepthDebug = false;
 	static uint32_t GbufferIndex = 0;
 
-	static const int2 ShadowMapSize = int2(2048, 2048);
+	static const int2 ShadowMapSize = int2(1024, 1024);
 
 	static Profiler RenderingProfiler("RenderingProfiler");
 
@@ -255,8 +255,8 @@ namespace vEngine
 		RenderEngine& render_engine = Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
 		//ideally each render element should have its own shader object so that it can be rendered independently
-		//in deferred rendering, all render element should share same shader object, which is "DeferredLighting.fx"
-		ShaderObject* shader_object = render_list[0]->GetShaderObject();
+		//in deferred rendering, all render elements should share same shader object, which is "DeferredLighting.fx"
+		ShaderObject* shader_object = ShaderObject::FindShaderByName("DeferredLighting");
 		
 		float4x4 root;
 		Math::Identity(root);
@@ -292,6 +292,7 @@ namespace vEngine
 			RenderingProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 			//pass 1
 			//bind lighting buffer
+			lighting_buffer_->GetViewport().SetCamera(main_camera_);
 			render_engine.BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			//set lights parameters
@@ -364,7 +365,6 @@ namespace vEngine
 					shadow_map_yblur_pp_->Apply();
 				}							
 
-				//ssdo_pp_->SetCamera(main_camera_);
  				//ssdo_pp_->Apply();
  				//occlusion_xblur_pp_->Apply();
  				//occlusion_yblur_pp_->Apply();
@@ -392,7 +392,6 @@ namespace vEngine
 				shader_object->SetReource("shadow_map_tex", shadow_blur_Y_);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_tex_);
 
-				lighting_buffer_->GetViewport().SetCamera(main_camera_);
 				render_engine.BindFrameBuffer(lighting_buffer_);
 				render_engine.SetDeferredRenderingState();
 

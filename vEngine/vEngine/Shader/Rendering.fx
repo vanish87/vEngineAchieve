@@ -1,3 +1,5 @@
+#include "CommonHeader.fx"
+
 struct Material
 {
 	float4 Ambient;
@@ -24,7 +26,6 @@ struct Light
 
 cbuffer cbPerFrame
 {
-	float3 g_eye_pos;
 	float4x4 main_camera_inv_view;
 	float4x4 main_camera_inv_proj;
 	Light light;

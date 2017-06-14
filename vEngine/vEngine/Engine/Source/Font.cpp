@@ -83,6 +83,8 @@ namespace vEngine
 
 	void Font::SetPPShader(ShaderObject* shander_object)
 	{
+		CHECK_ASSERT(false);
+/*
 		CHECK_ASSERT(shander_object != nullptr);
 		shander_object->SetMatrixVariable("g_model_matrix");
 		shander_object->SetMatrixVariable("g_world_matrix");
@@ -94,7 +96,7 @@ namespace vEngine
 		shander_object->SetVectorVariable("g_eye_pos");
 		shander_object->SetVectorVariable("g_eye_z");
 
-		shander_object->SetShaderResourceVariable("font_bitmap_tex");
+		shander_object->SetShaderResourceVariable("font_bitmap_tex");*/
 
 
 	}

@@ -21,11 +21,12 @@ namespace vEngine
 	{
 		return render_layout_;
 	}
-
+	/*
 	void Mesh::SetRenderParameters(const float4x4& parent)
 	{
-		shader_object_->SetMatrixVariable("g_model_matrix", this->local_matrix_);
-	}
+		RenderElement::SetRenderParameters(parent);
+		//shader_object_->SetMatrixVariable("g_model_matrix", parent * this->local_matrix_);
+	}*/
 
 	void Mesh::Render(int pass_index)
 	{

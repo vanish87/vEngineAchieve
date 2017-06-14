@@ -30,7 +30,7 @@ namespace vEngine
 		void SetModelMatrix(float4x4 model_matrix);
 		virtual void LoadShaderFile(std::string file_name);
 
-		virtual void SetRenderParameters(const float4x4& parent) = 0;
+		virtual void SetRenderParameters(const float4x4& parent);
 		virtual void Render(int pass_index) = 0;
 		virtual void EndRender() = 0;
 

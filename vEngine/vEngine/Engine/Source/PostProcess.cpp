@@ -77,7 +77,7 @@ namespace vEngine
 
 	void PostProcess::SetPPShader(ShaderObject* shander_object )
 	{
-		shander_object->SetMatrixVariable("g_model_matrix");
+		/*shander_object->SetMatrixVariable("g_model_matrix");
 		shander_object->SetMatrixVariable("g_world_matrix");
 		shander_object->SetMatrixVariable("g_mwv_inv_transpose");
 		shander_object->SetMatrixVariable("g_view_proj_matrix");
@@ -89,7 +89,7 @@ namespace vEngine
 
 		shander_object->SetShaderResourceVariable("input_tex_0");
 		shander_object->SetShaderResourceVariable("input_tex_1");
-		shander_object->SetShaderResourceVariable("input_tex_2");
+		shander_object->SetShaderResourceVariable("input_tex_2");*/
 		//shander_object->SetVariable("gMaterial");
 		//shander_object->SetShaderResourceVariable("mesh_diffuse");
 		fullscreen_mesh_->SetShaderObject(shander_object);
