@@ -58,10 +58,10 @@ void MyApp::InitObjects()
 	RunFontTest();
 
 	//set up lights
-	for(int i = 0; i < 0 ; ++i)
+	for(int i = 0; i < 10 ; ++i)
 	{
 		point_light_ = new PointLight();
-		point_light_->SetPos(float3(50.f + i*20 ,30.f, 0.f));	
+		point_light_->SetPos(float3(Math::RandomReal(-100.0f,100.0f) ,5.f, Math::RandomReal(-100.0f,100.0f)));
 		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
 		point_light_->AddToScene();
 	}

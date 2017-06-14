@@ -137,10 +137,12 @@ float4 CalulateLighting(in float3 normal,
 				//Clight * (N * Lc)
 				diffuse = light_color * diffuse_angle * att;
 				//pow(N*H, alpha) * Clight * (N * Lc)
-				spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+				//spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+				spec = light_color.r * CalBlinnPhongBRDF_Specular(normal, pos_eye, pos_light, true, spec_factor);
 			}
 
 			float4 acc_color = float4(diffuse.rgb, spec);
+			//acc_color = float4(float3(0,0,0), spec);
 			litColor = litColor + acc_color;
 			break;
 		}
