@@ -349,6 +349,24 @@ namespace vEngine
 			{
 				PRINT("no normal texture");
 			}
+
+			if (AI_SUCCESS == ai_mat.Get(AI_MATKEY_TEXTURE_HEIGHT(0), szPath))
+			{
+
+				Texture *tex = LoadTexture(szPath.C_Str());
+				//tex = LoadTexture(szPath.C_Str());
+				if (tex != nullptr)
+				{
+					textures_.push_back(tex);
+					//tex_srvs_.push_back(Context::Instance().GetRenderFactory().MakeRenderBuffer(textures_.back(), AT_GPU_READ_WRITE,BU_SHADER_RES));
+					//index 0 reserved for null
+					mat->normalmap_tex = (uint32_t)textures_.size();
+				}
+			}
+			else
+			{
+				PRINT("no height texture");
+			}
 			
 			materials_.push_back(mat);
 			

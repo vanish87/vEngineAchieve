@@ -62,7 +62,7 @@ void MyApp::InitObjects()
 	{
 		point_light_ = new PointLight();
 		point_light_->SetPos(float3(Math::RandomReal(-100.0f,100.0f) ,5.f, Math::RandomReal(-100.0f,100.0f)));
-		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
+		point_light_->SetColor(float4(Math::RandomReal(0.0f, 1.0f), Math::RandomReal(0.0f, 1.0f), Math::RandomReal(0.0f, 1.0f), 1.0f));
 		point_light_->AddToScene();
 	}
 

@@ -103,6 +103,7 @@ namespace vEngine
 
 	void Font::DrawD3DText(std::wstring Text, int2 Position)
 	{
+		if (this->cpu_data == nullptr) return;
 		FT_Error error;
 		int offset = 0;
 		//data = static_cast<byte*>(BitmapTexture->Map(AT_CPU_WRITE_GPU_READ));

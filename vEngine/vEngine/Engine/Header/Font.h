@@ -33,6 +33,7 @@ namespace vEngine
 	private:
 		//Mesh* font_mesh_;
 		Texture* bitmap_texture_;
+		bool inited_;
 
 
 		FT_Library  library;

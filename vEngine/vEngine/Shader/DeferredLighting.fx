@@ -76,6 +76,26 @@ float decodeFromColorSpace(float value)
 	return (value - 0.5) * 2;
 }
 
+//set value to normalize color value
+float4 encodeToColorSpace(float4 value)
+{
+	return (value + 1)* 0.5;
+}
+float4 decodeFromColorSpace(float4 value)
+{
+	return (value - 0.5) * 2;
+}
+
+//set value to normalize color value
+float3 encodeToColorSpace(float3 value)
+{
+	return (value + 1)* 0.5;
+}
+float3 decodeFromColorSpace(float3 value)
+{
+	return (value - 0.5) * 2;
+}
+
 GbufferVSOutput GbufferVS(GbufferVSInput vin)
 {
 	GbufferVSOutput vout;
@@ -113,6 +133,7 @@ GbufferPSOutput GbufferPS(GbufferVSOutput pin)
 		float3 B = cross(N, T);
 		float3x3 TtoW = float3x3(T, B, N);
 		normalTS = normal_map_tex.Sample(MeshTextureSampler, pin.tex_cood).rgb;
+		normalTS = decodeFromColorSpace(normalTS);
 		normalWS = mul(normalTS, TtoW);
 	}
 	else
