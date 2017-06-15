@@ -152,7 +152,7 @@ LightingVout LightingVS(in LightingVin vin)
 	vout.pos = float4(vin.position, 1.0f);
 	float4 positionVS = mul( float4(vin.position.xy, 1.0f, 1.0f), main_camera_inv_proj);
 	vout.posVS = positionVS.xyz / positionVS.w;
-	vout.posCS = float4(vin.position.xy, 1.0f, 1.0f);
+	vout.posCS = float3(vin.position.xy, 1.0f);
 	return vout;
 }
 float linstep(float min, float max, float v)

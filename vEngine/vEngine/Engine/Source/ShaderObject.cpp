@@ -22,6 +22,12 @@ namespace vEngine
 
 	ShaderObject* ShaderObject::FindShaderByName(const std::string shader_name)
 	{
+		if (shader_name.empty())
+		{
+			static ShaderObject* NullShader = Context::Instance().GetRenderFactory().MakeShaderObject();
+			return NullShader;
+		}
+
 		if (kShaderMaps.find(shader_name) == kShaderMaps.end())
 		{
 			kShaderMaps[shader_name] = Context::Instance().GetRenderFactory().MakeShaderObject();
@@ -37,8 +43,6 @@ namespace vEngine
 		this->SetupCommonVariable();
 		if (shader_name == "DeferredLighting")
 		{
-			this->SetMatrixVariable("g_model_matrix");
-			this->SetMatrixVariable("g_view_proj_matrix");
 			this->SetMatrixVariable("g_m_inv_transpose");
 
 			this->SetVariable("gMaterial");

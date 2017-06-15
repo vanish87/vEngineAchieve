@@ -295,6 +295,7 @@ namespace vEngine
 			lighting_buffer_->GetViewport().SetCamera(main_camera_);
 			render_engine.BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
+			lighting_buffer_->Clear(float4(0.1f, 0.1f, 0.1f, 1), 1, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
 			//set lights parameters
 			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights(); 
 			LightStruct* light_buffer = nullptr;

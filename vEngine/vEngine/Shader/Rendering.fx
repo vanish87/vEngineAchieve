@@ -93,7 +93,7 @@ float4 CalulateLighting(in float3 normal,
 	float3 pos_eye = normalize(g_eye_pos - position);//V == pos->eye   vector
 	normal = normalize(normal);
 	// Start with a sum of zero. 
-	// Default ambeint color = (0.2, 0.2 0.2)
+	// Default ambeint color = (0.1, 0.1 0.1)
 	float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 
