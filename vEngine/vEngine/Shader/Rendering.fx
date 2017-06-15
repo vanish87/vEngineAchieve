@@ -235,7 +235,7 @@ float4 CalLighting( in float3 normal,
 			float spec_factor = pow(max(dot(refect_vec, pos_eye), 0.0f), specularPower);
 
 			//Cdiff * Clight * (N * Lc)
-			diffuse =  diffuseAlbedo * light_color * diffuse_angle;
+			diffuse = diffuseAlbedo * light_color * diffuse_angle;
 			//pow(R*V, alpha) * Cspec * Clight * (N * Lc)
 			spec    = spec_factor * float4(specularAlbedo, 1.0f) * light_color * diffuse_angle;
 		}
