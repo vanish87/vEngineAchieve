@@ -57,7 +57,7 @@ namespace vEngine
     {
         //call pure virtual main here
         Thread* RunningInstance = static_cast<Thread*>(ThreadData);
-        ReturnCode RC=RunningInstance->Main(RunningInstance->Parameter);
+        ReturnCode RC = RunningInstance->Main(RunningInstance->Parameter);
         if (RC != RCSuccess())
         {
             PRINT("Thread: "<< RunningInstance->ThreadInstance.get_id() << "returned Error\n");

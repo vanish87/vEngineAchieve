@@ -455,7 +455,7 @@ namespace vEngine
 		//output_to_tex_pp_->SetInput(shadow_depth_, 0);
 		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
 		//output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
-		output_to_tex_pp_->SetInput(depth_tex_, 0);
+		//output_to_tex_pp_->SetInput(depth_tex_, 0);
 
 		//output_to_tex_pp_->SetInput(GBuffer->GetTexture(GBufferIndex), 0);
 
