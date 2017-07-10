@@ -141,7 +141,7 @@ namespace vEngine
 		//if (this->Counter % 300 == 0)
 		{
 			int InitPos = 0;
-			for (auto& it: this->EventStats)
+			for (const auto& it: this->EventStats)
 			{
 				//PRINT("Current average " << it.first << " :" << std::get<0>(it.second) / std::get<1>(it.second));
 				Text ProfileInfo = (L"Current average " + std::wstring(it.first.begin(), it.first.end()) + L": " + std::to_wstring(std::get<0>(it.second) / std::get<1>(it.second)));
