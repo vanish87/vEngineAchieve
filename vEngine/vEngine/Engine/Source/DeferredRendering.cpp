@@ -19,7 +19,7 @@ namespace vEngine
 	static bool EnableDepthDebug = false;
 	static uint32_t GbufferIndex = 0;
 
-	static const int2 ShadowMapSize = int2(1024, 1024);
+	static const int2 ShadowMapSize = int2(256, 256);
 
 	static Profiler RenderingProfiler("RenderingProfiler");
 
