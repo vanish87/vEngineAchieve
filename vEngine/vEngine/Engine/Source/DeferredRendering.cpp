@@ -19,7 +19,7 @@ namespace vEngine
 	static bool EnableDepthDebug = false;
 	static uint32_t GbufferIndex = 0;
 
-	static const int2 ShadowMapSize = int2(256, 256);
+	static const int2 ShadowMapSize = int2(1024, 1024);
 
 	static Profiler RenderingProfiler("RenderingProfiler");
 
@@ -457,7 +457,7 @@ namespace vEngine
 		//output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
 		//output_to_tex_pp_->SetInput(depth_tex_, 0);
 
-		//output_to_tex_pp_->SetInput(GBuffer->GetTexture(GBufferIndex), 0);
+		output_to_tex_pp_->SetInput(GBuffer->GetTexture(GBufferIndex), 0);
 
 		//CHECK_ASSERT(false);
 		output_to_tex_pp_->SetOutput(OutBuffer->GetTexture(0), 0);
