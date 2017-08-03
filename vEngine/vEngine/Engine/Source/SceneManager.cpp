@@ -1,8 +1,8 @@
-#include "Engine\Header\SceneManager.h"
-#include "Engine\Header\Context.h"
+#include "Engine/Header/SceneManager.h"
+#include "Engine/Header/Context.h"
 
-#include "Engine\Header\Font.h"
-#include "Engine\Header\Text.h"
+#include "Engine/Header/Font.h"
+#include "Engine/Header/Text.h"
 
 namespace vEngine
 {
@@ -73,8 +73,8 @@ namespace vEngine
 	{
 		std::unique_lock<std::mutex> lk(mutex_);
 		render_list_.clear();
-		std::vector<SceneObject*>::iterator so;
-		for(so = scene_object_list.begin() ; so < scene_object_list.end(); so++)
+		for (std::vector<SceneObject*>::iterator so = scene_object_list.begin();
+			so != scene_object_list.end(); ++so)
 		{
 			(*so)->Update();//do update aabb and set model_matrix equals to its render_element_'s
 			if((*so)->Visiable())
@@ -123,12 +123,11 @@ namespace vEngine
 
 	SceneObject* SceneManager::FindOjectByUUID(const UUID& uuid)
 	{
-		std::vector<SceneObject*>::iterator so;
-		for (so = scene_object_list.begin(); so < scene_object_list.end(); so++)
+		for (SceneObject* so: scene_object_list)
 		{
-			if ((*so)->id() == uuid)
+			if (so->id() == uuid)
 			{
-				return *so;
+				return so;
 			}
 		}
 

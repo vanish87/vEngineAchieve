@@ -11,8 +11,8 @@
 
 #include <string>
 #include <thread>
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\ReturnCode.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/ReturnCode.h"
 
 
 namespace vEngine

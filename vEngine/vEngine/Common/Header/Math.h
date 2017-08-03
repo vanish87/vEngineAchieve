@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Common\Header\CommonPreDec.h"
+#include "Common/Header/CommonPreDec.h"
 
 namespace vEngine
 {
@@ -27,6 +27,7 @@ namespace vEngine
 
 		float Abs(float num);
 		bool IsFloatEqual(float& lhs, float& rhs);
+		bool IsFloatEqual(const float& lhs, const float& rhs);
 
 		template <typename T>
 		Matrix<T> Multiply(const Matrix<T> & lhs, const Matrix<T> & rhs);
@@ -39,6 +40,9 @@ namespace vEngine
 		float ArcTan( float x );
 		float Cot(float x);
 		float InvSqrt(float number);
+		
+		float Ln(float x);
+		float Pow(float base, float exp);
 
 		template <typename T>
 		T Min(T& lhs, T& rhs);
@@ -110,9 +114,10 @@ namespace vEngine
 
 		bool IntersectRayAABB(Ray* ray, AABBox* aabb);
 		bool IntersectRayTriangle(Ray* ray, float3 a, float3 b, float3 c, float & t);
+		bool GetQuadraticRoot(float2& Roots, const float a, const float b, const float c);
 	}
 
 }
 
-#include "Common\Header\Math.hpp"
+#include "Common/Header/Math.hpp"
 #endif

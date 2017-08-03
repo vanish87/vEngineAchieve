@@ -2,10 +2,10 @@
 #define LIGHT_H_
 
 #pragma once
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\Camera.h"
-#include "Engine\Header\TypeAndFormat.h"
-#include "Engine\Header\SceneObject.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/Camera.h"
+#include "Engine/Header/TypeAndFormat.h"
+#include "Engine/Header/SceneObject.h"
 
 namespace vEngine
 {

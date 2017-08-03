@@ -4,9 +4,9 @@
 #pragma once
 #include <unordered_map>
 #include <typeinfo>
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\EnginePreDec.h"
-#include "Common\Header\UUID.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Common/Header/UUID.h"
 
 namespace vEngine
 {
@@ -23,6 +23,9 @@ namespace vEngine
 		//and to remove it when it has be destructed.
 		virtual void AddComponent(GameObject* const GameObject_);
 		virtual GameObject& FindComponentByUUID(const UUID& UUID_);
+
+		//virtual void Serialize();
+		//virtual void UnSerialize();
 
 		virtual std::string GetName();
 

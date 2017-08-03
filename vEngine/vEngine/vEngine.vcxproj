@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -54,6 +54,11 @@
     <ClCompile Include="Engine\Source\Light.cpp" />
     <ClCompile Include="Engine\Source\Mesh.cpp" />
     <ClCompile Include="Engine\Source\Model.cpp" />
+    <ClCompile Include="Engine\Source\Physics\ConeRestriction.cpp" />
+    <ClCompile Include="Engine\Source\Physics\Particle.cpp" />
+    <ClCompile Include="Engine\Source\Physics\Restriction.cpp" />
+    <ClCompile Include="Engine\Source\Physics\SandParticle.cpp" />
+    <ClCompile Include="Engine\Source\Physics\SandSimulator.cpp" />
     <ClCompile Include="Engine\Source\PostProcess.cpp" />
     <ClCompile Include="Engine\Source\Profiler.cpp" />
     <ClCompile Include="Engine\Source\RenderBuffer.cpp" />
@@ -129,6 +134,11 @@
     <ClInclude Include="Engine\Header\Lua\LuaScriptStack.h" />
     <ClInclude Include="Engine\Header\Mesh.h" />
     <ClInclude Include="Engine\Header\Model.h" />
+    <ClInclude Include="Engine\Header\Physics\ConeRestriction.hpp" />
+    <ClInclude Include="Engine\Header\Physics\Particle.hpp" />
+    <ClInclude Include="Engine\Header\Physics\Restriction.hpp" />
+    <ClInclude Include="Engine\Header\Physics\SandParticle.hpp" />
+    <ClInclude Include="Engine\Header\Physics\SandSimulator.hpp" />
     <ClInclude Include="Engine\Header\PostProcess.h" />
     <ClInclude Include="Engine\Header\Profiler.h" />
     <ClInclude Include="Engine\Header\RenderBuffer.h" />
@@ -147,13 +157,20 @@
     <ClInclude Include="Engine\Header\ShaderObject.h" />
     <ClInclude Include="Engine\Header\StateManager.h" />
     <ClInclude Include="Engine\Header\Text.h" />
-    <ClInclude Include="Engine\Header\texture.h" />
+    <ClInclude Include="Engine\Header\Texture.h" />
     <ClInclude Include="Engine\Header\TypeAndFormat.h" />
     <ClInclude Include="Engine\Header\Viewport.h" />
     <ClInclude Include="Engine\Header\Window.h" />
     <ClInclude Include="TestCase\TestCase.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shader\CommonHeader.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)FxFiles\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
     <FxCompile Include="Shader\DebugShader.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -174,6 +191,9 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)FxFiles\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)FxFiles\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Shader\GaussianBlurXFilterPostProcess.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
@@ -238,28 +258,28 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

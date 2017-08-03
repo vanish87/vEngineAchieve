@@ -1,9 +1,9 @@
-#include "Engine\Header\Lua\LuaScriptStack.h"
-#include "Engine\Header\Lua\LuaScriptContext.h"
-#include "Engine\Header\Context.h"
+#include "Engine/Header/Lua/LuaScriptStack.h"
+#include "Engine/Header/Lua/LuaScriptContext.h"
+#include "Engine/Header/Context.h"
 
 #ifdef __cplusplus
-#include "lua\lua.hpp"
+#include "lua/lua.hpp"
 #else
 COMPILE_PRINT_AND_ASSERT(false, "Should compile with c++")
 #endif

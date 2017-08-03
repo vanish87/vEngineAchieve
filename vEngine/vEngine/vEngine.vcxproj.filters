@@ -55,6 +55,12 @@
     <Filter Include="Header\Lua">
       <UniqueIdentifier>{b8c7a938-2ca4-4094-88f9-388558ba4970}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Physics">
+      <UniqueIdentifier>{2b57ba43-326a-49bb-9060-a503f2178cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Physics">
+      <UniqueIdentifier>{50134e86-df30-480e-a614-33b638af0df2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Configure\Config.xml">
@@ -242,6 +248,21 @@
     <ClCompile Include="Engine\Source\Text.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Physics\ConeRestriction.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Physics\Particle.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Physics\Restriction.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Physics\SandParticle.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Physics\SandSimulator.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Header\Sphere.h">
@@ -305,9 +326,6 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Header\StateManager.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Header\texture.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Header\TypeAndFormat.h">
@@ -448,6 +466,24 @@
     <ClInclude Include="Engine\Header\Text.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Header\Physics\ConeRestriction.hpp">
+      <Filter>Header\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Physics\Particle.hpp">
+      <Filter>Header\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Physics\Restriction.hpp">
+      <Filter>Header\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Physics\SandParticle.hpp">
+      <Filter>Header\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Physics\SandSimulator.hpp">
+      <Filter>Header\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Header\Texture.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\LinearizeDepthPostProcess.fx">
@@ -475,6 +511,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Font.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\CommonHeader.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

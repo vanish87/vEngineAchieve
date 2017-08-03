@@ -1,7 +1,7 @@
-#include "Engine\Header\DeferredRendering.h"
-#include "Engine\Header\RenderTools.h"
+#include "Engine/Header/DeferredRendering.h"
+#include "Engine/Header/RenderTools.h"
 #include "D3D11\D3DModel.h"
-#include "Engine\Header\Profiler.h"
+#include "Engine/Header/Profiler.h"
 
 
 namespace vEngine
@@ -19,10 +19,8 @@ namespace vEngine
 	static bool EnableDepthDebug = false;
 	static uint32_t GbufferIndex = 0;
 
-	static const int2 ShadowMapSize = int2(2048, 2048);
+	static const int2 ShadowMapSize = int2(256, 256);
 
-
-	static ProfileStatsHandler LogHanlder;
 	static Profiler RenderingProfiler("RenderingProfiler");
 
 	DeferredRendering::DeferredRendering( const Configure::RenderSetting& render_setting )
@@ -257,9 +255,11 @@ namespace vEngine
 		RenderEngine& render_engine = Context::Instance().GetRenderFactory().GetRenderEngine();
 		std::vector<RenderElement*> render_list = Context::Instance().GetSceneManager().GetRenderList();
 		//ideally each render element should have its own shader object so that it can be rendered independently
-		//in deferred rendering, all render element should share same shader object, which is "DeferredLighting.fx"
-		ShaderObject* shader_object = render_list[0]->GetShaderObject();
+		//in deferred rendering, all render elements should share same shader object, which is "DeferredLighting.fx"
+		ShaderObject* shader_object = ShaderObject::FindShaderByName("DeferredLighting");
 		
+		float4x4 root;
+		Math::Identity(root);
 		main_camera_ = Context::Instance().GetSceneManager().GetMainCamera();
 		//main_camera_ = Context::Instance().GetSceneManager().GetLights()[0]->GetCamera();
 		//Deferred Lighting
@@ -272,7 +272,7 @@ namespace vEngine
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			for(auto it: render_list)
 			{
-				it->SetRenderParameters();
+				it->SetRenderParameters(root);
 				//Render to Gbuffer
 				it->Render(0);
 				it->EndRender();
@@ -292,8 +292,10 @@ namespace vEngine
 			RenderingProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 			//pass 1
 			//bind lighting buffer
+			lighting_buffer_->GetViewport().SetCamera(main_camera_);
 			render_engine.BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
+			lighting_buffer_->Clear(float4(0.1f, 0.1f, 0.1f, 1), 1, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
 			//set lights parameters
 			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights(); 
 			LightStruct* light_buffer = nullptr;
@@ -352,7 +354,7 @@ namespace vEngine
 					{
 						//set shadowing 
 						(*re)->GetShaderObject()->SetTechnique("Shadowing");
-						(*re)->SetRenderParameters();
+						(*re)->SetRenderParameters(root);
 						(*re)->Render(0);
 						(*re)->EndRender();
 						//reset
@@ -364,7 +366,6 @@ namespace vEngine
 					shadow_map_yblur_pp_->Apply();
 				}							
 
-				//ssdo_pp_->SetCamera(main_camera_);
  				//ssdo_pp_->Apply();
  				//occlusion_xblur_pp_->Apply();
  				//occlusion_yblur_pp_->Apply();
@@ -392,12 +393,11 @@ namespace vEngine
 				shader_object->SetReource("shadow_map_tex", shadow_blur_Y_);
 				shader_object->SetReource("blur_occlusion_tex", occlusion_blur_tex_);
 
-				lighting_buffer_->GetViewport().SetCamera(main_camera_);
 				render_engine.BindFrameBuffer(lighting_buffer_);
 				render_engine.SetDeferredRenderingState();
 
 				fullscreen_mesh_->SetShaderObject(shader_object);
-				fullscreen_mesh_->SetRenderParameters();
+				fullscreen_mesh_->SetRenderParameters(root);
 				fullscreen_mesh_->Render(1);
 				fullscreen_mesh_->EndRender();
 			}
@@ -422,7 +422,7 @@ namespace vEngine
 			shader_object->SetReource("diffuse_tex", gbuffer_tex_[1]);
 			//Set Shader file for quad
 			fullscreen_mesh_->SetShaderObject(shader_object);
-			fullscreen_mesh_->SetRenderParameters();
+			fullscreen_mesh_->SetRenderParameters(root);
 			fullscreen_mesh_->Render(2);
 			fullscreen_mesh_->EndRender();
 
@@ -455,7 +455,7 @@ namespace vEngine
 		//output_to_tex_pp_->SetInput(shadow_depth_, 0);
 		//output_to_tex_pp_->SetInput(shadow_blur_Y_, 0);
 		//output_to_tex_pp_->SetInput(linear_depth_tex_, 0);
-		output_to_tex_pp_->SetInput(depth_tex_, 0);
+		//output_to_tex_pp_->SetInput(depth_tex_, 0);
 
 		//output_to_tex_pp_->SetInput(GBuffer->GetTexture(GBufferIndex), 0);
 

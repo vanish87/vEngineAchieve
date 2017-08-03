@@ -1,10 +1,10 @@
-#include "Engine\Header\ShaderObject.h"
+#include "Engine/Header/ShaderObject.h"
 #include <unordered_map>
-#include "Engine\Header\Context.h"
+#include "Engine/Header/Context.h"
 
 namespace vEngine
 {
-	static std::unordered_map<std::string, ShaderObject*> ShaderMaps;
+	static std::unordered_map<std::string, ShaderObject*> kShaderMaps;
 
 	ShaderObject::ShaderObject(void)
 	{
@@ -20,16 +20,22 @@ namespace vEngine
 		CHECK_ASSERT(false);
 	}
 
-	vEngine::ShaderObject* ShaderObject::FindShaderByName(const std::string shader_name)
+	ShaderObject* ShaderObject::FindShaderByName(const std::string shader_name)
 	{
-		if (ShaderMaps.find(shader_name) == ShaderMaps.end())
+		if (shader_name.empty())
 		{
-			ShaderMaps[shader_name] = Context::Instance().GetRenderFactory().MakeShaderObject();
-			ShaderMaps[shader_name]->LoadBinaryFile("FxFiles/"+ shader_name+".cso");
-			ShaderMaps[shader_name]->SetupShaderVariable(shader_name);
+			static ShaderObject* NullShader = Context::Instance().GetRenderFactory().MakeShaderObject();
+			return NullShader;
 		}
 
-		return ShaderMaps[shader_name];
+		if (kShaderMaps.find(shader_name) == kShaderMaps.end())
+		{
+			kShaderMaps[shader_name] = Context::Instance().GetRenderFactory().MakeShaderObject();
+			kShaderMaps[shader_name]->LoadBinaryFile("FxFiles/"+ shader_name+".cso");
+			kShaderMaps[shader_name]->SetupShaderVariable(shader_name);
+		}
+
+		return kShaderMaps[shader_name];
 	}
 
 	void ShaderObject::SetupShaderVariable(const std::string shader_name)
@@ -37,8 +43,6 @@ namespace vEngine
 		this->SetupCommonVariable();
 		if (shader_name == "DeferredLighting")
 		{
-			this->SetMatrixVariable("g_model_matrix");
-			this->SetMatrixVariable("g_view_proj_matrix");
 			this->SetMatrixVariable("g_m_inv_transpose");
 
 			this->SetVariable("gMaterial");
@@ -72,11 +76,9 @@ namespace vEngine
 	}
 
 	void ShaderObject::SetupCommonVariable()
-	{
+	{		
+		this->SetMatrixVariable("g_model_matrix");
 		this->SetMatrixVariable("g_view_proj_matrix");
-		this->SetMatrixVariable("g_view_matrix");
-		this->SetMatrixVariable("g_inv_proj_matrix");
-		this->SetMatrixVariable("g_inv_view_matrix");
 		this->SetVectorVariable("g_eye_pos");
 	}
 

@@ -2,13 +2,14 @@
 
 #include <fstream>
 #include <mutex>
-#include "Common\Header\CommonPreDec.h"
+#include "Common/Header/CommonPreDec.h"
 
-#include "Engine\Header\Text.h"
+#include "Engine/Header/Text.h"
 
 namespace vEngine
-{	
+{
 	static std::mutex LOG_MUTEX;
+	ProfileStatsHandler LogHanlder;
 
 	Profiler::Profiler(const std::string ProfilerName)
 		:Name(ProfilerName), Enabled(false)
@@ -97,7 +98,7 @@ namespace vEngine
 			switch (Event)
 			{
 			case vEngine::Profiler::PE_FUNCTION_CALL:
-				LogFile << "Function: " << Name << ',' << Time << " ms" <<std::endl;
+				LogFile << "Function: " << Name << ', ' << Time << " ms" <<std::endl;
 				break;
 			default:
 				break;
@@ -116,6 +117,7 @@ namespace vEngine
 
 	bool ProfileStatsHandler::Process(Profiler::PROFILER_EVENT Event, float Time, std::string Name)
 	{
+		std::unique_lock<std::mutex> lk(LOG_MUTEX);
 		switch (Event)
 		{
 		case vEngine::Profiler::PE_FUNCTION_CALL:
@@ -139,10 +141,10 @@ namespace vEngine
 		//if (this->Counter % 300 == 0)
 		{
 			int InitPos = 0;
-			for (auto& it: this->EventStats)
+			for (const auto& it: this->EventStats)
 			{
 				//PRINT("Current average " << it.first << " :" << std::get<0>(it.second) / std::get<1>(it.second));
-				Text ProfileInfo = (L"Current average " + std::wstring(it.first.begin(), it.first.end()) + L" :" + std::to_wstring(std::get<0>(it.second) / std::get<1>(it.second)));
+				Text ProfileInfo = (L"Current average " + std::wstring(it.first.begin(), it.first.end()) + L": " + std::to_wstring(std::get<0>(it.second) / std::get<1>(it.second)));
 				ProfileInfo.SetRect(int4(20, InitPos+=20, 0, 0));
 				ProfileInfo.Draw();
 			}

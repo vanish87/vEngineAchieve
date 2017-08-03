@@ -2,8 +2,8 @@
 #define RAY_H_
 
 #pragma once
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\Vector.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/Vector.h"
 
 namespace vEngine
 {

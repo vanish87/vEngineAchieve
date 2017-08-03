@@ -6,7 +6,7 @@
 //  Copyright © 2015 Yuan Li. All rights reserved.
 //
 
-#include "Common\Header\Thread.h"
+#include "Common/Header/Thread.h"
 
 namespace vEngine
 {
@@ -57,7 +57,7 @@ namespace vEngine
     {
         //call pure virtual main here
         Thread* RunningInstance = static_cast<Thread*>(ThreadData);
-        ReturnCode RC=RunningInstance->Main(RunningInstance->Parameter);
+        ReturnCode RC = RunningInstance->Main(RunningInstance->Parameter);
         if (RC != RCSuccess())
         {
             PRINT("Thread: "<< RunningInstance->ThreadInstance.get_id() << "returned Error\n");

@@ -1,11 +1,12 @@
 #include "MyApp.h"
-#include "Engine\Header\Context.h"
-#include "Common\Header\Timer.h"
-#include "Engine\Header\RenderTools.h"
-#include "Engine\Header\ResourceLoader.h"
-#include "Engine\Header\ScriptTest.h"
-#include "Engine\Header\ScriptContext.h"
-#include "Engine\Header\Text.h"
+#include "Engine/Header/Context.h"
+#include "Common/Header/Timer.h"
+#include "Engine/Header/RenderTools.h"
+#include "Engine/Header/ResourceLoader.h"
+#include "Engine/Header/ScriptTest.h"
+#include "Engine/Header/ScriptContext.h"
+#include "Engine/Header/Text.h"
+#include "Engine/Header/Physics/SandSimulator.hpp"
 
 #include "D3D11\D3DSkyDome.h"
 
@@ -14,6 +15,7 @@
 using namespace vEngine;
 
 static MyApp app;
+static SandSimulator sand_sims_;
 
 static Text t1 = L"this is a text";
 static Text t2 = L"this is a text1";
@@ -56,11 +58,11 @@ void MyApp::InitObjects()
 	RunFontTest();
 
 	//set up lights
-	for(int i = 0; i < 0 ; ++i)
+	for(int i = 0; i < 10 ; ++i)
 	{
 		point_light_ = new PointLight();
-		point_light_->SetPos(float3(50.f + i*20 ,30.f, 0.f));	
-		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
+		point_light_->SetPos(float3(Math::RandomReal(-100.0f,100.0f) ,5.f, Math::RandomReal(-100.0f,100.0f)));
+		point_light_->SetColor(float4(Math::RandomReal(0.0f, 1.0f), Math::RandomReal(0.0f, 1.0f), Math::RandomReal(0.0f, 1.0f), 1.0f));
 		point_light_->AddToScene();
 	}
 
@@ -87,7 +89,10 @@ void MyApp::InitObjects()
 
 
 	//model = new D3DModel();
+	//model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
 	model->LoadFile("Media/sponza/sponza.sobj", &MyApp::LoadCallback);
+
+	
 	//model->LoadFile("Media/dabrovic-sponza/sponza.sobj");
 	//model->LoadFile("Media/spacecraft_new.dae");
 	//model->LoadShaderFile("DeferredLighting");
@@ -124,6 +129,8 @@ void MyApp::InitObjects()
 	t1.SetRect(int4(50, 50, 0, 0));
 	t2.SetRect(int4(100, 100, 0, 0));
 
+	sand_sims_.Start();
+	
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);
 }
@@ -176,12 +183,11 @@ void MyApp::Update()
 	newtext_->SetContent(Test);
 	newtext_->Draw();
 	//std::cout<<spot_light_->GetPos().x()<<"\r";
-    //spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
+    spot_light_->SetDir(float3(0.f,-Math::Abs(Math::Sin(timer_->Timef()/5000.0f)),Math::Cos(timer_->Timef()/5000.0f)));
 
 	//text.setcontent("xxxx");
 	//text.setposition();
-
-
+	
 }
 
 

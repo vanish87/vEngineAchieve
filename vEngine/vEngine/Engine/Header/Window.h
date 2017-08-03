@@ -7,9 +7,9 @@
 #include <Windowsx.h>
 #include <string>
 
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\Configure.h"
-#include "Engine\Header\Context.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/Configure.h"
+#include "Engine/Header/Context.h"
 
 namespace vEngine
 {

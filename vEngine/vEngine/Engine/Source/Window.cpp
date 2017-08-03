@@ -1,5 +1,5 @@
-#include "Engine\Header\Window.h"
-#include "Engine\Header\GameState.h"
+#include "Engine/Header/Window.h"
+#include "Engine/Header/GameState.h"
 
 void WarningText(std::string text)
 {

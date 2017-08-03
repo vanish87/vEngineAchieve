@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "Engine\Header\EnginePreDec.h"
+#include "Engine/Header/EnginePreDec.h"
 #include "D3DPreDec.h"
-#include "Engine\Header\Model.h"
+#include "Engine/Header/Model.h"
 
 
 
@@ -21,11 +21,11 @@ namespace vEngine
 		//use this to load .fxo file only
 		virtual void LoadShaderFile(std::string file_name);
 
-		virtual void Render( int pass_index );
+		virtual void Render( int pass_index ) override;
 
-		virtual void SetRenderParameters();
+		virtual void SetRenderParameters(const float4x4& parent) override;
 
-		virtual void EndRender();
+		virtual void EndRender() override;
 	private:
 
 		//no pom for sky dome

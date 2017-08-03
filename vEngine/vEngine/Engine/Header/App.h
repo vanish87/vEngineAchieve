@@ -5,9 +5,9 @@
 
 #include <string>
 
-#include "Engine\Header\EnginePreDec.h"
-#include "Common\Header\Configure.h"
-#include "Engine\Header\Window.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Common/Header/Configure.h"
+#include "Engine/Header/Window.h"
 
 namespace vEngine
 {
@@ -24,6 +24,7 @@ namespace vEngine
 		void SetCursor(int x, int y);
 
 		const Window& GetWindow() const;
+		const float MS_PER_UPDATE = 1 / 60.0f;
 
 	private:
 		std::string app_name_;
@@ -34,6 +35,7 @@ namespace vEngine
 		static const int UPDATE_INTERVAL = 1000 / MAXIMUM_FRAME_RATE;
 		static const int MINIMUM_FRAME_RATE = 24;
 		static const int MAX_CYCLES_PER_FRAME = MAXIMUM_FRAME_RATE / MINIMUM_FRAME_RATE ;
+
 		
 	protected:
 		virtual void InitObjects()

@@ -3,7 +3,7 @@
 #include "D3DRenderEngine.h"
 #include "D3DTexture.h"
 #include "DirectXTex.h"
-#include "Engine\Header\RenderTools.h"
+#include "Engine/Header/RenderTools.h"
 
 namespace vEngine
 {
@@ -60,26 +60,28 @@ namespace vEngine
 		shader_object_->SetTechnique("SkyDomeTech");
 
 		shader_object_->SetShaderResourceVariable("background_tex");
-		shader_object_->SetMatrixVariable("g_world_matrix");
+		/*shader_object_->SetMatrixVariable("g_world_matrix");
 		shader_object_->SetMatrixVariable("g_view_proj_matrix");
 		shader_object_->SetMatrixVariable("g_view_matrix");
 		shader_object_->SetMatrixVariable("g_inv_proj_matrix");
 		shader_object_->SetMatrixVariable("g_inv_view_matrix");
 		shader_object_->SetMatrixVariable("g_model_matrix");
 		
-		shader_object_->SetVectorVariable("g_eye_pos");
+		shader_object_->SetVectorVariable("g_eye_pos");*/
 
 		sky_mesh_->SetShaderObject(shader_object_);
 	}
 
 	void D3DSkyDome::Render( int pass_index )
 	{
-		sky_mesh_->SetRenderParameters();
+		float4x4 root;
+		Math::Identity(root);
+		sky_mesh_->SetRenderParameters(root);
 		sky_mesh_->Render(pass_index);
 		sky_mesh_->EndRender();
 	}
 
-	void D3DSkyDome::SetRenderParameters()
+	void D3DSkyDome::SetRenderParameters(const float4x4& parent)
 	{
 
 		D3DRenderEngine* d3d_re = static_cast<D3DRenderEngine*>(&Context::Instance().GetRenderFactory().GetRenderEngine());	

@@ -3,8 +3,8 @@
 
 #pragma once
 #include <string>
-#include "Common\Header\CommonPreDec.h"
-#include "EnginePreDec.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/EnginePreDec.h"
 
 namespace vEngine
 {

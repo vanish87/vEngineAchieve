@@ -1,3 +1,5 @@
+#include "CommonHeader.fx"
+
 struct Material
 {
 	float4 Ambient;
@@ -24,7 +26,6 @@ struct Light
 
 cbuffer cbPerFrame
 {
-	float3 g_eye_pos;
 	float4x4 main_camera_inv_view;
 	float4x4 main_camera_inv_proj;
 	Light light;
@@ -92,7 +93,7 @@ float4 CalulateLighting(in float3 normal,
 	float3 pos_eye = normalize(g_eye_pos - position);//V == pos->eye   vector
 	normal = normalize(normal);
 	// Start with a sum of zero. 
-	// Default ambeint color = (0.2, 0.2 0.2)
+	// Default ambeint color = (0.1, 0.1 0.1)
 	float4 litColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 
@@ -136,10 +137,12 @@ float4 CalulateLighting(in float3 normal,
 				//Clight * (N * Lc)
 				diffuse = light_color * diffuse_angle * att;
 				//pow(N*H, alpha) * Clight * (N * Lc)
-				spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+				//spec = spec_factor * light_color.r * diffuse_angle* att;//only one value(specular intensity) for spec
+				spec = light_color.r * CalBlinnPhongBRDF_Specular(normal, pos_eye, pos_light, true, spec_factor);
 			}
 
 			float4 acc_color = float4(diffuse.rgb, spec);
+			//acc_color = float4(float3(0,0,0), spec);
 			litColor = litColor + acc_color;
 			break;
 		}
@@ -232,7 +235,7 @@ float4 CalLighting( in float3 normal,
 			float spec_factor = pow(max(dot(refect_vec, pos_eye), 0.0f), specularPower);
 
 			//Cdiff * Clight * (N * Lc)
-			diffuse =  diffuseAlbedo * light_color * diffuse_angle;
+			diffuse = diffuseAlbedo * light_color * diffuse_angle;
 			//pow(R*V, alpha) * Cspec * Clight * (N * Lc)
 			spec    = spec_factor * float4(specularAlbedo, 1.0f) * light_color * diffuse_angle;
 		}

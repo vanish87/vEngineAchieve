@@ -4,9 +4,9 @@
 #pragma once
 #include <vector>
 
-#include "Common\Header\CommonPreDec.h"
-#include "Common\Header\Vector.h"
-#include "Engine\Header\TypeAndFormat.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Common/Header/Vector.h"
+#include "Engine/Header/TypeAndFormat.h"
 
 
 namespace vEngine

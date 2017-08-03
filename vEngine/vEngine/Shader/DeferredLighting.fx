@@ -19,6 +19,7 @@ Texture2D blur_occlusion_tex;
 //for lighting buffer
 Texture2D lighting_tex;
 
+//mesh diffuse texture
 Texture2D mesh_diffuse;
 
 SamplerState MeshTextureSampler
@@ -34,24 +35,12 @@ SamplerState ShadowMapSampler
     AddressU = CLAMP;
     AddressV = CLAMP;
 };
-cbuffer cbViewBuffer
-{
-	float4x4 g_view_proj_matrix;
-	float4x4 g_view_matrix;
-	float4x4 g_inv_proj_matrix;
-	float4x4 g_inv_view_matrix;
-};
 
 cbuffer cbPerObject
 {
-	//model matrix: it can be a model * world or only model matrix
-	float4x4 g_model_matrix;
 	float4x4 g_m_inv_transpose;
 
 	Material gMaterial;
-
-	//not use
-	//float4x4 g_shadow_transform; 
 
 	float4x4 g_light_view_proj;
 
@@ -83,6 +72,26 @@ float encodeToColorSpace(float value)
 	return (value + 1)* 0.5;
 }
 float decodeFromColorSpace(float value)
+{
+	return (value - 0.5) * 2;
+}
+
+//set value to normalize color value
+float4 encodeToColorSpace(float4 value)
+{
+	return (value + 1)* 0.5;
+}
+float4 decodeFromColorSpace(float4 value)
+{
+	return (value - 0.5) * 2;
+}
+
+//set value to normalize color value
+float3 encodeToColorSpace(float3 value)
+{
+	return (value + 1)* 0.5;
+}
+float3 decodeFromColorSpace(float3 value)
 {
 	return (value - 0.5) * 2;
 }
@@ -124,6 +133,7 @@ GbufferPSOutput GbufferPS(GbufferVSOutput pin)
 		float3 B = cross(N, T);
 		float3x3 TtoW = float3x3(T, B, N);
 		normalTS = normal_map_tex.Sample(MeshTextureSampler, pin.tex_cood).rgb;
+		normalTS = decodeFromColorSpace(normalTS);
 		normalWS = mul(normalTS, TtoW);
 	}
 	else
@@ -163,7 +173,7 @@ LightingVout LightingVS(in LightingVin vin)
 	vout.pos = float4(vin.position, 1.0f);
 	float4 positionVS = mul( float4(vin.position.xy, 1.0f, 1.0f), main_camera_inv_proj);
 	vout.posVS = positionVS.xyz / positionVS.w;
-	vout.posCS = float4(vin.position.xy, 1.0f, 1.0f);
+	vout.posCS = float3(vin.position.xy, 1.0f);
 	return vout;
 }
 float linstep(float min, float max, float v)
@@ -305,6 +315,7 @@ float4 FinalPS( in FinalVout pin): SV_Target
 	//float4 DiffuseAlbedo = gMaterial.Diffuse;
 		
 	//cal lighting
+	//return float4(lighting.w>0.3?float3(1,1,1):0, 1.0f);
 	return float4(diffuse + specular , 1.0f);
 	//return float4(DiffuseAlbedo , 1.0f);
 

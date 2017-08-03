@@ -5,11 +5,11 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\EnginePreDec.h"
-#include "Common\Header\Thread.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Common/Header/Thread.h"
 
-#include "Engine\Header\TypeAndFormat.h"
+#include "Engine/Header/TypeAndFormat.h"
 
 
 namespace vEngine

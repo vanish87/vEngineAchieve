@@ -1,13 +1,14 @@
-#include "Engine\Header\Text.h"
-#include "Engine\Header\Context.h"
-#include "Engine\Header\texture.h"
-#include "Engine\Header\Font.h"
+#include "Engine/Header/Text.h"
+#include "Engine/Header/Context.h"
+#include "Engine/Header/texture.h"
+#include "Engine/Header/Font.h"
 
 namespace vEngine
 {
 	static TextRenderElement TextElement;
 	static Texture* BitmapTexture = nullptr;
 	static int2 TextureSize(1280, 800);
+	static std::mutex DRAW_MUTEX;
 
 	TextRenderElement::TextRenderElement()
 	{
@@ -19,7 +20,7 @@ namespace vEngine
 		throw std::logic_error("The method or operation is not implemented.");
 	}
 
-	void TextRenderElement::SetRenderParameters()
+	void TextRenderElement::SetRenderParameters(const float4x4& parent)
 	{
 		if (this->shader_object_ == nullptr)
 		{
@@ -60,6 +61,7 @@ namespace vEngine
 
 	void Text::Draw()
 	{
+		std::unique_lock<std::mutex> lk(DRAW_MUTEX);
 		Font::GetFontByName(this->font_name_).DrawD3DText(this->contents_, int2(this->text_field_.x(), this->text_field_.y()));
 	}
 	void Text::Draw(const std::wstring& new_text)

@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "Common\Header\CommonPreDec.h"
-#include "Engine\Header\EnginePreDec.h"
-#include "Engine\Header\Camera.h"
+#include "Common/Header/CommonPreDec.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Engine/Header/Camera.h"
 
 namespace vEngine
 {

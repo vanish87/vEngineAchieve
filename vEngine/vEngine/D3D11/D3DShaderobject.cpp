@@ -1,5 +1,5 @@
 #include "D3DShaderobject.h"
-#include "Engine\Header\Context.h"
+#include "Engine/Header/Context.h"
 
 namespace vEngine
 {
@@ -38,16 +38,25 @@ namespace vEngine
 	void D3DShaderobject::SetVariable( std::string name )
 	{
 		effect_variable_[name] = fx_->GetVariableByName(name.c_str());
+		CHECK_ASSERT(effect_variable_[name] != nullptr);
 	}
 
 	void D3DShaderobject::SetMatrixVariable( std::string name )
 	{
 		matrix_variable_[name] = fx_->GetVariableByName(name.c_str())->AsMatrix();
+		CHECK_ASSERT(matrix_variable_[name] != nullptr);
 	}
 
 	void D3DShaderobject::SetBool( std::string name)
 	{
 		scale_variable_[name] = fx_->GetVariableByName(name.c_str())->AsScalar();
+		CHECK_ASSERT(scale_variable_[name] != nullptr);
+	}
+
+	void D3DShaderobject::SetVectorVariable(std::string name)
+	{
+		vector_variable_[name] = fx_->GetVariableByName(name.c_str())->AsVector();
+		CHECK_ASSERT(vector_variable_[name] != nullptr);
 	}
 
 	void D3DShaderobject::SetBool( std::string name, bool value )
@@ -71,10 +80,6 @@ namespace vEngine
 		delete[] p;
 	}
 
-	void D3DShaderobject::SetVectorVariable( std::string name )
-	{
-		vector_variable_[name] = fx_->GetVariableByName(name.c_str())->AsVector();
-	}
 
 	void D3DShaderobject::SetVectorVariable( std::string name, float3 & vec3 )
 	{

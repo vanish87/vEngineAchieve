@@ -1,8 +1,8 @@
-#include "Engine\Header\Font.h"
-#include "Engine\Header\Context.h"
+#include "Engine/Header/Font.h"
+#include "Engine/Header/Context.h"
 
-#include "Engine\Header\PostProcess.h"
-#include "Engine\Header\Shaderobject.h"
+#include "Engine/Header/PostProcess.h"
+#include "Engine/Header/Shaderobject.h"
 
 namespace vEngine
 {
@@ -83,6 +83,8 @@ namespace vEngine
 
 	void Font::SetPPShader(ShaderObject* shander_object)
 	{
+		CHECK_ASSERT(false);
+/*
 		CHECK_ASSERT(shander_object != nullptr);
 		shander_object->SetMatrixVariable("g_model_matrix");
 		shander_object->SetMatrixVariable("g_world_matrix");
@@ -94,13 +96,14 @@ namespace vEngine
 		shander_object->SetVectorVariable("g_eye_pos");
 		shander_object->SetVectorVariable("g_eye_z");
 
-		shander_object->SetShaderResourceVariable("font_bitmap_tex");
+		shander_object->SetShaderResourceVariable("font_bitmap_tex");*/
 
 
 	}
 
 	void Font::DrawD3DText(std::wstring Text, int2 Position)
 	{
+		if (this->cpu_data == nullptr) return;
 		FT_Error error;
 		int offset = 0;
 		//data = static_cast<byte*>(BitmapTexture->Map(AT_CPU_WRITE_GPU_READ));

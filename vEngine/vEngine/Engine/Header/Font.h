@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "Common\Header\CommonPreDec.h"
+#include "Common/Header/CommonPreDec.h"
 #include "EnginePreDec.h"
 
 #include "freetype2/include/ft2build.h"
@@ -33,6 +33,7 @@ namespace vEngine
 	private:
 		//Mesh* font_mesh_;
 		Texture* bitmap_texture_;
+		bool inited_;
 
 
 		FT_Library  library;
