@@ -17,7 +17,7 @@ namespace vEngine
 	{
 	public:
 		SceneManager(void);
-		~SceneManager(void);
+		virtual ~SceneManager(void);
 
 		void AddSceneObject(SceneObject* scene_object);
 		void AddLight(Light* light);

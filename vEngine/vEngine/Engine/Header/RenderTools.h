@@ -13,7 +13,7 @@ namespace vEngine
 		RenderTools() {}; // ctor hidden
 		RenderTools(RenderTools const&) {}; // copy ctor hidden
 		RenderTools& operator=(RenderTools const&) { return *this; }; // assign op. hidden
-		~RenderTools() {}; // dtor hidden
+		virtual ~RenderTools() {}; // dtor hidden
 
 	public:
 		static RenderTools& GetInstance()

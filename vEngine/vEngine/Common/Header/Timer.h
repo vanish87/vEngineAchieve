@@ -21,7 +21,7 @@ namespace vEngine
 	{
 	public:
 		Timer(void);
-		~Timer(void);
+		virtual ~Timer(void);
 
 		void Retart();
 		//return time in ms(1 millisecond = 10e-3 second)

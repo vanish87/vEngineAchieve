@@ -12,7 +12,7 @@ namespace vEngine
 	{
 	public:
 		ShaderObject(void);
-		~ShaderObject(void);
+		virtual ~ShaderObject(void);
 
 		virtual void SetVariable(std::string name) = 0;
 		virtual void SetVectorVariable(std::string) = 0;

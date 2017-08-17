@@ -14,7 +14,7 @@ namespace vEngine
 		: currentid_(0)	{};
 		UUIDGenerator(const UUIDGenerator& rhs) {};
 		UUIDGenerator& operator=(const UUIDGenerator& rhs) { return *this; };
-		~UUIDGenerator() {};
+		virtual ~UUIDGenerator() {};
 
 		uint64_t currentid_;
 	public:
@@ -35,7 +35,7 @@ namespace vEngine
 		friend class GameObject;
 		friend class DebugTracking;
 	public:
-		~UUID(void) {};
+		virtual ~UUID(void) {};
 
 	private:
 		UUID()

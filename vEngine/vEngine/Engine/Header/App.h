@@ -15,7 +15,7 @@ namespace vEngine
 	{
 	public:
 		App(void);
-		~App(void);
+		virtual ~App(void);
 		App(std::string app_name);
 		void Initialize();
 		void Run();

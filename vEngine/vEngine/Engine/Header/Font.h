@@ -16,7 +16,7 @@ namespace vEngine
 	{
 	public:
 		Font(void);
-		~Font(void);
+		virtual ~Font(void);
 
 		static Font& GetFontByName(std::string name);
 

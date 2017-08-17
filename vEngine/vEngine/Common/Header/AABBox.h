@@ -15,7 +15,7 @@ namespace vEngine
 	{
 	public:
 		AABBox(void);
-		~AABBox(void);
+		virtual ~AABBox(void);
 
 		AABBox(std::vector<VertexType*> vertice, uint32_t vcout);
 

@@ -78,7 +78,7 @@ namespace vEngine
 		{
 
 		};
-		~DebugTracking()
+		virtual ~DebugTracking()
 		{
 
 		};

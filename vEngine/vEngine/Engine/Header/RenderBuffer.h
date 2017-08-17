@@ -18,7 +18,7 @@ namespace vEngine
 		{
 		
 		};
-		~RenderBuffer(void);
+		virtual ~RenderBuffer(void);
 		BufferUsage GetUsage();
 
 

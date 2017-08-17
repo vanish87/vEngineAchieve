@@ -3,8 +3,8 @@
 
 
 #pragma once
-#include "EnginePreDec.h"
-#include "TypeAndFormat.h"
+#include "Engine/Header/EnginePreDec.h"
+#include "Engine/Header/TypeAndFormat.h"
 
 namespace vEngine
 {
@@ -12,7 +12,7 @@ namespace vEngine
 	{
 	public:
 		RenderState(void);
-		~RenderState(void);
+		virtual ~RenderState(void);
 
 	protected:
 		RenderStateType state_type_;

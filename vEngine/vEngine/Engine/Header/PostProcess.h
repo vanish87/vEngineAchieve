@@ -12,7 +12,7 @@ namespace vEngine
 	{
 	public:
 		PostProcess(void);
-		~PostProcess(void);
+		virtual ~PostProcess(void);
 
 		void LoadPPFile(std::string file_name);
 		//temp solution for d3d shader object

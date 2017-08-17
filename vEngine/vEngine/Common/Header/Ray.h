@@ -11,7 +11,7 @@ namespace vEngine
 	{
 	public:
 		Ray(void);
-		~Ray(void){};
+		virtual ~Ray(void){};
 		Ray(float3 orig, float3 dir)
 			:origin_(orig), direction_(dir)
 		{

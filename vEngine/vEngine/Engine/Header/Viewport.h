@@ -14,7 +14,7 @@ namespace vEngine
 	public:
 		Viewport(void);
 		Viewport(uint32_t left, uint32_t top, uint32_t width, uint32_t height);
-		~Viewport(void);
+		virtual ~Viewport(void);
 
 		int Top(){return top_;};
 		int Left(){return left_;};

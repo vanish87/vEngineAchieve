@@ -34,7 +34,7 @@ namespace vEngine
 
 	public:
 		Configure();
-		~Configure();
+		virtual ~Configure();
 
 		void LoadConfig(std::string const & cfg_file);
 		ContextSetting& GetContextSetting();

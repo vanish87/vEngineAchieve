@@ -14,7 +14,7 @@ namespace vEngine
 	{
 	public:
 		RenderLayout(void);
-		~RenderLayout(void);
+		virtual ~RenderLayout(void);
 
 		virtual RenderLayout* GetLayout() = 0;
 		//vertex size for VBU_VERTEX

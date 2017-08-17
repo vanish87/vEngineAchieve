@@ -11,7 +11,7 @@ namespace vEngine
 	{
 	public:
 		GameState(void);
-		~GameState(void);
+		virtual ~GameState(void);
 
 		void SetParent(GameStateSharedPtr parent){parent_ = parent;};
 		GameStateSharedPtr GetParent(){return parent_;};

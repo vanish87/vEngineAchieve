@@ -11,7 +11,7 @@ namespace vEngine
 	{
 	public:
 		Sphere(void);
-		~Sphere(void);
+		virtual ~Sphere(void);
 
 		Vec3<T>& Center()
 		{

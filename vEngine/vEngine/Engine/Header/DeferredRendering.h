@@ -23,7 +23,7 @@ namespace vEngine
 	{
 	public:
 		DeferredRendering(const Configure::RenderSetting& render_setting);
-		~DeferredRendering(void);
+		virtual ~DeferredRendering(void);
 		
 		FrameBuffer* & GetGBuffer(){return gbuffer_;};
 		FrameBuffer* & GetLighingBuffer(){return lighting_buffer_;};

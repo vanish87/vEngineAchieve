@@ -12,7 +12,7 @@ namespace vEngine
 	{
 	public:
 		StateManager(void);
-		~StateManager(void);
+		virtual ~StateManager(void);
 
 		void Update();
 		void ChangeState(GameStateSharedPtr game_state, StateOP op);

@@ -10,7 +10,7 @@ namespace vEngine
 	{
 	public:
 		Frustum(void);
-		~Frustum(void);
+		virtual ~Frustum(void);
 
 	//bad frustum, better use 6 planes
 	protected:
