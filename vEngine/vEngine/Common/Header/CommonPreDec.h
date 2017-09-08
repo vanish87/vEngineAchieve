@@ -7,6 +7,7 @@
 //#define VENGINE_API __declspec(dllexport)
 #define VENGINE_API
 
+
 //debug and assert
 #include <iostream>
 //TODO Print colored warning with this

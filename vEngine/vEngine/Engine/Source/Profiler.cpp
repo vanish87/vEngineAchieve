@@ -98,7 +98,7 @@ namespace vEngine
 			switch (Event)
 			{
 			case vEngine::Profiler::PE_FUNCTION_CALL:
-				LogFile << "Function: " << Name << ', ' << Time << " ms" <<std::endl;
+				LogFile << "Function: " << Name << ", " << Time << " ms" <<std::endl;
 				break;
 			default:
 				break;

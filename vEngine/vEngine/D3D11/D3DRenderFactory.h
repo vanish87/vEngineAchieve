@@ -17,7 +17,7 @@
 
 namespace vEngine
 {
-	class VENGINE_API D3DRenderFactory : public RenderFactory
+	class D3DRenderFactory : public RenderFactory
 	{
 	public:
 		D3DRenderFactory(void);
