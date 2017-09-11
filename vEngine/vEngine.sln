@@ -19,8 +19,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeType2Lib", "FreeType2Lib\FreeType2Lib.vcxproj", "{9E1416E4-C96B-4DB5-8DCC-A036EFFD2D72}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EditorDll", "EditorDll\EditorDll.vcxproj", "{02B617D0-62F4-4159-8006-F60DAF749188}"
+	ProjectSection(ProjectDependencies) = postProject
+		{21DB105E-D529-4661-81F0-F6FBF97511B5} = {21DB105E-D529-4661-81F0-F6FBF97511B5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{42270CEB-AFE7-4DEB-9407-77B50E13F034}"
+	ProjectSection(ProjectDependencies) = postProject
+		{02B617D0-62F4-4159-8006-F60DAF749188} = {02B617D0-62F4-4159-8006-F60DAF749188}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

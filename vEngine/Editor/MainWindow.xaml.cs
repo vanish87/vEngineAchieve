@@ -28,7 +28,8 @@ namespace Editor
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
-        {            
+        {
+            vEngine.RenderFrame();
             vEngine.InitD3D((new System.Windows.Interop.WindowInteropHelper(this)).Handle, 200,300);
         }
 
