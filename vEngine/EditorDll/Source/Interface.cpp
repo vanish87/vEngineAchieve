@@ -22,6 +22,9 @@ void InitD3D(HWND hWnd, int Width, int Height)
 	::SetFocus(hWnd);
 	//::ShowCursor(!render_setting.full_screen);
 	::UpdateWindow(hWnd);
+
+	float4 test;
+	test = test * 3;
 }
 void RenderFrame(void)
 {

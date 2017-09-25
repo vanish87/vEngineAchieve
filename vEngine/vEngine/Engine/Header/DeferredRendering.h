@@ -25,8 +25,8 @@ namespace vEngine
 		DeferredRendering(const Configure::RenderSetting& render_setting);
 		virtual ~DeferredRendering(void);
 		
-		FrameBuffer* & GetGBuffer(){return gbuffer_;};
-		FrameBuffer* & GetLighingBuffer(){return lighting_buffer_;};
+		FrameBuffer* GetGBuffer(){return gbuffer_;};
+		FrameBuffer* GetLighingBuffer(){return lighting_buffer_;};
 
 		void Update();
 
