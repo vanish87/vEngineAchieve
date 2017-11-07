@@ -202,16 +202,16 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 	if (abs(world_pos1.x - world_pos.x)> 0.01)
 	{
-		return float4(1,0,0, 1);
+		//return float4(1,0,0, 1);
 		//world_pos.x = 0;
 	}
 	else if (abs(world_pos1.y - world_pos.y)> 0.01)
 	{
-		return float4(0, 1, 0, 1);
+		//return float4(0, 1, 0, 1);
 	}
 	else if (abs(world_pos1.z - world_pos.z)> 0.01)
 	{
-		return float4(0, 0, 1, 1);
+		//return float4(0, 0, 1, 1);
 	}
 	//world_pos = world_pos1;
 	//float4 world_pos = mul(float4(positionVS, 1.0f), main_camera_inv_view);
