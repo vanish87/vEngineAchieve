@@ -9,6 +9,8 @@
 #ifndef SNOW_SIMULATOR_HPP
 #define SNOW_SIMULATOR_HPP
 
+#pragma once
+
 #include "Common/Header/CommonPreDec.h"
 #include "Common/Header/ReturnCode.h"
 #include <unordered_map>
@@ -44,6 +46,8 @@ namespace vEngine
 		static const float3		GRAVITY_CONSTANT;
 
 	private:
+
+		void RandomToFillCircle(float Raduis);
 
 		std::array<Physics::Particle, SnowSimulator::NUMBER_OF_PARTICLES> ParticlePool;
 		

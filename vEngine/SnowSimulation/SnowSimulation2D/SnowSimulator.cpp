@@ -33,19 +33,30 @@ namespace vEngine
 		SimulationThread.Create(this);
 	}
 
-	//Do main context init stuffs
-	ReturnCode SnowSimulator::Init()
+	void SnowSimulator::RandomToFillCircle(float Raduis)
 	{
 		for (Particle& it : this->ParticlePool)
 		{
 			//SandParticle& it = this->ParticlePool[i];
 			it.Create();
 			it.AddToScene();
-			it.SetLocation(float3(Math::RandomReal(-50.0f, 50.0f), 200, 0));
+			float3 rand = float3(Math::RandomReal(-50.0f, 50.0f), Math::RandomReal(-50.0f, 50.0f), 0);
+			while (Math::Dot(rand, rand) > Raduis * Raduis)
+			{
+				rand = float3(Math::RandomReal(-50.0f, 50.0f), Math::RandomReal(-50.0f, 50.0f), 0);
+				it.SetLocation(rand);
+			}
+			rand.y() += 200;
+			it.SetLocation(rand);
 			it.SetScale(float3(1, 1, 1));
 			it.SetVisiable(true);
 		}
+	}
 
+	//Do main context init stuffs
+	ReturnCode SnowSimulator::Init()
+	{		
+		RandomToFillCircle(8);
 		return RCSuccess();
 	};
 	//Deinit stuffs
@@ -56,12 +67,7 @@ namespace vEngine
 
 	ReturnCode SnowSimulator::Reset()
 	{
-		for (Particle& it : this->ParticlePool)
-		{
-			it.Reset();
-			it.SetLocation(float3(Math::RandomReal(-50.0f, 50.0f), 300, 0));
-			it.SetScale(float3(1, 1, 1));
-		}
+		RandomToFillCircle(8);
 		return RCSuccess();
 	}
 

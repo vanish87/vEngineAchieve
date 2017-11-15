@@ -66,29 +66,7 @@ void MyApp::InitObjects()
 	//newtext_->AddToScene();
 
 	t1.SetRect(int4(50, 50, 0, 0));
-	t2.SetRect(int4(100, 100, 0, 0));
-
-	test = RenderTools::GetInstance().Make2DCricleMesh(100);
-
-	D3DModel* model = new D3DModel();
-	model->AddMesh(test);
-	Material* meshMat = new Material();
-	meshMat->diffuse = float4(1, 1, 1, 1);
-	meshMat->specular = float4(1, 1, 1, 1);
-	meshMat->shininess = 10;
-
-	model->AddMaterial(meshMat);
-	model->LoadShaderFile("DeferredLighting");
-
-
-	float4x4 rotaiton, trans;
-	Math::XRotation(rotaiton, Math::PI * 0.5);
-	Math::Translate(trans, 0, 0, -1.0f);
-	//model->SetModelMatrix(rotaiton * trans);
-
-	SceneObject* newp = new SceneObject(model);
-	newp->AddToScene();
-	
+	t2.SetRect(int4(100, 100, 0, 0));	
 
 	snow_sims_.Start();
 	
