@@ -432,7 +432,7 @@ namespace vEngine
 	void D3DRenderEngine::RenderFrameBegin()
 	{
 		//Clear Frame Buffer
-		cur_frame_buffer_->Clear(float4(0, 0, 0, 1), 1, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
+		cur_frame_buffer_->Clear(float4(0, 0, 0, 0), 1, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
 	}
 
 	void D3DRenderEngine::RenderFrameEnd()

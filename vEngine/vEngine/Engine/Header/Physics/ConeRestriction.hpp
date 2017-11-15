@@ -36,7 +36,7 @@ namespace vEngine
 		const float h = 50;
 		const float r = 30;
 		const float Mass = 5000;
-		const float3 Position0 = float3(0, 0, 100);
+		const float3 Position0 = float3(0, 0, 0);
 	};
 }
 

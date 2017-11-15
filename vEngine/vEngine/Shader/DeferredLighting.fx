@@ -45,6 +45,7 @@ cbuffer cbPerObject
 	float4x4 g_light_view_proj;
 
 	bool g_normal_map;
+	bool g_mesh_diffuse;
 };
 
 
@@ -141,7 +142,11 @@ GbufferPSOutput GbufferPS(GbufferVSOutput pin)
 		normalWS = pin.normalWS;
 	}
 
-	mat_diffuse = mesh_diffuse.Sample(MeshTextureSampler, pin.tex_cood).rgb;
+
+	if (g_mesh_diffuse)
+		mat_diffuse = mesh_diffuse.Sample(MeshTextureSampler, pin.tex_cood).rgb;
+	else
+		mat_diffuse = float4(1, 1, 1, 1);
 
 	//normalWS.x = encodeToColorSpace(normalWS.x);
 	//normalWS.y = encodeToColorSpace(normalWS.y);
@@ -265,6 +270,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 	float4 occlusion = blur_occlusion_tex.Load( samplelndices );
 	//cal lighting
+	return float4(1,1,1,1);
 	return CalulateLighting( normal, world_pos.xyz, shininess, shadow, occlusion);
 	
 }

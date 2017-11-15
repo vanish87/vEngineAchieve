@@ -209,7 +209,7 @@ namespace vEngine
 		VertexList vertices;
 		IndexList indices;
 
-		BuildGeoSphere(2, 900.0f, vertices, indices);
+		BuildGeoSphere(2, 1, vertices, indices);
 
 		VertexType* vb = new VertexType[vertices.size()];
 		uint32_t* ib = new uint32_t[indices.size()];
@@ -252,6 +252,86 @@ namespace vEngine
 		float4x4 model_matrix;
 		Math::Identity(model_matrix);
 		return new vEngine::Mesh("SkyDome", render_layout, model_matrix, vb, (uint32_t)vertices.size(), ib);
+	}
+
+	Mesh * RenderTools::Make2DCricleMesh(uint32_t DivisionDegree)
+	{
+		//make a full screen qua for lighting pass
+		VertexType* vb = new VertexType[DivisionDegree*3];
+		uint32_t* ib = new uint32_t[DivisionDegree*3];
+		float rad = 0; 
+		for (uint32_t i = 0; i < DivisionDegree * 3; i += 3)
+		{
+			float x = Math::Cos(rad);
+			float y = Math::Sin(rad);
+			float x1 = Math::Cos(rad+ (Math::PI*2) / DivisionDegree);
+			float y1 = Math::Sin(rad+ (Math::PI*2) / DivisionDegree);
+			//clock wise
+			vb[i].position = float3(x, y, 0);
+			vb[i + 1].position = float3(0, 0, 0);
+			vb[i + 2].position = float3(x1, y1, 0);
+
+
+			vb[i].uv = float2(x, y);
+			vb[i + 1].uv = float2(0, 0);
+			vb[i + 2].uv = float2(x1, y1);
+
+
+			vb[i].normal = float3(0, 0, -1);
+			vb[i + 1].normal = float3(0, 0, -1);
+			vb[i + 2].normal = float3(0, 0, -1);
+
+
+			vb[i].tangent = float3(0, 1, 0);
+			vb[i + 1].tangent = float3(0, 1, 0);
+			vb[i + 2].tangent = float3(0, 1, 0);
+
+
+			vb[i].bitangent = float3(1, 0, 0);
+			vb[i + 1].bitangent = float3(1, 0, 0);
+			vb[i + 2].bitangent = float3(1, 0, 0);
+
+			ib[i] = i;
+			ib[i + 1] = i+1;
+			ib[i + 2] = i+2;
+
+			rad += (Math::PI * 2) / DivisionDegree;
+		}
+		
+		//call MakeRenderLayout
+		RenderLayout* render_layout = Context::Instance().GetRenderFactory().MakeRenderLayout();
+		//call MakeRenderBuffer(Vertex)
+		InitData init_data;
+		init_data.data = vb;
+		init_data.row_pitch = 0;
+		init_data.slice_pitch = 0;
+		RenderBuffer* vertex_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_VERTEX, DivisionDegree * 3, sizeof(VertexType));
+		delete[] vb;
+		//call MakeRenderBuffer(Index)
+		init_data.data = ib;
+		init_data.row_pitch = 0;
+		init_data.slice_pitch = 0;
+		RenderBuffer* index_buffer = Context::Instance().GetRenderFactory().MakeRenderBuffer(init_data, AT_GPU_READ_WRITE, BU_INDEX, DivisionDegree * 3, sizeof(uint32_t));
+		delete[] ib;
+
+		//add VertexBuffer to renderlayout;
+		render_layout->AddBuffer(vertex_buffer, sizeof(VertexType));
+		//add IndexBuffer to renderlayout;
+		render_layout->AddBuffer(index_buffer, DivisionDegree * 3);
+		//set Primitivetype of renderlayout;
+		render_layout->SetPrimitive(PT_TRIANGLELIST);
+		//set Input layout Semi
+		std::vector<VertexUsage> inputlayout;
+		inputlayout.push_back(VU_POSITION);
+
+		inputlayout.push_back(VU_NORMAL);
+		inputlayout.push_back(VU_TEXCOORD);
+		inputlayout.push_back(VU_TANGENT);
+		inputlayout.push_back(VU_BINORMAL);
+		render_layout->SetInputLayout(inputlayout);
+		float4x4 model_matrix;
+		Math::Identity(model_matrix);
+		return new Mesh("2D Cricle Mesh", render_layout, model_matrix, vb, 6, ib);
 	}
 
 }

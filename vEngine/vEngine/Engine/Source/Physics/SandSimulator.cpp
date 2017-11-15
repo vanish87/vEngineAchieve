@@ -42,7 +42,7 @@ namespace vEngine
 		SimulationThread.Create(this);
 	}
 
-	//Do main context init staffs
+	//Do main context init stuffs
 	ReturnCode SandSimulator::Init()
 	{
 		for (SandParticle& it : this->ParticlePool)
@@ -56,7 +56,7 @@ namespace vEngine
 
 		return RCSuccess();
 	};
-	//Deinit staffs
+	//Deinit stuffs
 	ReturnCode SandSimulator::Deinit()
 	{
 		return RCSuccess();

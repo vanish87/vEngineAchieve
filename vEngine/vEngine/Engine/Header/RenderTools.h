@@ -24,6 +24,7 @@ namespace vEngine
 
 		Mesh* MakeFullScreenMesh();
 		Mesh* MakeSphereMesh();
+		Mesh* Make2DCricleMesh(uint32_t DivisionDegree = 10);
 		Texture* LoadTexture(std::string file_name);//TODO a independent texture loader
 	};
 }

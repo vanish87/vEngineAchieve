@@ -137,8 +137,12 @@ namespace vEngine
 		}
 
 
-		this->Counter++;
-		//if (this->Counter % 300 == 0)
+ 		this->Counter++;
+// 		if (this->Counter % 300 == 0)
+// 		{
+// 			std::get<0>(this->EventStats[Name]) = Time;
+// 			std::get<1>(this->EventStats[Name]) = 0;
+// 		}
 		{
 			int InitPos = 0;
 			for (const auto& it: this->EventStats)

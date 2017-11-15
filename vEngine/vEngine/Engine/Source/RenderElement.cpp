@@ -5,6 +5,7 @@ namespace vEngine
 {
 	RenderElement::RenderElement(void)
 	{
+		Math::Identity(this->local_matrix_);
 	}
 
 

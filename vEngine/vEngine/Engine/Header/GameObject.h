@@ -4,6 +4,7 @@
 #pragma once
 #include <unordered_map>
 #include <typeinfo>
+#include <mutex>
 #include "Common/Header/CommonPreDec.h"
 #include "Engine/Header/EnginePreDec.h"
 #include "Common/Header/UUID.h"
@@ -73,6 +74,8 @@ namespace vEngine
 
 	class DebugTracking
 	{
+
+		std::mutex TRACKING_MUTEX;
 	private:
 		DebugTracking() 
 		{
@@ -104,12 +107,14 @@ namespace vEngine
 
 		void Track(GameObject* const object)
 		{
+			std::unique_lock<std::mutex> lk(TRACKING_MUTEX);
 			this->ConponentList_[object->id()] = object;
 			//PRINT("Tracking " << typeid(*object).name());
 			//PRINT("subclass "<< object->GetName().c_str());
 		};
 		void UnTrack(GameObject* const object)
 		{
+			std::unique_lock<std::mutex> lk(TRACKING_MUTEX);
 			CHECK_ASSERT(this->ReleasedList_.find(object->id()) == this->ReleasedList_.end());
 			this->ReleasedList_[object->id()] = object;
 

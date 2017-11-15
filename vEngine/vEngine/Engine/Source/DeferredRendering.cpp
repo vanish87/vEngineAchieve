@@ -76,7 +76,7 @@ namespace vEngine
 		shadow_map_xblur_pp_->SetInput(shadow_linear_depth_, 0);
 		shadow_map_xblur_pp_->SetOutput(shadow_blur_X_, 0);
 
-		shadow_map_blur_so_->LoadBinaryFile("FxFiles/GaussianBlurYFilterPostProcess.cso");
+		shadow_map_blur_so_->LoadBinaryFile("FxFiles/GaussianBlurYFilterPostProcess");
 		shadow_map_blur_so_->SetTechnique("PPTech");
 
 		shadow_map_yblur_pp_ = new PostProcess();
@@ -268,6 +268,7 @@ namespace vEngine
 			//bind gbuffer
 			gbuffer_->GetViewport().SetCamera(main_camera_);
 			render_engine.BindFrameBuffer(gbuffer_);
+			gbuffer_->Clear(float4(0, 0, 0, 0), 0, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
 
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
 			for(auto it: render_list)
@@ -295,7 +296,6 @@ namespace vEngine
 			lighting_buffer_->GetViewport().SetCamera(main_camera_);
 			render_engine.BindFrameBuffer(lighting_buffer_);
 			Context::Instance().GetRenderFactory().GetRenderEngine().RenderFrameBegin();
-			lighting_buffer_->Clear(float4(0.1f, 0.1f, 0.1f, 1), 1, FrameBuffer::CBM_DEPTH | FrameBuffer::CBM_STENCIL | FrameBuffer::CBM_COLOR);
 			//set lights parameters
 			std::vector<Light*> lights = Context::Instance().GetSceneManager().GetLights(); 
 			LightStruct* light_buffer = nullptr;

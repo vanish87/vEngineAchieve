@@ -22,7 +22,7 @@ namespace vEngine
 
 		if (doc.LoadFile(cfg_file.c_str()) != XMLError::XML_SUCCESS)
 		{
-			PRINT("FAIL to load " + cfg_file);
+			PRINT_AND_BREAK("FAIL to load " + cfg_file);
 			return;
 		}
 

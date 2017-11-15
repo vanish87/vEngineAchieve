@@ -52,6 +52,11 @@ namespace vEngine
 			if (mat->diffuse_tex > 0)
 			{
 				shader_object_->SetReource("mesh_diffuse", textures_[mat->diffuse_tex - 1]);
+				shader_object_->SetBool("g_mesh_diffuse", true);
+			}
+			else
+			{
+				shader_object_->SetBool("g_mesh_diffuse", false);
 			}
 			if (mat->normalmap_tex > 0)
 			{

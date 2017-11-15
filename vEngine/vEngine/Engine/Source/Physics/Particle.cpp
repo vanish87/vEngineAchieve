@@ -8,12 +8,18 @@
 
 #include "Engine/Header/Physics/Particle.hpp"
 #include "Common/Header/ReturnCode.h"
+#include "Engine/Header/RenderTools.h"
+#include "Common/Header/Math.h"
+#include "Engine/Header/Model.h"
+
+#include "Engine/Header/Physics/ConeRestriction.hpp"
 
 namespace vEngine
 {
 	extern const float MS_PER_UPDATE;
 	namespace Physics
 	{
+		ConeRestriction restriction_instance_;
 		Particle::Particle()
 			:SceneObject::SceneObject()
 		{
@@ -21,7 +27,20 @@ namespace vEngine
 		ReturnCode Particle::Create()
 		{
 			//CHECK_ASSERT(false);
-			//this->RenderElement = new Mesh(Type);
+
+			Mesh* mesh = RenderTools::GetInstance().Make2DCricleMesh();
+
+			Model* model = new Model();
+			model->AddMesh(mesh);
+			Material* meshMat = new Material();
+			meshMat->diffuse = float4(1, 1, 1, 1);
+			meshMat->specular = float4(1, 1, 1, 1);
+			meshMat->shininess = 10;
+
+			model->AddMaterial(meshMat);
+			model->LoadShaderFile("DeferredLighting");
+
+			this->render_element_ = (RenderElement*)model;
 			return RCSuccess();
 		};
 		Particle::~Particle()
@@ -32,6 +51,7 @@ namespace vEngine
 		void Particle::Update()
 		{
 			float Delta = MS_PER_UPDATE;
+			restriction_instance_.Apply(*this);
 			if (Delta > 0)
 			{
 				this->last_frame_info_ = this->current_frame_info_;
@@ -40,7 +60,9 @@ namespace vEngine
 						(this->current_frame_info_.acceleration * 0.5 * Delta * Delta)); //0.5*a*t*t
 				this->current_frame_info_.velocity = this->current_frame_info_.velocity + this->current_frame_info_.acceleration * Delta;
 
-				//this->render_element_->SetLocation(this->current_frame_info_.location);
+ 				float4x4 m = this->render_element_->GetLocalMatrix();
+ 				Math::Translate(m, this->current_frame_info_.location.x(), this->current_frame_info_.location.y(), this->current_frame_info_.location.z());
+ 				this->render_element_->SetModelMatrix(m);
 
 				this->current_frame_info_.acceleration = float3(0, 0, 0);
 			}

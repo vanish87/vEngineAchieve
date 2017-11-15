@@ -14,7 +14,7 @@ namespace vEngine
 
 	void D3DShaderobject::LoadBinaryFile( std::string file_name )
 	{
-		std::ifstream fin(file_name, std::ios::binary);
+		std::ifstream fin(file_name + ".cso", std::ios::binary);
 
 		if (!fin)
 		{

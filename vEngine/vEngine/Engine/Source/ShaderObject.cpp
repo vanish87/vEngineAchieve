@@ -31,7 +31,7 @@ namespace vEngine
 		if (kShaderMaps.find(shader_name) == kShaderMaps.end())
 		{
 			kShaderMaps[shader_name] = Context::Instance().GetRenderFactory().MakeShaderObject();
-			kShaderMaps[shader_name]->LoadBinaryFile("FxFiles/"+ shader_name+".cso");
+			kShaderMaps[shader_name]->LoadBinaryFile("FxFiles/"+ shader_name);
 			kShaderMaps[shader_name]->SetupShaderVariable(shader_name);
 		}
 
@@ -70,6 +70,7 @@ namespace vEngine
 			this->SetShaderResourceVariable("lighting_tex"); 
 
 			//mesh diffuse texture
+			this->SetBool("g_mesh_diffuse");
 			this->SetShaderResourceVariable("mesh_diffuse");
 			
 		}
