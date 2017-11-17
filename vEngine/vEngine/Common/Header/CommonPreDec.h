@@ -87,6 +87,11 @@ namespace vEngine
  	class Matrix;
 	typedef Matrix<float> float4x4;
 
+
+	template <typename T>
+	class Matrix2D;
+	typedef Matrix2D<float> float2x2;
+
 	class Timer;
 
 	template <typename T>

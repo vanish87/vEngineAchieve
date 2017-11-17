@@ -32,6 +32,9 @@ namespace vEngine
 		template <typename T>
 		Matrix<T> Multiply(const Matrix<T> & lhs, const Matrix<T> & rhs);
 
+		template <typename T>
+		Matrix2D<T> Multiply(const Matrix2D<T> & lhs, const Matrix2D<T> & rhs);
+
 		float Sqrt(float x);
 		float Sin(float x);
 		float Cos(float x);
@@ -115,6 +118,14 @@ namespace vEngine
 		bool IntersectRayAABB(Ray* ray, AABBox* aabb);
 		bool IntersectRayTriangle(Ray* ray, float3 a, float3 b, float3 c, float & t);
 		bool GetQuadraticRoot(float2& Roots, const float a, const float b, const float c);
+
+		float3 GetBSpline(const float3 value);
+		float3 GetBSplineDerivative(const float3 value);
+
+		//https://github.com/Washington-University/workbench/blob/master/src/Nifti/Matrix4x4.cxx
+		void GetSVD(float4x4 A, float U[3][3], float D[3][3], float Vt[3][3]);
+
+		void GetSVD2D(float2x2 A, float2x2& U, float2& D, float2x2& Vt);
 	}
 
 }

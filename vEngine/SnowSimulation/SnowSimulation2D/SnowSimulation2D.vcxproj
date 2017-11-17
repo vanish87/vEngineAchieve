@@ -117,11 +117,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="MaterialPointParticle.hpp" />
     <ClInclude Include="SnowSimulator.hpp" />
     <ClInclude Include="Simulation2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="MaterialPointParticle.cpp" />
     <ClCompile Include="SnowSimulator.cpp" />
     <ClCompile Include="Simulation2D.cpp" />
   </ItemGroup>

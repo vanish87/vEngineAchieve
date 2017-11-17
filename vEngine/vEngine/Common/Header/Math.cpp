@@ -2,6 +2,7 @@
 #include "Common/Header/Vector.h"
 #include "Common/Header/Ray.h"
 #include "Common/Header/AABBox.h"
+#include "Common/Header/Matrix.h"
 
 namespace vEngine
 {
@@ -22,7 +23,7 @@ namespace vEngine
 			return std::cos(x);
 		}
 
-		float ArcCos( float x )
+		float ArcCos(float x)
 		{
 			return std::acos(x);
 		}
@@ -31,7 +32,7 @@ namespace vEngine
 		{
 			return std::tan(x);
 		}
-		float ArcTan( float x )
+		float ArcTan(float x)
 		{
 			return std::atan(x);
 		}
@@ -54,15 +55,15 @@ namespace vEngine
 			float xhalf = 0.5f*number;
 
 			int i = *(int*)&number; // get bits for floating value
-			i = 0x5f3759df - (i>>1); // gives initial guess y0
+			i = 0x5f3759df - (i >> 1); // gives initial guess y0
 			number = *(float*)&i; // convert bits back to float
-			number = number*(1.5f-xhalf*number*number); // Newton step, repeating increases accuracy
-			number = number*(1.5f-xhalf*number*number); // 2nd Newton step, repeating increases accuracy
+			number = number*(1.5f - xhalf*number*number); // Newton step, repeating increases accuracy
+			number = number*(1.5f - xhalf*number*number); // 2nd Newton step, repeating increases accuracy
 
 			return number;
 		}
 
-		bool IntersectRayAABB( Ray* ray, AABBox* aabb )
+		bool IntersectRayAABB(Ray* ray, AABBox* aabb)
 		{
 			//from http://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
 			//http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
@@ -118,13 +119,13 @@ namespace vEngine
 			maxB[1] = aabb->Max()[1];
 			maxB[2] = aabb->Max()[2];
 			float origin[NUMDIM], dir[NUMDIM];
-			origin[0]= ray->Origin().x();
-			origin[1]= ray->Origin().y();
-			origin[2]= ray->Origin().z();
+			origin[0] = ray->Origin().x();
+			origin[1] = ray->Origin().y();
+			origin[2] = ray->Origin().z();
 
-			dir[0]= ray->Direction().x();
-			dir[1]= ray->Direction().y();
-			dir[2]= ray->Direction().z();
+			dir[0] = ray->Direction().x();
+			dir[1] = ray->Direction().y();
+			dir[2] = ray->Direction().z();
 
 			bool inside = true;
 			int quadrant[NUMDIM];
@@ -133,21 +134,23 @@ namespace vEngine
 			double maxT[NUMDIM];
 			double candidatePlane[NUMDIM];
 
-			for (int i=0; i<NUMDIM; i++)
-				if(origin[i] < minB[i]) {
+			for (int i = 0; i < NUMDIM; i++)
+				if (origin[i] < minB[i]) {
 					quadrant[i] = 0;
 					candidatePlane[i] = minB[i];
 					inside = false;
-				}else if (origin[i] > maxB[i]) {
+				}
+				else if (origin[i] > maxB[i]) {
 					quadrant[i] = 1;
 					candidatePlane[i] = maxB[i];
 					inside = false;
-				}else	{
+				}
+				else {
 					quadrant[i] = 2;
 				}
 
 				/* Ray origin inside bounding box */
-				if(inside)	{
+				if (inside) {
 					//coord = origin;
 					return true;
 				}
@@ -155,9 +158,9 @@ namespace vEngine
 
 				/* Calculate T distances to candidate planes */
 				for (int i = 0; i < NUMDIM; i++)
-					if (quadrant[i] != 2 && dir[i] !=0.0)
+					if (quadrant[i] != 2 && dir[i] != 0.0)
 					{
-						maxT[i] = (candidatePlane[i]-origin[i]) / dir[i];
+						maxT[i] = (candidatePlane[i] - origin[i]) / dir[i];
 					}
 					else
 					{
@@ -174,16 +177,17 @@ namespace vEngine
 				if (maxT[whichPlane] < 0.) return false;
 				for (int i = 0; i < NUMDIM; i++)
 					if (whichPlane != i) {
-						coord[i] = origin[i] + maxT[whichPlane] *dir[i];
+						coord[i] = origin[i] + maxT[whichPlane] * dir[i];
 						if (coord[i] < minB[i] || coord[i] > maxB[i])
 							return false;
-					} else {
+					}
+					else {
 						coord[i] = candidatePlane[i];
 					}
 					return true;				/* ray hits box */
 		}
 
-		bool IntersectRayTriangle( Ray* ray, float3 a, float3 b, float3 c , float & t)
+		bool IntersectRayTriangle(Ray* ray, float3 a, float3 b, float3 c, float & t)
 		{
 			/*//http://www.cs.washington.edu/education/courses/cse457/07sp/lectures/triangle_intersection.pdf
 			float3 ab = b-a;
@@ -216,34 +220,34 @@ namespace vEngine
 			float det, inv_det;
 			float EPSILON = 0.000001f;
 
-			t =  std::numeric_limits<float>::max();
+			t = std::numeric_limits<float>::max();
 
-			edge1 = b-a;
-			edge2 = c-a;
+			edge1 = b - a;
+			edge2 = c - a;
 
 			pvec = Math::Cross(ray->Direction(), edge2);
 
 			det = Math::Dot(edge1, pvec);
 
 			// cull test on
-				if(det < 0)
-					return false;
-				tvec = ray->Origin() - a;
+			if (det < 0)
+				return false;
+			tvec = ray->Origin() - a;
 
-				u = Math::Dot(tvec , pvec);
-				if(u< 0.0f || u > det)
-					return false;
+			u = Math::Dot(tvec, pvec);
+			if (u< 0.0f || u > det)
+				return false;
 
-				qvec = Math::Cross(tvec, edge1);
-				v = Math::Dot(ray->Direction(), qvec);
-				if(v < 0.0f || u+v >det)
-					return false;
+			qvec = Math::Cross(tvec, edge1);
+			v = Math::Dot(ray->Direction(), qvec);
+			if (v < 0.0f || u + v >det)
+				return false;
 
-				t = Math::Dot(edge2, qvec);
-				inv_det = 1.0f / det;
-				t*= inv_det;
-				u*= inv_det;
-				v*= inv_det;
+			t = Math::Dot(edge2, qvec);
+			inv_det = 1.0f / det;
+			t *= inv_det;
+			u *= inv_det;
+			v *= inv_det;
 			//end cull test
 
 /*			//non-culling
@@ -267,7 +271,7 @@ namespace vEngine
 			return true;
 		}
 
-		float Abs( float num )
+		float Abs(float num)
 		{
 			return std::fabs(num);
 		}
@@ -317,7 +321,7 @@ namespace vEngine
 
 		bool GetQuadraticRoot(float2& Roots, const float a, const float b, const float c)
 		{
-			if (IsFloatEqual (a, 0.0f))
+			if (IsFloatEqual(a, 0.0f))
 			{
 				Roots.x() = Roots.y() = (b != 0.0f) ? -c / b : 0;
 				return b == 0 ? false : true;
@@ -339,5 +343,117 @@ namespace vEngine
 			return true;
 		}
 
+		inline float GetBSplineHelper(const float value)
+		{
+			float val = Math::Abs(value);
+			if (val < 1)
+			{
+				return (0.5f * val * val * val) - (val * val) + (2 / 3.0f);
+			}
+			else
+				if (val < 2)
+				{
+					return (-1 / 6.0f) * (val * val * val) + (val *val) - (2 * val) + (4 / 3.0f);
+				}
+				else
+				{
+					return 0;
+				}
+		}
+
+		inline float GetBSplineDerivativeHelper(const float value)
+		{
+			float val = Math::Abs(value);
+			if (val < 1)
+			{
+				return (1.5f * val * val) - 2 * val;
+			}
+			else
+			if (val < 2)
+			{
+				return (-0.5f) * (val * val) + 2 * val - 2;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		
+
+		float3 GetBSpline(const float3 value)
+		{
+			return float3(GetBSplineHelper(value.x()), GetBSplineHelper(value.y()), GetBSplineHelper(value.z()));
+		}
+
+
+		float3 GetBSplineDerivative(const float3 value)
+		{
+
+			return float3(GetBSplineDerivativeHelper(value.x()), GetBSplineDerivativeHelper(value.y()), GetBSplineDerivativeHelper(value.z()));
+		}
+
+
+		//-------------------------------------------------------------------------------------------------------------------------
+		//a extends of matrix functions to get SVD of a matrix
+		//TODO: write my own version
+
+
+		void GetSVD2D(float2x2 A, float2x2& U, float2& D, float2x2& Vt) {
+			/* Probably not the fastest, but I can't find any simple algorithms
+			Got most of the derivation from:
+			http://www.ualberta.ca/~mlipsett/ENGM541/Readings/svd_ellis.pdf
+			www.imm.dtu.dk/pubdb/views/edoc_download.php/3274/pdf/imm3274.pdf
+			https://github.com/victorliu/Cgeom/blob/master/geom_la.c (geom_matsvd2d method)
+			*/
+
+			const float MATRIX_EPSILON = 1e-6f;
+			//If it is diagonal, SVD is trivial
+			if (fabs(A[0][1] - A[1][0]) < MATRIX_EPSILON && fabs(A[0][1]) < MATRIX_EPSILON) {
+				U= float2x2(A[0][0] < 0 ? -1.f : 1.f, 0, 0, A[1][1] < 0 ? -1 : 1.f);
+				D = float2(fabs(A[0][0]), fabs(A[1][1]));
+				Math::Identity(Vt);
+			}
+			//Otherwise, we need to compute A^T*A
+			else {
+				float j = A[0][0] * A[0][0] + A[0][1] * A[0][1],
+					k = A[1][0] * A[1][0] + A[1][1] * A[1][1],
+					v_c = A[0][0] * A[1][0] + A[0][1] * A[1][1];
+				//Check to see if A^T*A is diagonal
+				if (fabs(v_c) < MATRIX_EPSILON) {
+					float s1 = sqrt(j),
+						s2 = fabs(j - k) < MATRIX_EPSILON ? s1 : sqrt(k);
+					D = float2(s1, s2);
+					Math::Identity(Vt);
+					U= float2x2(
+						A[0][0] / s1, A[1][0] / s2,
+						A[0][1] / s1, A[1][1] / s2
+					);
+				}
+				//Otherwise, solve quadratic for eigenvalues
+				else {
+					float jmk = j - k,
+						jpk = j + k,
+						root = sqrt(jmk*jmk + 4 * v_c*v_c),
+						eig = (jpk + root) / 2,
+						s1 = sqrt(eig),
+						s2 = fabs(root) < MATRIX_EPSILON ? s1 : sqrt((jpk - root) / 2);
+					D = float2(s1, s2);
+					//Use eigenvectors of A^T*A as V
+					float v_s = eig - j,
+						len = sqrt(v_s*v_s + v_c*v_c);
+					v_c /= len;
+					v_s /= len;
+					Vt = float2x2(v_c, -v_s, v_s, v_c);
+					//Compute Umatrix as Av/s
+					U= float2x2(
+						(A[0][0] * v_c + A[1][0] * v_s) / s1,
+						(A[1][0] * v_c - A[0][0] * v_s) / s2,
+						(A[0][1] * v_c + A[1][1] * v_s) / s1,
+						(A[1][1] * v_c - A[0][1] * v_s) / s2
+					);
+				}
+			}
+		}
 	}
 }

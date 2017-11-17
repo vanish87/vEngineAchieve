@@ -103,11 +103,154 @@ namespace vEngine
 			return ret;
 		}
 
+		template <typename S>
+		Matrix<T>		operator+(const Matrix<S> & rhs) const
+		{
+			Matrix<T> ret;
+			ret[0] = this->data_[0] + rhs[0];
+			ret[1] = this->data_[1] + rhs[1];
+			ret[2] = this->data_[2] + rhs[2];
+			ret[3] = this->data_[3] + rhs[3];
+			return ret;
+		}
+
+		template <typename S>
+		Matrix<T>		operator-(const Matrix<S> & rhs) const
+		{
+			Matrix<T> ret;
+			ret[0] = this->data_[0] - rhs[0];
+			ret[1] = this->data_[1] - rhs[1];
+			ret[2] = this->data_[2] - rhs[2];
+			ret[3] = this->data_[3] - rhs[3];
+			return ret;
+		}
+
 		Matrix<T> &		operator*(T const & rhs)
 		{
 			for (size_t i = 0; i < row_; ++ i)
 			{
 				data_[i] =data_[i]* rhs;
+			}
+			return *this;
+		}
+
+
+	};
+
+	template <typename T>
+	class Matrix2D
+	{
+	private:
+		Vec2<Vec2<T>> data_;
+
+		static const short row_ = 2;
+		static const short col_ = 2;
+		static const short size_ = 4;
+
+	public:
+		Matrix2D()
+		{
+			data_[0][0] = 0;	data_[0][1] = 0;
+			data_[1][0] = 0;	data_[1][1] = 0;
+		}
+		explicit Matrix2D(const Vec2<T> & x, const Vec2<T> & y)
+		{
+			data_[0] = x;
+			data_[1] = y;
+		}
+		explicit Matrix2D(const T & e11, const T & e12,
+						  const T & e21, const T & e22 )
+		{
+			data_[0][0] = e11;	data_[0][1] = e12;	
+			data_[1][0] = e21;	data_[1][1] = e22;
+			
+		}
+		explicit Matrix2D(const T(&src)[2][2])
+		{
+			for (size_t i = 0; i < row_; i++)
+				for (size_t j = 0; j < col_; j++)
+					data_[i][j] = src[i][j];
+		}
+
+		Matrix2D(const Matrix2D & rhs)//copy constructor
+		{
+			data_[0] = rhs.Row(0);
+			data_[1] = rhs.Row(1);
+		}
+
+		Matrix2D& operator=(const Matrix2D & rhs)
+		{
+			if (this == &rhs) return *this;
+			data_ = rhs.data_;
+			return *this;
+		}
+
+		static size_t size() { return size_; }
+		static size_t row() { return row_; }
+		static size_t col() { return col_; }
+
+		T& operator()(size_t row, size_t col)
+		{
+			return data_[row][col];
+		}
+		const T& operator()(size_t row, size_t col) const
+		{
+			return data_[row][col];
+		}
+
+		const Vec2<T> & Row(size_t index) const
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+
+		Vec2<T> & Row(size_t index)
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+
+		const Vec2<T> &	operator[](int index) const //get const row
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+		Vec2<T> &		operator[](int index) //get row
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+
+		template <typename S>
+		Matrix2D<T>		operator*(const Matrix2D<S> & rhs) const
+		{
+			Matrix2D<T> ret = Math::Multiply(*this, rhs);
+			return ret;
+		}
+
+		template <typename S>
+		Matrix2D<T>		operator+(const Matrix2D<S> & rhs) const
+		{
+			Matrix2D<T> ret;
+			ret[0] = this->data_[0] + rhs[0];
+			ret[1] = this->data_[1] + rhs[1];
+			return ret;
+		}
+
+		template <typename S>
+		Matrix2D<T>		operator-(const Matrix2D<S> & rhs) const
+		{
+			Matrix2D<T> ret;
+			ret[0] = this->data_[0] - rhs[0];
+			ret[1] = this->data_[1] - rhs[1];
+			return ret;
+		}
+
+		Matrix2D<T> &		operator*(T const & rhs)
+		{
+			for (size_t i = 0; i < row_; ++i)
+			{
+				data_[i] = data_[i] * rhs;
 			}
 			return *this;
 		}

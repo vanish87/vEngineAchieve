@@ -21,9 +21,9 @@ namespace vEngine
 		static const short size_ = 2;
 
 	public:
-		Vec2()
+		explicit Vec2()
 		{
-			vec_.fill(0);
+
 		}
 		explicit Vec2(const T & x, const T & y)
 		{
@@ -69,6 +69,12 @@ namespace vEngine
 		}
 
 		T& operator[](size_t index)
+		{
+			CHECK_ASSERT(index < 2);
+			return vec_[index];
+		}
+		
+		const T& operator[](size_t index) const
 		{
 			CHECK_ASSERT(index < 2);
 			return vec_[index];
@@ -120,8 +126,9 @@ namespace vEngine
 		static const short size_ = 3;
 
 	public:
-		Vec3()
+		explicit Vec3()
 		{
+
 		}
 		explicit Vec3(const T & x, const T & y, const T & z)
 		{
@@ -191,9 +198,21 @@ namespace vEngine
 		}
 
 		template <typename S>
+		Vec3 operator+(const S& rhs) const
+		{
+			return Vec3(vec_[0] + rhs, vec_[1] + rhs, vec_[2] + rhs);
+		}
+
+		template <typename S>
 		Vec3 operator-(const Vec3<S> & rhs) const
 		{ 
 			return Vec3(vec_[0] - rhs.x() , vec_[1] - rhs.y() , vec_[2] - rhs.z());
+		}
+
+		template <typename S>
+		Vec3 operator*(const Vec3<S> & rhs) const
+		{
+			return Vec3(vec_[0] * rhs.x(), vec_[1] * rhs.y(), vec_[2] * rhs.z());
 		}
 
 		Vec3 operator*(const T & rhs) const
@@ -226,8 +245,9 @@ namespace vEngine
 		static const short size_ = 4;
 
 	public:
-		Vec4()
+		explicit Vec4()
 		{
+
 		}
 		explicit Vec4(const T & x, const T & y, const T & z, const T & w)
 		{

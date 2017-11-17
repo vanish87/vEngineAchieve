@@ -15,8 +15,9 @@
 #include "Common/Header/ReturnCode.h"
 #include <unordered_map>
 #include <list>
-#include "Engine/Header/Physics/Particle.hpp"
 #include "Common/Header/Thread.h"
+#include "MaterialPointParticle.hpp"
+#include "Grid.h"
 
 namespace vEngine
 {
@@ -25,6 +26,8 @@ namespace vEngine
 	public:
 		virtual ReturnCode Main(void* para) override;
 	};
+
+
 	class SnowSimulator
 	{
 	public:
@@ -49,9 +52,18 @@ namespace vEngine
 
 		void RandomToFillCircle(float Raduis);
 
-		std::array<Physics::Particle, SnowSimulator::NUMBER_OF_PARTICLES> ParticlePool;
+		void ResterizeParticleToGrid();
+		void ComputeParticleVolumesAndDensities();
+		void ComputeGridForce();
+		void ComputeGridVelocity();
+		void ComputeParticleVelocity();
+
+
+		std::array<Physics::MaterialPointParticle, SnowSimulator::NUMBER_OF_PARTICLES> particle_pool_;
+
+		Physics::Grid eulerian_grid_;
 		
-		SnowSimulatorThread SimulationThread;
+		SnowSimulatorThread simulation_thread_;
 	};
 }
 

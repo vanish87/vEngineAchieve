@@ -12,14 +12,12 @@
 #include "Common/Header/Math.h"
 #include "Engine/Header/Model.h"
 
-#include "Engine/Header/Physics/ConeRestriction.hpp"
 
 namespace vEngine
 {
 	extern const float MS_PER_UPDATE;
 	namespace Physics
 	{
-		ConeRestriction restriction_instance_;
 		Particle::Particle()
 			:SceneObject::SceneObject()
 		{
@@ -51,7 +49,6 @@ namespace vEngine
 		void Particle::Update()
 		{
 			float Delta = MS_PER_UPDATE;
-			restriction_instance_.Apply(*this);
 			if (Delta > 0)
 			{
 				this->last_frame_info_ = this->current_frame_info_;

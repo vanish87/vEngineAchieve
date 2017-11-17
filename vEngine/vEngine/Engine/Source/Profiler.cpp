@@ -148,7 +148,7 @@ namespace vEngine
 			for (const auto& it: this->EventStats)
 			{
 				//PRINT("Current average " << it.first << " :" << std::get<0>(it.second) / std::get<1>(it.second));
-				Text ProfileInfo = (L"Current average " + std::wstring(it.first.begin(), it.first.end()) + L": " + std::to_wstring(std::get<0>(it.second) / std::get<1>(it.second)));
+				Text ProfileInfo = (L"Current average " + std::wstring(it.first.begin(), it.first.end()) + L": " + std::to_wstring(std::get<0>(it.second) / std::get<1>(it.second)) + L" ms");
 				ProfileInfo.SetRect(int4(20, InitPos+=20, 0, 0));
 				ProfileInfo.Draw();
 			}

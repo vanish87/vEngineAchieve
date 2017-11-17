@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include <unordered_map>
+#include <array>
 #include "Common/Header/CommonPreDec.h"
+#include "Common/Header/Vector.h"
 
 namespace vEngine
 {
@@ -18,33 +19,43 @@ namespace vEngine
 
 		class Cell
 		{
+		public:
+			float mass_;
+			float3 velocity_;
+			float3 velocity_new_;
+			float3 force_;
 
+			void PrintInfo();
+			void Reset();
 		};
 
 		class Grid
 		{
+		public:
 			Grid();
 			virtual ~Grid();
 
+			void VisualizeCells();
+			void VisualizeCellAt(const int3& Index);
+			Cell& GetCell(const int3& GridCoordinate);
 
+			float3 GetGridPositionFromParticlePosition(const float3& ParticlePos);
+			int3   GetGridIndexFromParticlePosition(const float3& ParticlePos);
+
+			void Reset();
+
+			void PrintInfo();
 
 			static const uint32_t	VOXEL_CELL_SIZE;
+			static const uint32_t	VOXEL_GRID_SIZE = 64;
 
-			struct SpatialHashZ
-			{
-				std::unordered_map < int32_t, std::list<Cell*>> m;
-			};
-			struct SpatialHashY
-			{
-				std::unordered_map < int32_t, SpatialHashZ> m;
-			};
-			struct SpatialHash
-			{
-				std::unordered_map < int32_t, SpatialHashY> m;
-			};
+			typedef std::array<std::array<std::array<Cell, VOXEL_GRID_SIZE>, VOXEL_GRID_SIZE>, VOXEL_GRID_SIZE> GridDataType;
+			
+			GridDataType grid_data_;
 
+			private:
+				void AddPointMeshAt(const int3& Index);
 
-			SpatialHash SpatialHashInstance;
 		};
 	}
 }
