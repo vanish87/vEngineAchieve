@@ -23,7 +23,11 @@ namespace vEngine
 	public:
 		explicit Vec2()
 		{
-
+			this->vec_.fill(T(0));
+		}
+		explicit Vec2(T val)
+		{
+			this->vec_.fill(val);
 		}
 		explicit Vec2(const T & x, const T & y)
 		{
