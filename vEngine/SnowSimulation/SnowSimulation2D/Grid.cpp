@@ -56,7 +56,7 @@ namespace vEngine
 			}
 			else
 			{
-				PRINT_WARNING("Invalid Cell Index");
+				CHECK_AND_ASSERT(false, "Invalid Cell Index");
 				return NullCell;
 			}
 		}
@@ -126,6 +126,7 @@ namespace vEngine
 
 		void Cell::PrintInfo()
 		{
+			PRINT("Cell-----------");
 			PRINT("Mass " << this->mass_);
 			PRINT("Force " << this->force_.x() << " " <<this->force_.y());
 			PRINT("Velocity " << this->velocity_.x() << " " << this->velocity_.y());

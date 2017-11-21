@@ -14,7 +14,7 @@ namespace vEngine
 	public:
 		SceneObject(void);
 		SceneObject(RenderElement* render_element)
-			:render_element_(render_element), local_matrix_(render_element->local_matrix_), visiable_(true)
+			:render_element_(render_element), local_matrix_(render_element->local_matrix_), visiable_(true), update_in_main_thread_(true)
 		{
 			
 		};
@@ -31,12 +31,15 @@ namespace vEngine
 		bool Visiable();
 		void SetVisiable(bool visiable);
 
+		bool MainThreadUpdate();
+		void SetVMainThreadUpdate(bool InMain);
 	protected:
 
 		RenderElement* render_element_;
 		float4x4 local_matrix_;
 
 		bool visiable_;
+		bool update_in_main_thread_;
 	};
 
 }

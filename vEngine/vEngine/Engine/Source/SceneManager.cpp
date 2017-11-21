@@ -76,9 +76,14 @@ namespace vEngine
 		for (std::vector<SceneObject*>::iterator so = scene_object_list.begin();
 			so != scene_object_list.end(); ++so)
 		{
-			(*so)->Update();//do update aabb and set model_matrix equals to its render_element_'s
-			if((*so)->Visiable())
+			if ((*so)->MainThreadUpdate() == true)
+			{
+				(*so)->Update();//do update aabb and set model_matrix equals to its render_element_'s
+			}
+			if ((*so)->Visiable())
+			{
 				render_list_.push_back((*so)->GetRenderElement());
+			}
 		}
 	}
 

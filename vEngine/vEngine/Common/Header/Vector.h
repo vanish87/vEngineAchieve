@@ -115,6 +115,11 @@ namespace vEngine
 			return Vec2(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs));
 		}
 
+		void Print()
+		{
+			PRINT(this->x() << " " << this->y());
+		}
+
 
 	};
 
@@ -132,7 +137,11 @@ namespace vEngine
 	public:
 		explicit Vec3()
 		{
-
+			this->vec_.fill(T(0));
+		}
+		explicit Vec3(T val)
+		{
+			this->vec_.fill(val);
 		}
 		explicit Vec3(const T & x, const T & y, const T & z)
 		{
@@ -251,7 +260,11 @@ namespace vEngine
 	public:
 		explicit Vec4()
 		{
-
+			this->vec_.fill(T(0));
+		}
+		explicit Vec4(T val)
+		{
+			this->vec_.fill(val);
 		}
 		explicit Vec4(const T & x, const T & y, const T & z, const T & w)
 		{

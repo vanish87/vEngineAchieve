@@ -255,6 +255,11 @@ namespace vEngine
 			return *this;
 		}
 
+		void Print()
+		{
+			PRINT(data_[0][0] << " " << data_[0][1]);
+			PRINT(data_[1][0] << " " << data_[1][1]);
+		}
 
 	};
 }

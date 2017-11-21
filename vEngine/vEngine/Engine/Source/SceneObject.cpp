@@ -22,6 +22,8 @@ namespace vEngine
 		}
 	}
 
+
+
 	RenderElement* SceneObject::GetRenderElement()
 	{
 		return render_element_;
@@ -35,6 +37,16 @@ namespace vEngine
 	void SceneObject::SetVisiable( bool visiable )
 	{
 		visiable_ = visiable;
+	}
+
+	bool SceneObject::MainThreadUpdate()
+	{
+		return this->update_in_main_thread_;
+	}
+
+	void SceneObject::SetVMainThreadUpdate(bool InMain)
+	{
+		this->update_in_main_thread_ = InMain;
 	}
 
 	void SceneObject::AddToScene()

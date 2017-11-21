@@ -39,8 +39,11 @@ namespace vEngine
 
 			float2x2 force_;
 
-			float3 weight_;
-			float3 weight_dev_;
+			float2x2 velocity_gradient_;
+
+			float3 weight_[4][4];
+			float3 weight_dev_[4][4];
+			float3 weight_gradient_[4][4];
 
 			float2x2 Fe;
 			float2x2 Fp;

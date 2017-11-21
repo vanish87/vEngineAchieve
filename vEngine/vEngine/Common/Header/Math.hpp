@@ -79,6 +79,13 @@ namespace vEngine
 		}
 
 		template <typename T>
+		Matrix2D<T> OuterProduct(Vec2<T> const & lhs, Vec2<T> const & rhs)
+		{
+			return Matrix2D<T>(lhs[0] * rhs[0], lhs[0] * rhs[1],
+							   lhs[1] * rhs[0], lhs[1] * rhs[1]);
+		}
+
+		template <typename T>
 		Vec3<T> Cross(Vec3<T> const & lhs, Vec3<T> const & rhs)
 		{
 			return Vec3<T>(lhs.y() * rhs.z() - lhs.z() * rhs.y(),
@@ -219,6 +226,16 @@ namespace vEngine
 			{
 				return rhs;
 			}
+		}
+
+		template <typename T>
+		Matrix2D<T>  Inverse(Matrix2D<T> & rhs)
+		{
+			float det = determinant(rhs);
+			CHECK_ASSERT(det != 0);
+			return Matrix2D<T>(
+				rhs[1][1] / det, -rhs[1][0] / det,
+				-rhs[0][1] / det, rhs[0][0] / det);
 		}
 
 		template <typename T>

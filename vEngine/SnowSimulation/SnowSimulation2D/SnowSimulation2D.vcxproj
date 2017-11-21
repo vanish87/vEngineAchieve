@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="Grid.h" />
     <ClInclude Include="MaterialPointParticle.hpp" />
+    <ClInclude Include="SnowConstants.h" />
     <ClInclude Include="SnowSimulator.hpp" />
     <ClInclude Include="Simulation2D.h" />
   </ItemGroup>

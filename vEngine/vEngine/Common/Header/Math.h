@@ -55,6 +55,9 @@ namespace vEngine
 		template <typename T> 
 		T Dot(Vec3<T> const & lhs, Vec3<T> const & rhs);
 
+		template <typename T>
+		Matrix2D<T> OuterProduct(Vec2<T> const & lhs, Vec2<T> const & rhs);
+
 		template <typename T> 
 		Vec3<T> Cross(Vec3<T> const & lhs, Vec3<T> const & rhs);
 
@@ -81,6 +84,9 @@ namespace vEngine
 
 		template <typename T>
 		Matrix<T>  Inverse(Matrix<T> & lhs);
+
+		template <typename T>
+		Matrix2D<T>  Inverse(Matrix2D<T> & lhs);
 
 		template <typename T>
 		Matrix<T>  Transpose(Matrix<T> & lhs);
@@ -125,6 +131,7 @@ namespace vEngine
 		//https://github.com/Washington-University/workbench/blob/master/src/Nifti/Matrix4x4.cxx
 		void GetSVD(float4x4 A, float U[3][3], float D[3][3], float Vt[3][3]);
 
+		void GetPolarDecomposition2D(float2x2 A, float2x2& R, float2x2& S);
 		void GetSVD2D(float2x2 A, float2x2& U, float2& D, float2x2& Vt);
 	}
 

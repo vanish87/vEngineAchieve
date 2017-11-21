@@ -20,10 +20,21 @@ namespace vEngine
 		class Cell
 		{
 		public:
+			Cell()
+				:is_active_(false)
+			{
+
+			}
+			virtual ~Cell()
+			{
+
+			}
 			float mass_;
 			float3 velocity_;
 			float3 velocity_new_;
 			float3 force_;
+
+			bool is_active_;
 
 			void PrintInfo();
 			void Reset();

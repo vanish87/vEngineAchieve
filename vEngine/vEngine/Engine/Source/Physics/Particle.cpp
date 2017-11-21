@@ -88,6 +88,9 @@ namespace vEngine
 
 		void Particle::SetLocation(const float3& location)
 		{
+			CHECK_ASSERT(Math::IsNAN(location.x()) == false);
+			CHECK_ASSERT(Math::IsNAN(location.y()) == false);
+			CHECK_ASSERT(Math::IsNAN(location.z()) == false);
 			this->current_frame_info_.location = location;
 		}
 		const float3 Particle::GetLocation() const
@@ -120,6 +123,9 @@ namespace vEngine
 		}
 		void Particle::SetVelocity(const float3& velocity)
 		{
+			CHECK_ASSERT(Math::IsNAN(velocity.x()) == false);
+			CHECK_ASSERT(Math::IsNAN(velocity.y()) == false);
+			CHECK_ASSERT(Math::IsNAN(velocity.z()) == false);
 			this->current_frame_info_.velocity = velocity;
 		};
 

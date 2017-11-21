@@ -56,7 +56,9 @@ namespace vEngine
 		void ComputeParticleVolumesAndDensities();
 		void ComputeGridForce();
 		void ComputeGridVelocity();
+		void ComputeParticleDeformationGradient();
 		void ComputeParticleVelocity();
+		void ComputeParticlePosition();
 
 
 		std::array<Physics::MaterialPointParticle, SnowSimulator::NUMBER_OF_PARTICLES> particle_pool_;
