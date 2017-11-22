@@ -95,6 +95,12 @@ namespace vEngine
 			float lambdaFp = LAMBDA * Math::Pow(Math::E, EPSILON*(1 - Jp));
 
 
+			if (Math::IsINF(muFp)) muFp = std::numeric_limits<float>::max();
+			if (Math::IsINF(lambdaFp)) lambdaFp = std::numeric_limits<float>::max();
+
+			CHECK_ASSERT(Math::IsINF(muFp) == false);
+			CHECK_ASSERT(Math::IsINF(lambdaFp) == false);
+
 			/*float2x2 U;
 			float2 D;
 			float2x2 Vt;
@@ -120,6 +126,11 @@ namespace vEngine
 			this->force_ = temp * (-this->volume_);
 			//PRINT_VAR(force_);
 
+
+			CHECK_ASSERT(Math::IsNAN(force_[0][0]) == false);
+			CHECK_ASSERT(Math::IsNAN(force_[0][1]) == false);
+			CHECK_ASSERT(Math::IsNAN(force_[1][0]) == false);
+			CHECK_ASSERT(Math::IsNAN(force_[1][1]) == false);
 			//equation:
 			//P(F) = Y(F)/dF = ( 2 * mu * (Fe - R ) * FeT + (lambda * (Je - 1) * Je) ) * -V
 		}

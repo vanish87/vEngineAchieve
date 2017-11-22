@@ -40,28 +40,57 @@ namespace vEngine
 
 	void SnowSimulator::RandomToFillCircle(float Raduis, float2 Position)
 	{
-		for (Particle& it : this->particle_pool_)
+		for (uint32_t i = 0; i < this->particle_pool_.size(); ++i)
 		{
-			//SandParticle& it = this->ParticlePool[i];
-			it.Create();
-			float3 rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
-			while (Math::Dot(rand, rand) > Raduis * Raduis)
+			if (i < 200)
 			{
-				rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
+				Particle& it = this->particle_pool_[i];
+				it.Create();
+				float3 rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
+				while (Math::Dot(rand, rand) > Raduis * Raduis)
+				{
+					rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
+					it.SetLocation(rand);
+				}
+				rand.x() += Position.x();
+				rand.y() += Position.y();
 				it.SetLocation(rand);
+				it.SetVelocity(float3(90, -150, 0));
+
+				it.SetMass(0.0005);
+
+				it.SetScale(float3(1, 1, 1));
+				it.SetVisiable(true);
+				it.SetVMainThreadUpdate(false);
+
+				it.AddToScene();
+
 			}
-			rand.x() += Position.x();
-			rand.y() += Position.y();
-			it.SetLocation(rand);
-			it.SetVelocity(float3(40, -100, 0));
+			else
+			{
+				Particle& it = this->particle_pool_[i];
+				it.Create();
+				float3 rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
+				while (Math::Dot(rand, rand) > Raduis * Raduis)
+				{
+					rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
+					it.SetLocation(rand);
+				}
+				rand.x() += 60;
+				rand.y() += 50;
+				it.SetLocation(rand);
+				it.SetVelocity(float3(0, 0, 0));
 
-			it.SetMass(0.0005);
+				it.SetMass(0.0005);
 
-			it.SetScale(float3(1, 1, 1));
-			it.SetVisiable(true);
-			it.SetVMainThreadUpdate(false);
+				it.SetScale(float3(1, 1, 1));
+				it.SetVisiable(true);
+				it.SetVMainThreadUpdate(false);
 
-			it.AddToScene();
+				it.AddToScene();
+			}
+
+			
 		}
 	}
 
@@ -204,7 +233,6 @@ namespace vEngine
 			it.density_ /= CellArea;
 			CHECK_ASSERT(it.density_ > 0);
 			it.volume_ = it.GetMass() / it.density_;
-
 			//it.PrintInfo();
 		}
 
@@ -236,7 +264,7 @@ namespace vEngine
 					it.weight_gradient_[i + 1][j + 1].y() = it.weight_[i + 1][j + 1].x() * it.weight_dev_[i + 1][j + 1].y();
 					it.weight_gradient_[i + 1][j + 1].z() = 1;
 
-					it.weight_gradient_[i + 1][j + 1] = it.weight_gradient_[i + 1][j + 1] / Grid::VOXEL_CELL_SIZE;
+					//it.weight_gradient_[i + 1][j + 1] = it.weight_gradient_[i + 1][j + 1] / Grid::VOXEL_CELL_SIZE;
 
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 

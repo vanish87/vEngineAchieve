@@ -58,7 +58,7 @@ namespace vEngine
 			void PrintInfo();
 
 			static const uint32_t	VOXEL_CELL_SIZE;
-			static const uint32_t	VOXEL_GRID_SIZE = 64;
+			static const uint32_t	VOXEL_GRID_SIZE = 96;
 
 			typedef std::array<std::array<std::array<Cell, VOXEL_GRID_SIZE>, VOXEL_GRID_SIZE>, VOXEL_GRID_SIZE> GridDataType;
 			

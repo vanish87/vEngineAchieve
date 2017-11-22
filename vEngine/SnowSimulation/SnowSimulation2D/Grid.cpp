@@ -56,7 +56,7 @@ namespace vEngine
 			}
 			else
 			{
-				CHECK_AND_ASSERT(false, "Invalid Cell Index");
+				PRINT_WARNING("Invalid Cell Index");
 				return NullCell;
 			}
 		}
