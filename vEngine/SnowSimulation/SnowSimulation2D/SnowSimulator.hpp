@@ -45,12 +45,12 @@ namespace vEngine
 
 		ReturnCode Reset();
 
-		static const uint32_t	NUMBER_OF_PARTICLES = 100;
+		static const uint32_t	NUMBER_OF_PARTICLES = 300;
 		static const float3		GRAVITY_CONSTANT;
 
 	private:
 
-		void RandomToFillCircle(float Raduis);
+		void RandomToFillCircle(float Raduis, float2 Position);
 
 		void ResterizeParticleToGrid();
 		void ComputeParticleVolumesAndDensities();
@@ -58,6 +58,7 @@ namespace vEngine
 		void ComputeGridVelocity();
 		void ComputeParticleDeformationGradient();
 		void ComputeParticleVelocity();
+		void ParticleCollision();
 		void ComputeParticlePosition();
 
 

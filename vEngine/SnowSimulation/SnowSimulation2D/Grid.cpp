@@ -63,7 +63,11 @@ namespace vEngine
 
 		float3 Grid::GetGridPositionFromParticlePosition(const float3 & ParticlePos)
 		{
-			return ParticlePos / (float)Grid::VOXEL_CELL_SIZE;
+			float3 GridPosition = ParticlePos / (float)Grid::VOXEL_CELL_SIZE;
+			GridPosition.x() = ParticlePos.x() < 0 ? GridPosition.x() - 1 : GridPosition.x();
+			GridPosition.y() = ParticlePos.y() < 0 ? GridPosition.y() - 1 : GridPosition.y();
+			GridPosition.z() = ParticlePos.z() < 0 ? GridPosition.z() - 1 : GridPosition.z();
+			return GridPosition;
 		}
 
 		int3 Grid::GetGridIndexFromParticlePosition(const float3& ParticlePos)
@@ -72,6 +76,9 @@ namespace vEngine
 			GridIndex.x() = (int32_t)(ParticlePos.x() / Grid::VOXEL_CELL_SIZE);
 			GridIndex.y() = (int32_t)(ParticlePos.y() / Grid::VOXEL_CELL_SIZE);
 			GridIndex.z() = (int32_t)(ParticlePos.z() / Grid::VOXEL_CELL_SIZE);
+			GridIndex.x() = ParticlePos.x() < 0 ? GridIndex.x()-1 : GridIndex.x();
+			GridIndex.y() = ParticlePos.y() < 0 ? GridIndex.y()-1 : GridIndex.y();
+			GridIndex.z() = ParticlePos.z() < 0 ? GridIndex.z()-1 : GridIndex.z();
 			return GridIndex;
 		}
 
@@ -88,7 +95,7 @@ namespace vEngine
 				{
 					for (auto& z : y)
 					{
-						if (z.mass_ > 0)
+						if (z.is_active_)
 						{
 							z.PrintInfo();
 						}

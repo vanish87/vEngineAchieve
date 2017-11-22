@@ -38,7 +38,7 @@ namespace vEngine
 		simulation_thread_.Create(this);
 	}
 
-	void SnowSimulator::RandomToFillCircle(float Raduis)
+	void SnowSimulator::RandomToFillCircle(float Raduis, float2 Position)
 	{
 		for (Particle& it : this->particle_pool_)
 		{
@@ -50,9 +50,10 @@ namespace vEngine
 				rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
 				it.SetLocation(rand);
 			}
-			rand.y() += 100;
+			rand.x() += Position.x();
+			rand.y() += Position.y();
 			it.SetLocation(rand);
-			it.SetVelocity(float3(0, -10, 0));
+			it.SetVelocity(float3(40, -100, 0));
 
 			it.SetMass(0.0005);
 
@@ -67,7 +68,7 @@ namespace vEngine
 	void SnowSimulator::ResterizeParticleToGrid()
 	{
 		//to map particles mass and velocities to Grid with weight kernel
-		PRINT("Cell Size is "<< Grid::VOXEL_CELL_SIZE);
+		//PRINT("Cell Size is "<< Grid::VOXEL_CELL_SIZE);
 
 		this->eulerian_grid_.Reset();
 
@@ -145,18 +146,18 @@ namespace vEngine
 			{
 				for (auto& z : y)
 				{
-					if (z.mass_ > 0 && z.is_active_)
+					if (z.is_active_)
 					{
 						z.velocity_ = z.velocity_ / z.mass_;
-						z.PrintInfo();
+						//z.PrintInfo();
 					}
 				}
 			}
 		}
 //  
-//  		PRINT_WARNING("begin of ResterizeParticleToGrid-----------------------------------------------");
-//  		this->eulerian_grid_.PrintInfo();
-//  		PRINT_WARNING("end of ResterizeParticleToGrid-----------------------------------------------");
+//   		PRINT_WARNING("begin of ResterizeParticleToGrid-----------------------------------------------");
+//   		this->eulerian_grid_.PrintInfo();
+//   		PRINT_WARNING("end of ResterizeParticleToGrid-----------------------------------------------");
 		/*
 		for (auto& x : this->eulerian_grid_.grid_data_)
 		{
@@ -194,7 +195,7 @@ namespace vEngine
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
 					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (cell.is_active_)
+					if (weight > BSPLINE_EPSILON)
 					{
 						it.density_ += (cell.mass_ *  weight);
 					}
@@ -204,7 +205,7 @@ namespace vEngine
 			CHECK_ASSERT(it.density_ > 0);
 			it.volume_ = it.GetMass() / it.density_;
 
-			it.PrintInfo();
+			//it.PrintInfo();
 		}
 
 // 		PRINT_WARNING("begin of ComputeParticleVolumesAndDensities-----------------------------------------------");
@@ -235,23 +236,28 @@ namespace vEngine
 					it.weight_gradient_[i + 1][j + 1].y() = it.weight_[i + 1][j + 1].x() * it.weight_dev_[i + 1][j + 1].y();
 					it.weight_gradient_[i + 1][j + 1].z() = 1;
 
+					it.weight_gradient_[i + 1][j + 1] = it.weight_gradient_[i + 1][j + 1] / Grid::VOXEL_CELL_SIZE;
+
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
+					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					if (weight > BSPLINE_EPSILON)
+					{
+						float3 newf = float3(it.force_[0][0] * it.weight_gradient_[i + 1][j + 1][0] + it.force_[1][0] * it.weight_gradient_[i + 1][j + 1][1],
+							it.force_[0][1] * it.weight_gradient_[i + 1][j + 1][0] + it.force_[1][1] * it.weight_gradient_[i + 1][j + 1][1],
+							0);
+						CHECK_ASSERT(Math::IsNAN(newf.x()) == false);
+						CHECK_ASSERT(Math::IsNAN(newf.y()) == false);
+						CHECK_ASSERT(Math::IsNAN(newf.z()) == false);
 
-					float3 newf = float3(it.force_[0][0] * it.weight_gradient_[i + 1][j + 1][0] + it.force_[1][0] * it.weight_gradient_[i + 1][j + 1][1],
-						it.force_[0][1] * it.weight_gradient_[i + 1][j + 1][0] + it.force_[1][1] * it.weight_gradient_[i + 1][j + 1][1],
-						0);
-					CHECK_ASSERT(Math::IsNAN(newf.x()) == false);
-					CHECK_ASSERT(Math::IsNAN(newf.y()) == false);
-					CHECK_ASSERT(Math::IsNAN(newf.z()) == false);
-
-					cell.force_ = cell.force_ + newf;
+						cell.force_ = cell.force_ + newf;
+					}
 				}
 			}
 		}
-// 		PRINT_WARNING("begin of ComputeGridForce-----------------------------------------------");
-// 		this->eulerian_grid_.PrintInfo();
-// 		PRINT_WARNING("end of ComputeGridForce-----------------------------------------------");
+//  		PRINT_WARNING("begin of ComputeGridForce-----------------------------------------------");
+//  		this->eulerian_grid_.PrintInfo();
+//  		PRINT_WARNING("end of ComputeGridForce-----------------------------------------------");
 	}
 
 
@@ -270,7 +276,7 @@ namespace vEngine
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.x()) == false);
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.y()) == false);
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.z()) == false);
-						c.PrintInfo();
+						//c.PrintInfo();
 					}
 				}
 			}
@@ -295,11 +301,12 @@ namespace vEngine
 					//we have row majar matrix here so we need to use outer product for this V * WDevt
 					//wchich is equal to  * Math::Transpose(VelocityMat) * ParticleWeightDev;
 					//but this will confuse us to understand the equation from paper
-					if (cell.is_active_)
+					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					if (weight > BSPLINE_EPSILON)
 					{
 						VelocityGrandient = VelocityGrandient +
 							Math::OuterProduct(float2(cell.velocity_new_.x(), cell.velocity_new_.y()),
-								float2(it.weight_gradient_[i + 1][j + 1].x(), it.weight_gradient_[i + 1][j + 1].y()));
+											   float2(it.weight_gradient_[i + 1][j + 1].x(), it.weight_gradient_[i + 1][j + 1].y()));
 					}
 				}
 			}
@@ -320,8 +327,8 @@ namespace vEngine
 			float2x2 Vtp;
 			Math::GetSVD2D(it.Fe, Up, Dp, Vtp);
 
-			Dp.x() = Math::Clamp(Dp.x(), 1 - CRIT_COMPRESS, 1 + CRIT_STRETCH);
-			Dp.y() = Math::Clamp(Dp.y(), 1 - CRIT_COMPRESS, 1 + CRIT_STRETCH);
+			Dp.x() = Math::Clamp(Dp.x(), CRIT_COMPRESS, CRIT_STRETCH);
+			Dp.y() = Math::Clamp(Dp.y(), CRIT_COMPRESS, CRIT_STRETCH);
 
 			float2x2 NewDp;
 			NewDp[0][0] = Dp.x();
@@ -354,20 +361,29 @@ namespace vEngine
 					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
-					if (cell.is_active_)
+					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					if (weight > BSPLINE_EPSILON)
 					{
-						Vpic = Vpic + cell.velocity_new_ * it.weight_[i + 1][j + 1];
-						Vflip = Vflip + it.GetVelocity() + (cell.velocity_new_ - cell.velocity_) * it.weight_[i + 1][j + 1];
+						Vpic = Vpic + cell.velocity_new_ * weight;
+						Vflip = Vflip + (cell.velocity_new_ - cell.velocity_) * weight;
 					}
 				}
 			}
-			new_v = Vpic * (1 - FLIP_PERCENT) + Vflip * FLIP_PERCENT;
-
-			new_v.x() = Math::Clamp(new_v.x(), -100.0f, 100.0f);
-			new_v.y() = Math::Clamp(new_v.y(), -100.0f, 100.0f);
+			new_v = Vpic * (1 - FLIP_PERCENT) + (it.GetVelocity() + Vflip) * FLIP_PERCENT;
+						
+// 			new_v.x() = Math::Clamp(new_v.x(), -500.0f, 500.0f);
+// 			new_v.y() = Math::Clamp(new_v.y(), -500.0f, 500.0f);
 
 			it.SetVelocity(new_v);
-			it.PrintInfo();
+			//it.PrintInfo();
+		}
+	}
+
+	void SnowSimulator::ParticleCollision()
+	{
+		for (MaterialPointParticle& it : this->particle_pool_)
+		{
+
 		}
 	}
 
@@ -395,7 +411,7 @@ namespace vEngine
 	{
 		TestFunction();
 		//this->eulerian_grid_.VisualizeCells();
-		RandomToFillCircle(10);
+		RandomToFillCircle(20, float2(20, 100));
 		this->ResterizeParticleToGrid();
 		this->ComputeParticleVolumesAndDensities();
 		return RCSuccess();
@@ -408,7 +424,7 @@ namespace vEngine
 
 	ReturnCode SnowSimulator::Reset()
 	{
-		RandomToFillCircle(8);
+		RandomToFillCircle(8, float2(0,0));
 		return RCSuccess();
 	}
 
@@ -442,6 +458,9 @@ namespace vEngine
 
 		//
 		//Particle collision detections
+		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
+		this->ParticleCollision();
+		SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ParticleCollision");
 		
 
 		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);

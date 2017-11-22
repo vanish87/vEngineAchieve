@@ -29,6 +29,8 @@ namespace vEngine
 		bool IsFloatEqual(float& lhs, float& rhs);
 		bool IsFloatEqual(const float& lhs, const float& rhs);
 
+		bool IsFloatEqual(float& lhs, float& rhs, float epsilon);
+
 		template <typename T>
 		Matrix<T> Multiply(const Matrix<T> & lhs, const Matrix<T> & rhs);
 
@@ -52,7 +54,10 @@ namespace vEngine
 		template <typename T>
 		T Max(T& lhs, T& rhs);
 
-		template <typename T> 
+		template <typename T>
+		T Dot(Vec2<T> const & lhs, Vec2<T> const & rhs);
+
+		template <typename T>
 		T Dot(Vec3<T> const & lhs, Vec3<T> const & rhs);
 
 		template <typename T>

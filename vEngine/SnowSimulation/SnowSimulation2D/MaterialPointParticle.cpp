@@ -62,16 +62,45 @@ namespace vEngine
 
 		void MaterialPointParticle::ComputeEnergyDensity()
 		{
+			//------------------------
+
+			/*float Je = Math::determinant(this->Fe);
+			float Jp = Math::determinant(this->Fp);
+
+			float harden = Math::Pow(Math::E, EPSILON*(1 - Jp));
+
+			float2x2 U;
+			float2 D;
+			float2x2 Vt;
+			Math::GetSVD2D(Fe, U, D, Vt);
+
+			float2x2 temp = (this->Fe - (U * Math::Transpose(Vt))) * 2 * MU * Math::Transpose(this->Fe);
+
+
+			float D_lambdaFp = LAMBDA * Jp * (1 - Jp);
+			float2x2 lambda_mat;
+			lambda_mat[0][0] = D_lambdaFp;
+			lambda_mat[1][1] = D_lambdaFp;
+
+			temp = temp + lambda_mat;
+
+			this->force_ = temp * -volume_ * harden;
+*/
+
+			//-----------------------------------------
 			float Je = Math::determinant(this->Fe);
 			float Jp = Math::determinant(this->Fp);
 
 			float muFp = MU * Math::Pow(Math::E, EPSILON*(1 - Jp));
-			float D_lambdaFp = LAMBDA * Jp * (1 - Jp);
+			float lambdaFp = LAMBDA * Math::Pow(Math::E, EPSILON*(1 - Jp));
+
 
 			/*float2x2 U;
 			float2 D;
 			float2x2 Vt;
-			Math::GetSVD2D(Fe, U, D, Vt);		*/	
+			Math::GetSVD2D(Fe, U, D, Vt);
+
+			CHECK_ASSERT(Math::Abs(Math::determinant(D) - Je) < 1e-5f);*/
 			
 			float2x2 R;// = Math::Multiply(U, Vt);
 			float2x2 S;
@@ -82,8 +111,8 @@ namespace vEngine
 			//PRINT_VAR(temp);
 			
 			float2x2 lambda_mat;
-			lambda_mat[0][0] = D_lambdaFp;
-			lambda_mat[1][1] = D_lambdaFp;
+			lambda_mat[0][0] = lambdaFp * (Je - 1) * Je;
+			lambda_mat[1][1] = lambdaFp * (Je - 1) * Je;
 			//PRINT_VAR(lambda_mat);
 			
 			temp = temp + lambda_mat;
@@ -92,7 +121,7 @@ namespace vEngine
 			//PRINT_VAR(force_);
 
 			//equation:
-			//P(F) = Y(F)/dF = ( 2 * mu * (Fe - R ) * FeT + (lambda * (Jp - 1) * Jp) ) * -V
+			//P(F) = Y(F)/dF = ( 2 * mu * (Fe - R ) * FeT + (lambda * (Je - 1) * Je) ) * -V
 		}
 
 		void MaterialPointParticle::PrintInfo()

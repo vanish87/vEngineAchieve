@@ -73,6 +73,12 @@ namespace vEngine
 		}
 
 		template <typename T>
+		T Dot(Vec2<T> const & lhs, Vec2<T> const & rhs)
+		{
+			return T(lhs.x()*rhs.x() + lhs.y()*rhs.y());
+		}
+
+		template <typename T>
 		T Dot(Vec3<T> const & lhs, Vec3<T> const & rhs)
 		{
 			return T(lhs.x()*rhs.x() + lhs.y()*rhs.y() + lhs.z()* rhs.z());
