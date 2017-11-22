@@ -20,6 +20,7 @@ namespace vEngine
 
 
 	const float3	SnowSimulator::GRAVITY_CONSTANT = float3(0, -9.8f, 0);
+	const float MS_PER_UPDATE = 1 / 60.0f;
 
 	const float BSPLINE_EPSILON = 1e-4;
 
@@ -355,6 +356,8 @@ namespace vEngine
 			float2x2 Vtp;
 			Math::GetSVD2D(it.Fe, Up, Dp, Vtp);
 
+			//here CRIT_COMPRESS stores (1 - Sigma)
+			//CRIT_STRETCH stores (1 + Sigma)
 			Dp.x() = Math::Clamp(Dp.x(), CRIT_COMPRESS, CRIT_STRETCH);
 			Dp.y() = Math::Clamp(Dp.y(), CRIT_COMPRESS, CRIT_STRETCH);
 

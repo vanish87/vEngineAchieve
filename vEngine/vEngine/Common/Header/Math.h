@@ -137,6 +137,12 @@ namespace vEngine
 		void GetSVD(float4x4 A, float U[3][3], float D[3][3], float Vt[3][3]);
 
 		void GetPolarDecomposition2D(float2x2 A, float2x2& R, float2x2& S);
+
+		//implementation of this paper
+		//http://www.math.ucla.edu/~fuchuyuan/svd/paper.pdf
+		//
+		//in the end of this function, I TRANSPOSE V so it will return V-Transpose instead of V
+		//this is different with original paper, which returns V
 		void GetSVD2D(float2x2 A, float2x2& U, float2& D, float2x2& Vt);
 	}
 

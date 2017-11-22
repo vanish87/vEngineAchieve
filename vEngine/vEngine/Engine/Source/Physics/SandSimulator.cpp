@@ -25,7 +25,7 @@ namespace vEngine
 	float SandSimulator::kNormalRestitution = 1;
 	
 	extern const float MS_PER_UPDATE;
-	const float MS_PER_UPDATE = 1 / 60.0f;
+	//const float MS_PER_UPDATE = 1 / 60.0f;
 
 	static Profiler SimulatorProfiler("SimulatorProfiler");
 
