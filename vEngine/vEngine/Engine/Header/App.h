@@ -24,7 +24,6 @@ namespace vEngine
 		void SetCursor(int x, int y);
 
 		const Window& GetWindow() const;
-		const float MS_PER_UPDATE = 1 / 60.0f;
 
 	private:
 		std::string app_name_;

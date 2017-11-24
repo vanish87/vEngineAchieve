@@ -50,8 +50,10 @@ namespace vEngine
 			void VisualizeCellAt(const int3& Index);
 			Cell& GetCell(const int3& GridCoordinate);
 
-			float3 GetGridPositionFromParticlePosition(const float3& ParticlePos);
+			//return Grid space index for particle position
 			int3   GetGridIndexFromParticlePosition(const float3& ParticlePos);
+			//return Grid space position for particle  position
+			float3 GetGridPositionFromParticlePosition(const float3& ParticlePos);
 
 			void Reset();
 

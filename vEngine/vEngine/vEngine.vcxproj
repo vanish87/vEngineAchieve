@@ -138,6 +138,7 @@
     <ClInclude Include="Engine\Header\CommonTools.h" />
     <ClInclude Include="Engine\Header\Context.h" />
     <ClInclude Include="Engine\Header\DeferredRendering.h" />
+    <ClInclude Include="Engine\Header\EngineConstants.h" />
     <ClInclude Include="Engine\Header\EnginePreDec.h" />
     <ClInclude Include="Engine\Header\Font.h" />
     <ClInclude Include="Engine\Header\FrameBuffer.h" />

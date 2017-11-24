@@ -168,9 +168,9 @@ namespace vEngine
 			float3 v1 = vin[iin[i * 3 + 1]].position;
 			float3 v2 = vin[iin[i * 3 + 2]].position;
 
-			float3 m0 = (v0 + v1) * 0.5;
-			float3 m1 = (v1 + v2) * 0.5;
-			float3 m2 = (v0 + v2) * 0.5;
+			float3 m0 = (v0 + v1) * 0.5f;
+			float3 m1 = (v1 + v2) * 0.5f;
+			float3 m2 = (v0 + v2) * 0.5f;
 			VertexType vt0, vt1, vt2, vtm0, vtm1, vtm2;
 			vt0.position = v0;
 			vt1.position = v1;

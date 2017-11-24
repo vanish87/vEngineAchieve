@@ -20,9 +20,8 @@ namespace vEngine
 
 
 	const float3	SnowSimulator::GRAVITY_CONSTANT = float3(0, -9.8f, 0);
-	const float MS_PER_UPDATE = 1 / 60.0f;
 
-	const float BSPLINE_EPSILON = 1e-4;
+	const float BSPLINE_EPSILON = 1e-4f;
 
 	static Profiler SimulatorProfiler("SimulatorProfiler");
 	
@@ -56,7 +55,7 @@ namespace vEngine
 				rand.x() += Position.x();
 				rand.y() += Position.y();
 				it.SetLocation(rand);
-				it.SetVelocity(float3(90, -150, 0));
+				it.SetVelocity(float3(150, -150, 0));
 
 				it.SetMass(0.0005);
 
@@ -77,7 +76,7 @@ namespace vEngine
 					rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
 					it.SetLocation(rand);
 				}
-				rand.x() += 60;
+				rand.x() += 80;
 				rand.y() += 50;
 				it.SetLocation(rand);
 				it.SetVelocity(float3(0, 0, 0));
@@ -100,6 +99,7 @@ namespace vEngine
 		//to map particles mass and velocities to Grid with weight kernel
 		//PRINT("Cell Size is "<< Grid::VOXEL_CELL_SIZE);
 
+		//for each frame, we will recalculate all grid infomation
 		this->eulerian_grid_.Reset();
 
 		//map mass first
@@ -107,7 +107,7 @@ namespace vEngine
 		{
 			const float3 Position = it.GetLocation();
 
-			//PRINT("From paticle " << Position.x() << " " << Position.y());
+			//PRINT("From particle " << Position.x() << " " << Position.y());
 			
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
@@ -305,6 +305,10 @@ namespace vEngine
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.x()) == false);
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.y()) == false);
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.z()) == false);
+
+
+						c.velocity_new_.x() = Math::Clamp(c.velocity_new_.x(), -500.0f, 500.0f);
+						c.velocity_new_.y() = Math::Clamp(c.velocity_new_.y(), -500.0f, 500.0f);
 						//c.PrintInfo();
 					}
 				}
@@ -370,6 +374,16 @@ namespace vEngine
 			it.Fp = Up * Math::Inverse(NewDp)*Math::Transpose(Up)*Fp1;
 			//PRINT_VAR(it.Fp);
 
+			CHECK_ASSERT(Math::IsNAN(it.Fe[0][0]) == false);
+			CHECK_ASSERT(Math::IsNAN(it.Fe[0][1]) == false);
+			CHECK_ASSERT(Math::IsNAN(it.Fe[1][0]) == false);
+			CHECK_ASSERT(Math::IsNAN(it.Fe[1][1]) == false);
+
+			CHECK_ASSERT(Math::IsNAN(it.Fp[0][0]) == false);
+			CHECK_ASSERT(Math::IsNAN(it.Fp[0][1]) == false);
+			CHECK_ASSERT(Math::IsNAN(it.Fp[1][0]) == false);
+			CHECK_ASSERT(Math::IsNAN(it.Fp[1][1]) == false);
+
 		}
 	}
 
@@ -402,8 +416,8 @@ namespace vEngine
 			}
 			new_v = Vpic * (1 - FLIP_PERCENT) + (it.GetVelocity() + Vflip) * FLIP_PERCENT;
 						
-// 			new_v.x() = Math::Clamp(new_v.x(), -500.0f, 500.0f);
-// 			new_v.y() = Math::Clamp(new_v.y(), -500.0f, 500.0f);
+//  			new_v.x() = Math::Clamp(new_v.x(), -500.0f, 500.0f);
+//  			new_v.y() = Math::Clamp(new_v.y(), -500.0f, 500.0f);
 
 			it.SetVelocity(new_v);
 			//it.PrintInfo();

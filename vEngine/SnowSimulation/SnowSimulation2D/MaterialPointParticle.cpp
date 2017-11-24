@@ -44,7 +44,7 @@ namespace vEngine
 				this->last_frame_info_ = this->current_frame_info_;
 				this->current_frame_info_.location = this->current_frame_info_.location + //S0
 					((this->current_frame_info_.velocity * Delta) +//V0*t 
-					(this->current_frame_info_.acceleration * 0.5 * Delta * Delta)); //0.5*a*t*t
+					(this->current_frame_info_.acceleration * 0.5f * Delta * Delta)); //0.5*a*t*t
 				this->current_frame_info_.velocity = this->current_frame_info_.velocity + this->current_frame_info_.acceleration * Delta;
 
 				float4x4 m = this->render_element_->GetLocalMatrix();

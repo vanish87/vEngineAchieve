@@ -10,7 +10,6 @@
 
 namespace vEngine
 {
-	extern const float MS_PER_UPDATE;
 	namespace Physics
 	{
 		const static float
