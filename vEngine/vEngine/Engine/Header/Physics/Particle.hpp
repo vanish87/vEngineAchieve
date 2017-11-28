@@ -22,6 +22,7 @@ namespace vEngine
 		public:
 			Particle();
 			ReturnCode Create();
+			ReturnCode Create(float4 color);
 			virtual ~Particle();
 
 			virtual void Update();

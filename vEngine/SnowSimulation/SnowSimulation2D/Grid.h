@@ -34,6 +34,7 @@ namespace vEngine
 			float3 velocity_new_;
 			float3 force_;
 
+
 			bool is_active_;
 
 			void PrintInfo();
@@ -60,9 +61,11 @@ namespace vEngine
 			void PrintInfo();
 
 			static const uint32_t	VOXEL_CELL_SIZE;
-			static const uint32_t	VOXEL_GRID_SIZE = 96;
+			static const uint32_t	VOXEL_GRID_SIZE = 32;
 
 			typedef std::array<std::array<std::array<Cell, VOXEL_GRID_SIZE>, VOXEL_GRID_SIZE>, VOXEL_GRID_SIZE> GridDataType;
+			typedef std::array<std::array<Cell, VOXEL_GRID_SIZE>, VOXEL_GRID_SIZE> GridDataTypeX;
+			typedef std::array<Cell, VOXEL_GRID_SIZE> GridDataTypeY;
 			
 			GridDataType grid_data_;
 

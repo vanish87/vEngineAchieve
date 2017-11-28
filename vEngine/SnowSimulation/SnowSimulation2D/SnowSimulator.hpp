@@ -45,17 +45,25 @@ namespace vEngine
 
 		ReturnCode Reset();
 
-		static const uint32_t	NUMBER_OF_PARTICLES = 300;
+		static const uint32_t	NUMBER_OF_PARTICLES = 500;
 		static const float3		GRAVITY_CONSTANT;
 
 	private:
 
 		void RandomToFillCircle(float Raduis, float2 Position);
 
+		void ResterizeParticleMassToGrid();
+
+		//from The Affine Particle-In-Cell (APIC) method
+		//http://www.seas.upenn.edu/~cffjiang/research/mpmcourse/mpmcourse.pdf
+		void ResterizeParticleToGridWithAPIC();
+		void ComputeParticleVelocityWithAPIC();
+
 		void ResterizeParticleToGrid();
 		void ComputeParticleVolumesAndDensities();
 		void ComputeGridForce();
 		void ComputeGridVelocity();
+		void GridCollision();
 		void ComputeParticleDeformationGradient();
 		void ComputeParticleVelocity();
 		void ParticleCollision();

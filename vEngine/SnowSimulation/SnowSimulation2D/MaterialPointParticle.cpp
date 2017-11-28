@@ -28,6 +28,8 @@ namespace vEngine
 			Math::Identity(this->s);
 			Math::Identity(this->v);
 			Math::Identity(this->d);
+
+			Math::Identity(this->B);
 		};
 		MaterialPointParticle::~MaterialPointParticle()
 		{
@@ -47,10 +49,12 @@ namespace vEngine
 					(this->current_frame_info_.acceleration * 0.5f * Delta * Delta)); //0.5*a*t*t
 				this->current_frame_info_.velocity = this->current_frame_info_.velocity + this->current_frame_info_.acceleration * Delta;
 
-				float4x4 m = this->render_element_->GetLocalMatrix();
-				Math::Translate(m, this->current_frame_info_.location.x(), this->current_frame_info_.location.y(), this->current_frame_info_.location.z());
-				this->render_element_->SetModelMatrix(m);
-
+				if (this->render_element_ != nullptr)
+				{
+					float4x4 m = this->render_element_->GetLocalMatrix();
+					Math::Translate(m, this->current_frame_info_.location.x(), this->current_frame_info_.location.y(), this->current_frame_info_.location.z());
+					this->render_element_->SetModelMatrix(m);
+				}
 				this->current_frame_info_.acceleration = float3(0, 0, 0);
 			}
 		}
@@ -90,6 +94,15 @@ namespace vEngine
 			//-----------------------------------------
 			float Je = Math::determinant(this->Fe);
 			float Jp = Math::determinant(this->Fp);
+
+			//CHECK_ASSERT(Jp != 0);
+
+// 			if (Jp == 0) Jp = 1; 
+// 			if (Math::IsINF(Jp))
+// 			{
+// 				Math::Identity(this->Fp);
+// 				Jp = 1;
+// 			}
 
 			float muFp = MU * Math::Pow(Math::E, EPSILON*(1 - Jp));
 			float lambdaFp = LAMBDA * Math::Pow(Math::E, EPSILON*(1 - Jp));

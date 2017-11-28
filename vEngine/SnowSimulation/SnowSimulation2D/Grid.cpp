@@ -9,7 +9,7 @@ namespace vEngine
 {
 	namespace Physics
 	{
-		const uint32_t	Grid::VOXEL_CELL_SIZE = 5;
+		const uint32_t	Grid::VOXEL_CELL_SIZE = 10;
 
 		static Cell NullCell;
 
@@ -28,11 +28,15 @@ namespace vEngine
 			int xpos = 0;
 			int ypos = 0;;
 			int zpos = 0;
-			for (xpos = -(int)Grid::VOXEL_GRID_SIZE; xpos < (int)Grid::VOXEL_GRID_SIZE; xpos++)
+			for (xpos = -(int)Grid::VOXEL_GRID_SIZE/2; xpos < (int)Grid::VOXEL_GRID_SIZE/2; xpos++)
 			{
-				for (ypos = -(int)Grid::VOXEL_GRID_SIZE; ypos < (int)Grid::VOXEL_GRID_SIZE; ypos++)
+				for (ypos = -(int)Grid::VOXEL_GRID_SIZE/2; ypos < (int)Grid::VOXEL_GRID_SIZE/2; ypos++)
 				{
-					this->AddPointMeshAt(int3(xpos, ypos, 0));
+					if (   (xpos < -(int)Grid::VOXEL_GRID_SIZE / 2 + 1 || xpos >(int)Grid::VOXEL_GRID_SIZE / 2 - 2) 
+						|| (ypos < -(int)Grid::VOXEL_GRID_SIZE / 2 + 1 || ypos >(int)Grid::VOXEL_GRID_SIZE / 2 - 2))
+					{
+						this->AddPointMeshAt(int3(xpos, ypos, 0));
+					}
 				}
 			}
 		}
@@ -47,6 +51,7 @@ namespace vEngine
 			//map [-VOXEL_GRID_SIZE/2, VOXEL_GRID_SIZE/2] to [0, VOXEL_GRID_SIZE]
 			//in order to access array by index
 			int3 GridIndex = GridCoordinate + Grid::VOXEL_GRID_SIZE/2;
+			//GridIndex = GridIndex / Grid::VOXEL_CELL_SIZE;
 
 			if (   GridIndex.x() >= 0 && GridIndex.x() < Grid::VOXEL_GRID_SIZE
 				&& GridIndex.y() >= 0 && GridIndex.y() < Grid::VOXEL_GRID_SIZE
@@ -56,7 +61,7 @@ namespace vEngine
 			}
 			else
 			{
-				PRINT_WARNING("Invalid Cell Index");
+				CHECK_ASSERT(false, "Invalid Cell Index");
 				return NullCell;
 			}
 		}

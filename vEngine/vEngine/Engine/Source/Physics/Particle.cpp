@@ -23,6 +23,10 @@ namespace vEngine
 		};
 		ReturnCode Particle::Create()
 		{
+			return this->Create(float4(1, 1, 1, 1));
+		}
+		ReturnCode Particle::Create(float4 color)
+		{
 			//CHECK_ASSERT(false);
 
 			Mesh* mesh = RenderTools::GetInstance().Make2DCricleMesh();
@@ -30,8 +34,8 @@ namespace vEngine
 			Model* model = new Model();
 			model->AddMesh(mesh);
 			Material* meshMat = new Material();
-			meshMat->diffuse = float4(1, 1, 1, 1);
-			meshMat->specular = float4(1, 1, 1, 1);
+			meshMat->diffuse = color;
+			meshMat->specular = float4(0, 0, 0, 0);
 			meshMat->shininess = 10;
 
 			model->AddMaterial(meshMat);

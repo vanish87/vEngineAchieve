@@ -45,6 +45,10 @@ namespace vEngine
 			float3 weight_dev_[4][4];
 			float3 weight_gradient_[4][4];
 
+			//APIC matrix
+			float2x2 B;
+			float2x2 D;
+
 			float2x2 Fe;
 			float2x2 Fp;
 

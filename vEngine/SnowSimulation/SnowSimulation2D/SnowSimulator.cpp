@@ -13,15 +13,21 @@
 #include "Engine/Header/Profiler.h"
 
 #include "SnowConstants.h"
+#include "Engine/Header/Text.h"
+#include <string>
 
 namespace vEngine
 {
 	using namespace Physics;
 
 
-	const float3	SnowSimulator::GRAVITY_CONSTANT = float3(0, -9.8f, 0);
+	const float3	SnowSimulator::GRAVITY_CONSTANT = float3(0, -9.80f, 0);
+
+	float SpeedLimit = 300;
 
 	const float BSPLINE_EPSILON = 1e-4f;
+
+	static bool WithAPIC = false;
 
 	static Profiler SimulatorProfiler("SimulatorProfiler");
 	
@@ -40,24 +46,43 @@ namespace vEngine
 
 	void SnowSimulator::RandomToFillCircle(float Raduis, float2 Position)
 	{
+		float ParticleArea = PARTICLE_DIAM * PARTICLE_DIAM;
+		float ParticleMass = DENSITY * ParticleArea *0.07;
+
+		float CricleArea = Math::PI * Raduis * Raduis / 100000;
+		uint32_t NumberOfParticle = CricleArea / ParticleArea;
+
+		int Count = 0;
+
+		float2 CriclePos[3] =
+		{ Position , float2(80,50) , float2(0,0)};
+
+
+		float4 CricleColor[3] =
+		{ float4(1,0,0,1) , float4(0,0,1,1) , float4(1,1,1,1)};
+
+
+		float2 CricleSpeed[3] =
+		{ float2(150,-150) , float2(0,0) , float2(0,0) };
+
 		for (uint32_t i = 0; i < this->particle_pool_.size(); ++i)
 		{
-			if (i < 200)
+			if (i < NumberOfParticle * (Count + 1))
 			{
 				Particle& it = this->particle_pool_[i];
-				it.Create();
+				it.Create(CricleColor[Count]);
 				float3 rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
 				while (Math::Dot(rand, rand) > Raduis * Raduis)
 				{
 					rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
 					it.SetLocation(rand);
 				}
-				rand.x() += Position.x();
-				rand.y() += Position.y();
+				rand.x() += CriclePos[Count].x();
+				rand.y() += CriclePos[Count].y();
 				it.SetLocation(rand);
-				it.SetVelocity(float3(150, -150, 0));
+				it.SetVelocity(float3(CricleSpeed[Count].x(), CricleSpeed[Count].y(), 0));
 
-				it.SetMass(0.0005);
+				it.SetMass(ParticleMass);
 
 				it.SetScale(float3(1, 1, 1));
 				it.SetVisiable(true);
@@ -68,47 +93,22 @@ namespace vEngine
 			}
 			else
 			{
-				Particle& it = this->particle_pool_[i];
-				it.Create();
-				float3 rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
-				while (Math::Dot(rand, rand) > Raduis * Raduis)
-				{
-					rand = float3(Math::RandomReal(-Raduis, Raduis), Math::RandomReal(-Raduis, Raduis), 0);
-					it.SetLocation(rand);
-				}
-				rand.x() += 80;
-				rand.y() += 50;
-				it.SetLocation(rand);
-				it.SetVelocity(float3(0, 0, 0));
-
-				it.SetMass(0.0005);
-
-				it.SetScale(float3(1, 1, 1));
-				it.SetVisiable(true);
-				it.SetVMainThreadUpdate(false);
-
-				it.AddToScene();
+				Count++;
 			}
 
 			
 		}
 	}
 
-	void SnowSimulator::ResterizeParticleToGrid()
+	void SnowSimulator::ResterizeParticleMassToGrid()
 	{
-		//to map particles mass and velocities to Grid with weight kernel
-		//PRINT("Cell Size is "<< Grid::VOXEL_CELL_SIZE);
-
-		//for each frame, we will recalculate all grid infomation
-		this->eulerian_grid_.Reset();
-
 		//map mass first
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
 			const float3 Position = it.GetLocation();
 
 			//PRINT("From particle " << Position.x() << " " << Position.y());
-			
+
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
 
@@ -116,6 +116,7 @@ namespace vEngine
 
 			//PRINT("Get Index " << GridIndex.x() << " " << GridIndex.y());
 			//PRINT("Get GridPos " << ParticleGridPosition.x() << " " << ParticleGridPosition.y());
+			Math::Identity(it.D);
 
 			for (int i = -1; i < 3; ++i)
 			{
@@ -125,22 +126,135 @@ namespace vEngine
 					float3 Nx = ParticleGridPosition - CurrentIndex;
 
 					//PRINT("Index "<< CurrentIndex.x()<<" "<< CurrentIndex.y()<<" Get Nx =  " << Nx.x() << " " << Nx.y());
-					it.weight_[i+1][j+1] = Math::GetBSpline(Nx);
+					it.weight_[i + 1][j + 1] = Math::GetBSpline(Nx);
 					//TODO 
 					//here we remove z for 2D
 					it.weight_[i + 1][j + 1].z() = 1;
 
+					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
 
-					//PRINT_VAR(it.weight_[i + 1][j + 1]);// .z() = 1;
+						//PRINT_VAR(it.weight_[i + 1][j + 1]);// .z() = 1;
+					float2 Nx2D(Nx.x(), Nx.y());
+					it.D = it.D + Math::OuterProduct(Nx2D, Nx2D) * weight;
 
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
-					cell.mass_ += it.GetMass() * it.weight_[i+1][j+1].x() * it.weight_[i + 1][j + 1].y();
+					cell.mass_ += it.GetMass() * weight;
 					//CHECK_ASSERT(cell.mass_ > 0);
 				}
 			}
 
 			//cell.PrintInfo();
 		}
+	}
+
+
+	void SnowSimulator::ResterizeParticleToGridWithAPIC()
+	{
+		//for each frame, we will recalculate all grid information
+		this->eulerian_grid_.Reset();
+
+		//map mass first
+		this->ResterizeParticleMassToGrid();
+
+		for (MaterialPointParticle& it : this->particle_pool_)
+		{
+			const float3 Position = it.GetLocation();
+
+			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
+			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
+
+
+			for (int i = -1; i < 3; ++i)
+			{
+				for (int j = -1; j < 3; ++j)
+				{
+					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					if (weight > BSPLINE_EPSILON)
+					{
+						int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
+						Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
+
+						float3 Nx = ParticleGridPosition - CurrentIndex;
+						float2x2 temp = it.B * Math::Inverse(it.D);
+						float3 VpAffine;
+						VpAffine.x() = temp[0][0] * Nx.x() + temp[0][1] * Nx.y();
+						VpAffine.y() = temp[1][0] * Nx.x() + temp[1][1] * Nx.y();
+
+						cell.velocity_ = cell.velocity_ + ((it.GetVelocity() + VpAffine) * it.GetMass() * weight);
+						cell.is_active_ = true;
+
+						CHECK_ASSERT(cell.mass_ > 0);
+					}
+				}
+			}
+
+		}
+
+
+		for (auto& x : this->eulerian_grid_.grid_data_)
+		{
+			for (auto& y : x)
+			{
+				for (auto& z : y)
+				{
+					if (z.is_active_)
+					{
+						z.velocity_ = z.velocity_ / z.mass_;
+						//z.PrintInfo();
+					}
+				}
+			}
+		}
+	}
+
+	void SnowSimulator::ComputeParticleVelocityWithAPIC()
+	{
+		for (MaterialPointParticle& it : this->particle_pool_)
+		{
+			const float3 Position = it.GetLocation();
+
+			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
+			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
+
+			Math::Identity(it.B);
+
+			float3 Vp;
+			for (int i = -1; i < 3; ++i)
+			{
+				for (int j = -1; j < 3; ++j)
+				{
+					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
+					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
+
+					float3 Nx = ParticleGridPosition - CurrentIndex;
+					float2 Nx2D(Nx.x(), Nx.y());
+					float2 V2D(cell.velocity_new_.x(), cell.velocity_new_.y());
+
+					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					if (weight > BSPLINE_EPSILON)
+					{
+						Vp = Vp + cell.velocity_new_ * weight;
+						it.B = it.B + (Math::OuterProduct(V2D, Nx2D) * weight);
+					}
+				}
+			}
+
+			it.SetVelocity(Vp);
+			//it.PrintInfo();
+		}
+	}
+
+	void SnowSimulator::ResterizeParticleToGrid()
+	{
+		//to map particles mass and velocities to Grid with weight kernel
+		//PRINT("Cell Size is "<< Grid::VOXEL_CELL_SIZE);
+
+		//for each frame, we will recalculate all grid information
+		this->eulerian_grid_.Reset();
+
+
+		//map mass first
+		this->ResterizeParticleMassToGrid();
 
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
@@ -293,6 +407,7 @@ namespace vEngine
 
 	void SnowSimulator::ComputeGridVelocity()
 	{
+		int count = 0;
 		for (auto& x : this->eulerian_grid_.grid_data_)
 		{
 			for (auto& y : x)
@@ -307,10 +422,51 @@ namespace vEngine
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.z()) == false);
 
 
-						c.velocity_new_.x() = Math::Clamp(c.velocity_new_.x(), -500.0f, 500.0f);
-						c.velocity_new_.y() = Math::Clamp(c.velocity_new_.y(), -500.0f, 500.0f);
+						c.velocity_new_.x() = Math::Clamp(c.velocity_new_.x(), -SpeedLimit, SpeedLimit);
+						c.velocity_new_.y() = Math::Clamp(c.velocity_new_.y(), -SpeedLimit, SpeedLimit);
 						//c.PrintInfo();
+						count++;
 					}
+				}
+			}
+		}
+
+		Text cout = L"Cell count:"+ std::to_wstring(count);
+		cout.SetRect(int4(500, 500, 0, 0));
+		cout.Draw();
+	}
+
+	void SnowSimulator::GridCollision()
+	{
+
+		float GridDeltaTime = MS_PER_UPDATE / Grid::VOXEL_CELL_SIZE;
+
+		for (int i = 0; i < this->eulerian_grid_.grid_data_.size(); ++i)
+		{
+			Grid::GridDataTypeX x = this->eulerian_grid_.grid_data_[i];
+			for (int j = 0; j < x.size(); ++j)
+			{
+				Grid::GridDataTypeY y = x[j];
+				for (int k = 0; k < y.size(); ++k)
+				{
+					Cell& c = y[k];
+
+					if (c.is_active_)
+					{
+						float3 CurrentPosition = float3(i, j, k);
+						float3 NewPosition = c.velocity_new_ * GridDeltaTime + CurrentPosition;
+
+						if (NewPosition.x() > ((int)Grid::VOXEL_GRID_SIZE) / 2 - 2 || NewPosition.x() < -((int)Grid::VOXEL_GRID_SIZE) / 2 + 1)
+						{
+							c.velocity_new_.x() = 0;
+							c.velocity_new_.y() *= STICKY;
+						}
+						if (NewPosition.y() > ((int)Grid::VOXEL_GRID_SIZE) / 2 - 2 || NewPosition.y() < -((int)Grid::VOXEL_GRID_SIZE ) / 2 + 1)
+						{
+							c.velocity_new_.y() = 0;
+							c.velocity_new_.x() *= STICKY;
+						}
+					}					
 				}
 			}
 		}
@@ -374,6 +530,13 @@ namespace vEngine
 			it.Fp = Up * Math::Inverse(NewDp)*Math::Transpose(Up)*Fp1;
 			//PRINT_VAR(it.Fp);
 
+			//CHECK_ASSERT(Math::determinant(it.Fp) < 10);
+
+// 			CHECK_ASSERT(it.Fp[0][0] < 10);
+// 			CHECK_ASSERT(it.Fp[0][1] < 10);
+// 			CHECK_ASSERT(it.Fp[1][0] < 10);
+// 			CHECK_ASSERT(it.Fp[1][1] < 10);
+
 			CHECK_ASSERT(Math::IsNAN(it.Fe[0][0]) == false);
 			CHECK_ASSERT(Math::IsNAN(it.Fe[0][1]) == false);
 			CHECK_ASSERT(Math::IsNAN(it.Fe[1][0]) == false);
@@ -416,8 +579,8 @@ namespace vEngine
 			}
 			new_v = Vpic * (1 - FLIP_PERCENT) + (it.GetVelocity() + Vflip) * FLIP_PERCENT;
 						
-//  			new_v.x() = Math::Clamp(new_v.x(), -500.0f, 500.0f);
-//  			new_v.y() = Math::Clamp(new_v.y(), -500.0f, 500.0f);
+  			new_v.x() = Math::Clamp(new_v.x(), -SpeedLimit, SpeedLimit);
+  			new_v.y() = Math::Clamp(new_v.y(), -SpeedLimit, SpeedLimit);
 
 			it.SetVelocity(new_v);
 			//it.PrintInfo();
@@ -426,9 +589,24 @@ namespace vEngine
 
 	void SnowSimulator::ParticleCollision()
 	{
+		float ParticleDeltTime = MS_PER_UPDATE;
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
+			float3 NewPosition = it.GetVelocity() * ParticleDeltTime + it.GetLocation();
+			float3 NewVelocity = it.GetVelocity();
+			
+			float left = (((int)Grid::VOXEL_GRID_SIZE) / 2 )*Grid::VOXEL_CELL_SIZE;
+			float up   = (((int)Grid::VOXEL_GRID_SIZE) / 2)*Grid::VOXEL_CELL_SIZE;
+			if (NewPosition.x() > left - (Grid::VOXEL_CELL_SIZE * 2) || NewPosition.x() < -left + (Grid::VOXEL_CELL_SIZE * 2))
+			{
+				NewVelocity.x() = -STICKY * NewVelocity.x();
+			}
+			if (NewPosition.y() > up - (Grid::VOXEL_CELL_SIZE * 2) || NewPosition.y() < -up + (Grid::VOXEL_CELL_SIZE * 2))
+			{
+				NewVelocity.y() = -STICKY * NewVelocity.y();
+			}
 
+			it.SetVelocity(NewVelocity);
 		}
 	}
 
@@ -455,7 +633,7 @@ namespace vEngine
 	ReturnCode SnowSimulator::Init()
 	{
 		TestFunction();
-		//this->eulerian_grid_.VisualizeCells();
+		this->eulerian_grid_.VisualizeCells();
 		RandomToFillCircle(20, float2(20, 100));
 		this->ResterizeParticleToGrid();
 		this->ComputeParticleVolumesAndDensities();
@@ -476,9 +654,18 @@ namespace vEngine
 	//User update
 	ReturnCode SnowSimulator::Update()
 	{
-		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
-		this->ResterizeParticleToGrid();
-		SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ResterizeParticleToGrid");
+		if (WithAPIC)
+		{
+			SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
+			this->ResterizeParticleToGridWithAPIC();
+			SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ResterizeParticleToGrid");			
+		}
+		else
+		{
+			SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
+			this->ResterizeParticleToGrid();
+			SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ResterizeParticleToGrid");
+		}
 
 		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 		this->ComputeGridForce();
@@ -491,15 +678,27 @@ namespace vEngine
 		//
 		//Grid collision detections
 		//and explicit time integration
+		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
+		this->GridCollision();
+		SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update GridCollision");
 		//
 
 		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
 		this->ComputeParticleDeformationGradient();
 		SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ComputeParticleDeformationGradient");
 
-		SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
-		this->ComputeParticleVelocity();
-		SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ComputeParticleVelocity");
+		if (WithAPIC)
+		{
+			SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
+			this->ComputeParticleVelocityWithAPIC();
+			SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ComputeParticleVelocity");			
+		}
+		else
+		{
+			SimulatorProfiler.Begin(Profiler::PE_FUNCTION_CALL);
+			this->ComputeParticleVelocity();
+			SimulatorProfiler.End(Profiler::PE_FUNCTION_CALL, "SnowSimulator Update ComputeParticleVelocity");
+		}
 
 		//
 		//Particle collision detections
