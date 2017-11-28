@@ -41,8 +41,8 @@ namespace vEngine
 
 			float2x2 velocity_gradient_;
 
-			float weight_all_;
-			float weight_gradient_all_;
+			float weight_all_[4][4];
+			float weight_gradient_all_[4][4];
 
 			float3 weight_[4][4];
 			float3 weight_dev_[4][4];

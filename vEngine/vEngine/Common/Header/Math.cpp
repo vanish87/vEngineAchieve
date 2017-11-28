@@ -370,8 +370,8 @@ namespace vEngine
 				return 0;
 			}
 
-			if (ret < 1e-4f) 
-				return 0;
+			//if (ret < 1e-4f) 
+			//	return 0;
 
 			return ret;
 		}

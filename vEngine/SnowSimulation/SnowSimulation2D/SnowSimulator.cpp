@@ -25,7 +25,7 @@ namespace vEngine
 
 	float SpeedLimit = 300;
 
-	const float BSPLINE_EPSILON = 1e-4f;
+	//const float BSPLINE_EPSILON = 1e-4f;
 
 	static bool WithAPIC = false;
 
@@ -131,14 +131,14 @@ namespace vEngine
 					//here we remove z for 2D
 					it.weight_[i + 1][j + 1].z() = 1;
 
-					it.weight_all_ = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y() * it.weight_[i + 1][j + 1].z();
+					it.weight_all_[i + 1][j + 1] = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y() * it.weight_[i + 1][j + 1].z();
 
 						//PRINT_VAR(it.weight_[i + 1][j + 1]);// .z() = 1;
 					float2 Nx2D(Nx.x(), Nx.y());
-					it.D = it.D + Math::OuterProduct(Nx2D, Nx2D) * it.weight_all_;
+					it.D = it.D + Math::OuterProduct(Nx2D, Nx2D) * it.weight_all_[i + 1][j + 1];
 
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
-					cell.mass_ += it.GetMass() * it.weight_all_;
+					cell.mass_ += it.GetMass() * it.weight_all_[i + 1][j + 1];
 					//CHECK_ASSERT(cell.mass_ > 0);
 				}
 			}
@@ -168,19 +168,20 @@ namespace vEngine
 			{
 				for (int j = -1; j < 3; ++j)
 				{
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (weight > BSPLINE_EPSILON)
-					{
-						int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
-						Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
+					//float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					//if (weight > BSPLINE_EPSILON)
+					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
+					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
+					if(cell.is_active_)					
+					{
 						float3 Nx = ParticleGridPosition - CurrentIndex;
 						float2x2 temp = it.B * Math::Inverse(it.D);
 						float3 VpAffine;
 						VpAffine.x() = temp[0][0] * Nx.x() + temp[0][1] * Nx.y();
 						VpAffine.y() = temp[1][0] * Nx.x() + temp[1][1] * Nx.y();
 
-						cell.velocity_ = cell.velocity_ + ((it.GetVelocity() + VpAffine) * it.GetMass() * weight);
+						cell.velocity_ = cell.velocity_ + ((it.GetVelocity() + VpAffine) * it.GetMass() * it.weight_all_[i + 1][j + 1]);
 						cell.is_active_ = true;
 
 						CHECK_ASSERT(cell.mass_ > 0);
@@ -230,11 +231,12 @@ namespace vEngine
 					float2 Nx2D(Nx.x(), Nx.y());
 					float2 V2D(cell.velocity_new_.x(), cell.velocity_new_.y());
 
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (weight > BSPLINE_EPSILON)
+					//float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					//if (weight > BSPLINE_EPSILON)
+					if (cell.is_active_)
 					{
-						Vp = Vp + cell.velocity_new_ * weight;
-						it.B = it.B + (Math::OuterProduct(V2D, Nx2D) * weight);
+						Vp = Vp + cell.velocity_new_ * it.weight_all_[i + 1][j + 1];
+						it.B = it.B + (Math::OuterProduct(V2D, Nx2D) * it.weight_all_[i + 1][j + 1]);
 					}
 				}
 			}
@@ -256,6 +258,7 @@ namespace vEngine
 		//map mass first
 		this->ResterizeParticleMassToGrid();
 
+
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
 			const float3 Position = it.GetPosition();
@@ -268,15 +271,9 @@ namespace vEngine
 			{
 				for (int j = -1; j < 3; ++j)
 				{
-					if (it.weight_all_ > BSPLINE_EPSILON)
-					{
-						int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
-						Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
-						cell.momentum_ = cell.velocity_ + (it.GetVelocity() * it.GetMass() * it.weight_all_);
-						cell.is_active_ = true;
-
-						CHECK_ASSERT(cell.mass_ > 0);
-					}
+					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
+					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
+					cell.momentum_ = cell.momentum_ + (it.GetVelocity() * it.GetMass() * it.weight_all_[i + 1][j + 1]);
 				}
 			}
 
@@ -289,18 +286,28 @@ namespace vEngine
 			{
 				for (auto& z : y)
 				{
-					if (z.is_active_)
+					if (z.mass_ > 0)
 					{
+						z.is_active_ = true;
 						z.velocity_ = z.momentum_ / z.mass_;
 						//z.PrintInfo();
+					}
+					else
+					{
+						z.velocity_ = float3(0, 0, 0);
+						z.momentum_ = float3(0, 0, 0);
+						z.mass_ = 0;
 					}
 				}
 			}
 		}
-//  
-//   		PRINT_WARNING("begin of ResterizeParticleToGrid-----------------------------------------------");
-//   		this->eulerian_grid_.PrintInfo();
-//   		PRINT_WARNING("end of ResterizeParticleToGrid-----------------------------------------------");
+
+
+
+// 		PRINT_WARNING("begin of ResterizeParticleToGrid-----------------------------------------------");
+// 		this->eulerian_grid_.PrintInfo();
+// 		PRINT_WARNING("end of ResterizeParticleToGrid-----------------------------------------------");
+
 		/*
 		for (auto& x : this->eulerian_grid_.grid_data_)
 		{
@@ -337,15 +344,13 @@ namespace vEngine
 					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (weight > BSPLINE_EPSILON)
-					{
-						it.density_ += (cell.mass_ *  weight);
-					}
+					it.density_ += (cell.mass_ *  it.weight_all_[i + 1][j + 1]);
+
 				}
 			}
-			it.density_ /= CellArea;
 			CHECK_ASSERT(it.density_ > 0);
+			it.density_ /= CellArea;
+			
 			it.volume_ = it.GetMass() / it.density_;
 			//it.PrintInfo();
 		}
@@ -373,7 +378,7 @@ namespace vEngine
 					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
 					float3 Nx = ParticleGridPosition - CurrentIndex;
 
-					it.weight_dev_[i + 1][j + 1] = Math::GetBSplineDerivative(Nx);
+					it.weight_dev_[i + 1][j + 1] = Math::GetBSplineDerivative(Nx);// / Grid::VOXEL_CELL_SIZE;
 					it.weight_gradient_[i + 1][j + 1].x() = it.weight_dev_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
 					it.weight_gradient_[i + 1][j + 1].y() = it.weight_[i + 1][j + 1].x() * it.weight_dev_[i + 1][j + 1].y();
 					it.weight_gradient_[i + 1][j + 1].z() = 1;
@@ -382,8 +387,9 @@ namespace vEngine
 
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (weight > BSPLINE_EPSILON)
+					//float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					//if (weight > BSPLINE_EPSILON)
+					if(cell.is_active_)
 					{
 						float3 newf = float3(it.force_[0][0] * it.weight_gradient_[i + 1][j + 1][0] + it.force_[1][0] * it.weight_gradient_[i + 1][j + 1][1],
 							it.force_[0][1] * it.weight_gradient_[i + 1][j + 1][0] + it.force_[1][1] * it.weight_gradient_[i + 1][j + 1][1],
@@ -421,8 +427,8 @@ namespace vEngine
 						CHECK_ASSERT(Math::IsNAN(c.velocity_new_.z()) == false);
 
 
-						c.velocity_new_.x() = Math::Clamp(c.velocity_new_.x(), -SpeedLimit, SpeedLimit);
-						c.velocity_new_.y() = Math::Clamp(c.velocity_new_.y(), -SpeedLimit, SpeedLimit);
+						//c.velocity_new_.x() = Math::Clamp(c.velocity_new_.x(), -SpeedLimit, SpeedLimit);
+						//c.velocity_new_.y() = Math::Clamp(c.velocity_new_.y(), -SpeedLimit, SpeedLimit);
 						//c.PrintInfo();
 						count++;
 					}
@@ -479,6 +485,7 @@ namespace vEngine
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float2x2 VelocityGrandient;
+			Math::Identity(VelocityGrandient);
 			for (int i = -1; i < 3; ++i)
 			{
 				for (int j = -1; j < 3; ++j)
@@ -489,8 +496,8 @@ namespace vEngine
 					//we have row majar matrix here so we need to use outer product for this V * WDevt
 					//wchich is equal to  * Math::Transpose(VelocityMat) * ParticleWeightDev;
 					//but this will confuse us to understand the equation from paper
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (weight > BSPLINE_EPSILON)
+					//float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					if (cell.is_active_)
 					{
 						VelocityGrandient = VelocityGrandient +
 							Math::OuterProduct(float2(cell.velocity_new_.x(), cell.velocity_new_.y()),
@@ -568,18 +575,19 @@ namespace vEngine
 					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (weight > BSPLINE_EPSILON)
+					//float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					//if (weight > BSPLINE_EPSILON)
+					if(cell.is_active_)
 					{
-						Vpic = Vpic + cell.velocity_new_ * weight;
-						Vflip = Vflip + (cell.velocity_new_ - cell.velocity_) * weight;
+						Vpic = Vpic + cell.velocity_new_ * it.weight_all_[i + 1][j + 1];
+						Vflip = Vflip + (cell.velocity_new_ - cell.velocity_) * it.weight_all_[i + 1][j + 1];
 					}
 				}
 			}
 			new_v = Vpic * (1 - FLIP_PERCENT) + (it.GetVelocity() + Vflip) * FLIP_PERCENT;
 						
-  			new_v.x() = Math::Clamp(new_v.x(), -SpeedLimit, SpeedLimit);
-  			new_v.y() = Math::Clamp(new_v.y(), -SpeedLimit, SpeedLimit);
+  			//new_v.x() = Math::Clamp(new_v.x(), -SpeedLimit, SpeedLimit);
+  			//new_v.y() = Math::Clamp(new_v.y(), -SpeedLimit, SpeedLimit);
 
 			it.SetVelocity(new_v);
 			//it.PrintInfo();

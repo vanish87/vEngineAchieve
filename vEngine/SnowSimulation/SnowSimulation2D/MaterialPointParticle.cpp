@@ -95,7 +95,7 @@ namespace vEngine
 			float Je = Math::determinant(this->Fe);
 			float Jp = Math::determinant(this->Fp);
 
-			//CHECK_ASSERT(Jp != 0);
+			CHECK_ASSERT(Math::IsNAN(Jp) == false);
 
 // 			if (Jp == 0) Jp = 1; 
 // 			if (Math::IsINF(Jp))
@@ -104,12 +104,14 @@ namespace vEngine
 // 				Jp = 1;
 // 			}
 
-			float muFp = MU * Math::Pow(Math::E, EPSILON*(1 - Jp));
-			float lambdaFp = LAMBDA * Math::Pow(Math::E, EPSILON*(1 - Jp));
+			float ClampedJpParameter = Math::Clamp(EPSILON*(1 - Jp), 0.0f, 10.0f);
+
+			float muFp = MU * Math::Pow(Math::E, ClampedJpParameter);
+			float lambdaFp = LAMBDA * Math::Pow(Math::E, ClampedJpParameter);
 
 
-			if (Math::IsINF(muFp)) muFp = std::numeric_limits<float>::max();
-			if (Math::IsINF(lambdaFp)) lambdaFp = std::numeric_limits<float>::max();
+			//if (Math::IsINF(muFp)) muFp = std::numeric_limits<float>::max();
+			//if (Math::IsINF(lambdaFp)) lambdaFp = std::numeric_limits<float>::max();
 
 			CHECK_ASSERT(Math::IsINF(muFp) == false);
 			CHECK_ASSERT(Math::IsINF(lambdaFp) == false);

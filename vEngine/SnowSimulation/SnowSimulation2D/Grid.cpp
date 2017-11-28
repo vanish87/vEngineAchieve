@@ -100,7 +100,7 @@ namespace vEngine
 				{
 					for (auto& z : y)
 					{
-						if (z.is_active_)
+						if (z.is_active_ || z.mass_ > 0)
 						{
 							z.PrintInfo();
 						}
