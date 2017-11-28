@@ -104,7 +104,7 @@ namespace vEngine
 			//do some time correction if particles collided this frame
 			it.Update();
 
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 			int3 HashId;
 			HashId.x() = (int32_t)Position.x() / SandSimulator::VOXEL_CELL_SIZE;// = int3((int32_t)Position.x(), (int32_t)Position.y(), (int32_t)Position.z());// / SandSimulator::VOXEL_CELL_SIZE;
 			HashId.y() = (int32_t)Position.y() / SandSimulator::VOXEL_CELL_SIZE; 
@@ -133,7 +133,7 @@ namespace vEngine
 		for (SandParticle& it : this->ParticlePool)
 		{
 			//SandParticle& it = this->ParticlePool[i];
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 			int3 HashId;			
 			HashId.x() = (int32_t)Position.x() / SandSimulator::VOXEL_CELL_SIZE;// = int3((int32_t)Position.x(), (int32_t)Position.y(), (int32_t)Position.z());// / SandSimulator::VOXEL_CELL_SIZE;
 			HashId.y() = (int32_t)Position.y() / SandSimulator::VOXEL_CELL_SIZE;
@@ -165,8 +165,8 @@ namespace vEngine
 
 		for (int i = 0; i < SandParticle::kNumberOfSphere; ++i)
 		{
-			float3 x1 = target1.GetLocation() + target1.terahedron_instance_.position[i];
-			float3 x2 = target2.GetLocation() + target2.terahedron_instance_.position[i];
+			float3 x1 = target1.GetPosition() + target1.terahedron_instance_.position[i];
+			float3 x2 = target2.GetPosition() + target2.terahedron_instance_.position[i];
 
 			float3 VectorToX2 = x2 - x1;
 

@@ -32,7 +32,7 @@ namespace vEngine
 			void ApplyForce(const float3& force);
 
 			void SetLocation(const float3& location);
-			const float3 GetLocation() const;
+			const float3 GetPosition() const;
 			void SetScale(const float3& scale);
 
 			const float GetMass() const;

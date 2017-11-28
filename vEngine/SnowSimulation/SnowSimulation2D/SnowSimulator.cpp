@@ -105,7 +105,7 @@ namespace vEngine
 		//map mass first
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			//PRINT("From particle " << Position.x() << " " << Position.y());
 
@@ -131,14 +131,14 @@ namespace vEngine
 					//here we remove z for 2D
 					it.weight_[i + 1][j + 1].z() = 1;
 
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
+					it.weight_all_ = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y() * it.weight_[i + 1][j + 1].z();
 
 						//PRINT_VAR(it.weight_[i + 1][j + 1]);// .z() = 1;
 					float2 Nx2D(Nx.x(), Nx.y());
-					it.D = it.D + Math::OuterProduct(Nx2D, Nx2D) * weight;
+					it.D = it.D + Math::OuterProduct(Nx2D, Nx2D) * it.weight_all_;
 
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
-					cell.mass_ += it.GetMass() * weight;
+					cell.mass_ += it.GetMass() * it.weight_all_;
 					//CHECK_ASSERT(cell.mass_ > 0);
 				}
 			}
@@ -158,7 +158,7 @@ namespace vEngine
 
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
@@ -211,7 +211,7 @@ namespace vEngine
 	{
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
@@ -258,7 +258,7 @@ namespace vEngine
 
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
@@ -268,12 +268,11 @@ namespace vEngine
 			{
 				for (int j = -1; j < 3; ++j)
 				{
-					float weight = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y();
-					if (weight > BSPLINE_EPSILON)
+					if (it.weight_all_ > BSPLINE_EPSILON)
 					{
 						int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
 						Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
-						cell.velocity_ = cell.velocity_ + (it.GetVelocity() * it.GetMass() * weight);
+						cell.momentum_ = cell.velocity_ + (it.GetVelocity() * it.GetMass() * it.weight_all_);
 						cell.is_active_ = true;
 
 						CHECK_ASSERT(cell.mass_ > 0);
@@ -292,7 +291,7 @@ namespace vEngine
 				{
 					if (z.is_active_)
 					{
-						z.velocity_ = z.velocity_ / z.mass_;
+						z.velocity_ = z.momentum_ / z.mass_;
 						//z.PrintInfo();
 					}
 				}
@@ -319,7 +318,7 @@ namespace vEngine
 	{
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
@@ -362,7 +361,7 @@ namespace vEngine
 		{
 			it.ComputeEnergyDensity();
 
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
@@ -476,7 +475,7 @@ namespace vEngine
 	{
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float2x2 VelocityGrandient;
@@ -554,7 +553,7 @@ namespace vEngine
 	{
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			const float3 Position = it.GetLocation();
+			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
 			float3 ParticleGridPosition = this->eulerian_grid_.GetGridPositionFromParticlePosition(Position);
@@ -592,7 +591,7 @@ namespace vEngine
 		float ParticleDeltTime = MS_PER_UPDATE;
 		for (MaterialPointParticle& it : this->particle_pool_)
 		{
-			float3 NewPosition = it.GetVelocity() * ParticleDeltTime + it.GetLocation();
+			float3 NewPosition = it.GetVelocity() * ParticleDeltTime + it.GetPosition();
 			float3 NewVelocity = it.GetVelocity();
 			
 			float left = (((int)Grid::VOXEL_GRID_SIZE) / 2 )*Grid::VOXEL_CELL_SIZE;

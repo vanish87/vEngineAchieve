@@ -30,6 +30,7 @@ namespace vEngine
 
 			}
 			float mass_;
+			float3 momentum_;
 			float3 velocity_;
 			float3 velocity_new_;
 			float3 force_;

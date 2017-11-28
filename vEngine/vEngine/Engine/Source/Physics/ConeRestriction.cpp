@@ -28,14 +28,14 @@ namespace vEngine
 
 	ReturnCode ConeRestriction::Apply(Particle& ParticleIn)
 	{
-		float3 Position = ParticleIn.GetLocation();
+		float3 Position = ParticleIn.GetPosition();
 		Position = Position - Position0;
 		float k = Math::Sqrt(Position.x()*Position.x() + Position.z()*Position.z()) * h / r;
 		float cone_y = k + Position0.y();
 		float3 vel = ParticleIn.GetVelocity();
-		if (-cone_y >= ParticleIn.GetLocation().y())
+		if (-cone_y >= ParticleIn.GetPosition().y())
 		{
-			float3 x1 = ParticleIn.GetLocation();
+			float3 x1 = ParticleIn.GetPosition();
 			float3 x2 = float3(x1.x(), -cone_y, x1.z());
 			float  m1 = ParticleIn.GetMass();
 			float  m2 = this->Mass;

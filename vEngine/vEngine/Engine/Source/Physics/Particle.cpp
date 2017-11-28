@@ -96,7 +96,7 @@ namespace vEngine
 			CHECK_ASSERT(Math::IsNAN(location.z()) == false);
 			this->current_frame_info_.location = location;
 		}
-		const float3 Particle::GetLocation() const
+		const float3 Particle::GetPosition() const
 		{
 			return this->current_frame_info_.location;
 		}
