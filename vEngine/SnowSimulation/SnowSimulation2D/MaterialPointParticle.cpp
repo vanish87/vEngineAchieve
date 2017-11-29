@@ -38,7 +38,7 @@ namespace vEngine
 
 		void MaterialPointParticle::Update()
 		{
-			//this->restriction_instance_.Apply(*this); 
+			this->restriction_instance_.Apply(*this); 
 			
 			float Delta = 1/60.0f;
 			if (Delta > 0)
@@ -95,8 +95,12 @@ namespace vEngine
 			float Je = Math::determinant(this->Fe);
 			float Jp = Math::determinant(this->Fp);
 
-			CHECK_ASSERT(Math::IsNAN(Jp) == false);
-
+			//CHECK_ASSERT(Math::IsNAN(Jp) == false);
+			if (Math::IsNAN(Jp))
+			{
+				PRINT_WARNING("NAN Jp");
+				Jp = 1;
+			}
 // 			if (Jp == 0) Jp = 1; 
 // 			if (Math::IsINF(Jp))
 // 			{
@@ -104,7 +108,7 @@ namespace vEngine
 // 				Jp = 1;
 // 			}
 
-			float ClampedJpParameter = Math::Clamp(EPSILON*(1 - Jp), 0.0f, 10.0f);
+			float ClampedJpParameter = Math::Clamp(EPSILON*(1 - Jp), -5.0f, 5.0f);
 
 			float muFp = MU * Math::Pow(Math::E, ClampedJpParameter);
 			float lambdaFp = LAMBDA * Math::Pow(Math::E, ClampedJpParameter);

@@ -45,7 +45,8 @@ namespace vEngine
 			//points to T2
 			//ParticleIn.ApplyForce(Fn*-1);       
 
-			vel.y() = vel.y() * -1;
+			vel.x() = vel.x() * -0.9f;
+			vel.y() = vel.y() * -0.9f;
 			ParticleIn.SetLocation(x2);
 		}
 

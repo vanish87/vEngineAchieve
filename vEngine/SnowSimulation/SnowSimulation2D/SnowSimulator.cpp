@@ -16,6 +16,13 @@
 #include "Engine/Header/Text.h"
 #include <string>
 
+#define USE_OPENMP
+
+#ifdef USE_OPENMP
+#include <omp.h>
+#endif // USE_OPENMP
+
+
 namespace vEngine
 {
 	using namespace Physics;
@@ -47,7 +54,7 @@ namespace vEngine
 	void SnowSimulator::RandomToFillCircle(float Raduis, float2 Position)
 	{
 		float ParticleArea = PARTICLE_DIAM * PARTICLE_DIAM;
-		float ParticleMass = DENSITY * ParticleArea *0.07;
+		float ParticleMass = DENSITY * ParticleArea *0.03;
 
 		float CricleArea = Math::PI * Raduis * Raduis / 100000;
 		uint32_t NumberOfParticle = CricleArea / ParticleArea;
@@ -63,7 +70,7 @@ namespace vEngine
 
 
 		float2 CricleSpeed[3] =
-		{ float2(150,-150) , float2(0,0) , float2(0,0) };
+		{ float2(200,-150) , float2(0,0) , float2(0,0) };
 
 		for (uint32_t i = 0; i < this->particle_pool_.size(); ++i)
 		{
@@ -103,8 +110,13 @@ namespace vEngine
 	void SnowSimulator::ResterizeParticleMassToGrid()
 	{
 		//map mass first
-		for (MaterialPointParticle& it : this->particle_pool_)
+		#ifdef USE_OPENMP
+		#pragma omp parallel for
+		#endif
+		for (int32_t i = 0; i < NUMBER_OF_PARTICLES; ++i)
+			//for (MaterialPointParticle& it : this->particle_pool_)
 		{
+			MaterialPointParticle& it = this->particle_pool_[i];
 			const float3 Position = it.GetPosition();
 
 			//PRINT("From particle " << Position.x() << " " << Position.y());
@@ -133,7 +145,7 @@ namespace vEngine
 
 					it.weight_all_[i + 1][j + 1] = it.weight_[i + 1][j + 1].x() * it.weight_[i + 1][j + 1].y() * it.weight_[i + 1][j + 1].z();
 
-						//PRINT_VAR(it.weight_[i + 1][j + 1]);// .z() = 1;
+					//PRINT_VAR(it.weight_[i + 1][j + 1]);// .z() = 1;
 					float2 Nx2D(Nx.x(), Nx.y());
 					it.D = it.D + Math::OuterProduct(Nx2D, Nx2D) * it.weight_all_[i + 1][j + 1];
 
@@ -145,6 +157,8 @@ namespace vEngine
 
 			//cell.PrintInfo();
 		}
+
+		
 	}
 
 
@@ -156,8 +170,14 @@ namespace vEngine
 		//map mass first
 		this->ResterizeParticleMassToGrid();
 
-		for (MaterialPointParticle& it : this->particle_pool_)
+
+		#ifdef USE_OPENMP
+		#pragma omp parallel for
+		#endif
+		for (int32_t i = 0; i < NUMBER_OF_PARTICLES; ++i)
+			//for (MaterialPointParticle& it : this->particle_pool_)
 		{
+			MaterialPointParticle& it = this->particle_pool_[i];
 			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
@@ -173,7 +193,7 @@ namespace vEngine
 					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
 
-					if(cell.is_active_)					
+					//if(cell.is_active_)					
 					{
 						float3 Nx = ParticleGridPosition - CurrentIndex;
 						float2x2 temp = it.B * Math::Inverse(it.D);
@@ -181,10 +201,10 @@ namespace vEngine
 						VpAffine.x() = temp[0][0] * Nx.x() + temp[0][1] * Nx.y();
 						VpAffine.y() = temp[1][0] * Nx.x() + temp[1][1] * Nx.y();
 
-						cell.velocity_ = cell.velocity_ + ((it.GetVelocity() + VpAffine) * it.GetMass() * it.weight_all_[i + 1][j + 1]);
-						cell.is_active_ = true;
+						cell.momentum_ = cell.momentum_ + ((it.GetVelocity() + VpAffine) * it.GetMass() * it.weight_all_[i + 1][j + 1]);
+						//cell.is_active_ = true;
 
-						CHECK_ASSERT(cell.mass_ > 0);
+						//CHECK_ASSERT(cell.mass_ > 0);
 					}
 				}
 			}
@@ -198,10 +218,17 @@ namespace vEngine
 			{
 				for (auto& z : y)
 				{
-					if (z.is_active_)
+					if (z.mass_ > 0)
 					{
-						z.velocity_ = z.velocity_ / z.mass_;
+						z.is_active_ = true;
+						z.velocity_ = z.momentum_ / z.mass_;
 						//z.PrintInfo();
+					}
+					else
+					{
+						z.velocity_ = float3(0, 0, 0);
+						z.momentum_ = float3(0, 0, 0);
+						z.mass_ = 0;
 					}
 				}
 			}
@@ -362,8 +389,14 @@ namespace vEngine
 
 	void SnowSimulator::ComputeGridForce()
 	{
-		for (MaterialPointParticle& it : this->particle_pool_)
+
+		#ifdef USE_OPENMP
+		#pragma omp parallel for
+		#endif
+		for (int32_t i = 0; i < NUMBER_OF_PARTICLES; ++i)
+			//for (MaterialPointParticle& it : this->particle_pool_)
 		{
+			MaterialPointParticle& it = this->particle_pool_[i];
 			it.ComputeEnergyDensity();
 
 			const float3 Position = it.GetPosition();
@@ -446,6 +479,10 @@ namespace vEngine
 
 		float GridDeltaTime = MS_PER_UPDATE / Grid::VOXEL_CELL_SIZE;
 
+
+		#ifdef USE_OPENMP
+		#pragma omp parallel for
+		#endif
 		for (int i = 0; i < this->eulerian_grid_.grid_data_.size(); ++i)
 		{
 			Grid::GridDataTypeX x = this->eulerian_grid_.grid_data_[i];
@@ -479,8 +516,14 @@ namespace vEngine
 
 	void SnowSimulator::ComputeParticleDeformationGradient()
 	{
-		for (MaterialPointParticle& it : this->particle_pool_)
+
+		#ifdef USE_OPENMP
+		#pragma omp parallel for
+		#endif
+		for (int32_t i = 0; i < NUMBER_OF_PARTICLES; ++i)
+			//for (MaterialPointParticle& it : this->particle_pool_)
 		{
+			MaterialPointParticle& it = this->particle_pool_[i];
 			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
@@ -558,8 +601,13 @@ namespace vEngine
 
 	void SnowSimulator::ComputeParticleVelocity()
 	{
-		for (MaterialPointParticle& it : this->particle_pool_)
+		#ifdef USE_OPENMP
+		#pragma omp parallel for
+		#endif
+		for (int32_t i = 0; i < NUMBER_OF_PARTICLES; ++i)
+			//for (MaterialPointParticle& it : this->particle_pool_)
 		{
+			MaterialPointParticle& it = this->particle_pool_[i];
 			const float3 Position = it.GetPosition();
 
 			int3 GridIndex = this->eulerian_grid_.GetGridIndexFromParticlePosition(Position);
@@ -586,8 +634,8 @@ namespace vEngine
 			}
 			new_v = Vpic * (1 - FLIP_PERCENT) + (it.GetVelocity() + Vflip) * FLIP_PERCENT;
 						
-  			//new_v.x() = Math::Clamp(new_v.x(), -SpeedLimit, SpeedLimit);
-  			//new_v.y() = Math::Clamp(new_v.y(), -SpeedLimit, SpeedLimit);
+  			new_v.x() = Math::Clamp(new_v.x(), -SpeedLimit, SpeedLimit);
+  			new_v.y() = Math::Clamp(new_v.y(), -SpeedLimit, SpeedLimit);
 
 			it.SetVelocity(new_v);
 			//it.PrintInfo();
@@ -597,8 +645,14 @@ namespace vEngine
 	void SnowSimulator::ParticleCollision()
 	{
 		float ParticleDeltTime = MS_PER_UPDATE;
-		for (MaterialPointParticle& it : this->particle_pool_)
+
+		#ifdef USE_OPENMP
+		#pragma omp parallel for
+		#endif
+		for (int32_t i = 0; i < NUMBER_OF_PARTICLES; ++i)
+			//for (MaterialPointParticle& it : this->particle_pool_)
 		{
+			MaterialPointParticle& it = this->particle_pool_[i];
 			float3 NewPosition = it.GetVelocity() * ParticleDeltTime + it.GetPosition();
 			float3 NewVelocity = it.GetVelocity();
 			
@@ -639,9 +693,14 @@ namespace vEngine
 	//Do main context init stuffs
 	ReturnCode SnowSimulator::Init()
 	{
+
+		#ifdef USE_OPENMP
+		omp_set_num_threads(32);
+		#endif
+
 		TestFunction();
 		this->eulerian_grid_.VisualizeCells();
-		RandomToFillCircle(20, float2(20, 100));
+		RandomToFillCircle(20, float2(0, 100));
 		this->ResterizeParticleToGrid();
 		this->ComputeParticleVolumesAndDensities();
 		return RCSuccess();
