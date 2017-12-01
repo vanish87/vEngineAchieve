@@ -201,7 +201,7 @@ namespace vEngine
 						VpAffine.x() = temp[0][0] * Nx.x() + temp[0][1] * Nx.y();
 						VpAffine.y() = temp[1][0] * Nx.x() + temp[1][1] * Nx.y();
 
-						cell.momentum_ = cell.momentum_ + ((it.GetVelocity() + VpAffine) * it.GetMass() * it.weight_all_[i + 1][j + 1]);
+						cell.momentum_ += ((it.GetVelocity() + VpAffine) * it.GetMass() * it.weight_all_[i + 1][j + 1]);
 						//cell.is_active_ = true;
 
 						//CHECK_ASSERT(cell.mass_ > 0);
@@ -300,7 +300,7 @@ namespace vEngine
 				{
 					int3 CurrentIndex = int3(GridIndex.x() + i, GridIndex.y() + j, GridIndex.z());
 					Cell& cell = this->eulerian_grid_.GetCell(CurrentIndex);
-					cell.momentum_ = cell.momentum_ + (it.GetVelocity() * it.GetMass() * it.weight_all_[i + 1][j + 1]);
+					cell.momentum_ += (it.GetVelocity() * it.GetMass() * it.weight_all_[i + 1][j + 1]);
 				}
 			}
 
@@ -431,7 +431,7 @@ namespace vEngine
 						CHECK_ASSERT(Math::IsNAN(newf.y()) == false);
 						CHECK_ASSERT(Math::IsNAN(newf.z()) == false);
 
-						cell.force_ = cell.force_ + newf;
+						cell.force_ += newf;
 					}
 				}
 			}
@@ -627,8 +627,8 @@ namespace vEngine
 					//if (weight > BSPLINE_EPSILON)
 					if(cell.is_active_)
 					{
-						Vpic = Vpic + cell.velocity_new_ * it.weight_all_[i + 1][j + 1];
-						Vflip = Vflip + (cell.velocity_new_ - cell.velocity_) * it.weight_all_[i + 1][j + 1];
+						Vpic += cell.velocity_new_ * it.weight_all_[i + 1][j + 1];
+						Vflip += (cell.velocity_new_ - cell.velocity_) * it.weight_all_[i + 1][j + 1];
 					}
 				}
 			}

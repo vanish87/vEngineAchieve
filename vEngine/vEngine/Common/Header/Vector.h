@@ -92,27 +92,80 @@ namespace vEngine
 		you should make sure that the type of c's is same as lhs(b)'s in the expression;
 		*/
 		template <typename S>
-		Vec2 operator+(const Vec2<S> & rhs) const
-		{ 
-			return Vec2(vec_[0] + rhs.x() , vec_[1] + rhs.y());
+		Vec2<T> operator+(const Vec2<S> & rhs) const
+		{
+			return Vec2<T>(vec_[0] + rhs.x(), vec_[1] + rhs.y());
+		}
+		
+		template <typename S>
+		Vec2<T>& operator+=(const Vec2<S> & rhs)
+		{
+			vec_[0] += rhs.x();
+			vec_[1] += rhs.y();
+			return *this;
 		}
 
+		Vec2<T> operator+(const T & rhs) const
+		{
+			return Vec2<T>(vec_[0] + rhs, vec_[1] + rhs);
+		}
+
+		Vec2<T>& operator+=(const T & rhs)
+		{			
+			vec_[0] += rhs;
+			vec_[1] += rhs;
+			return *this;
+		}
 
 		template <typename S>
-		Vec2 operator-(const Vec2<S> & rhs) const
+		Vec2<T> operator-(const Vec2<S> & rhs) const
 		{ 
-			return Vec2(vec_[0] - rhs.x() , vec_[1] - rhs.y());
+			return Vec2<T>(vec_[0] - rhs.x() , vec_[1] - rhs.y());
 		}
 
-		Vec2 operator*(const T & rhs) const
-		{ 
-			return Vec2(vec_[0] * rhs , vec_[1] * rhs);
+		template <typename S>
+		Vec2<T>& operator-=(const Vec2<S> & rhs)
+		{
+			vec_[0] -= rhs.x();
+			vec_[1] -= rhs.y();
+			return *this;
 		}
 
-		Vec2 operator/(const T & rhs) const
+		Vec2<T> operator-(const T & rhs) const
+		{
+			return Vec2<T>(vec_[0] - rhs, vec_[1] - rhs);
+		}
+
+		Vec2<T>& operator-=(const T & rhs)
+		{
+			vec_[0] -= rhs;
+			vec_[1] -= rhs;
+			return *this;
+		}
+
+		Vec2<T> operator*(const T & rhs) const
+		{
+			return Vec2<T>(vec_[0] * rhs, vec_[1] * rhs);
+		}
+
+		Vec2<T>& operator*=(const T & rhs)
+		{
+			vec_[0] *= rhs;
+			vec_[1] *= rhs;
+			return *this;
+		}
+
+		Vec2<T> operator/(const T & rhs) const
 		{ 
 			CHECK_ASSERT( rhs != 0);
-			return Vec2(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs));
+			return Vec2<T>(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs));
+		}
+
+		Vec2<T>& operator/=(const T & rhs)
+		{
+			vec_[0] /= rhs;
+			vec_[1] /= rhs;
+			return *this;
 		}
 
 		void Print()
@@ -205,38 +258,100 @@ namespace vEngine
 		}
 
 		template <typename S>
-		Vec3 operator+(const Vec3<S> & rhs) const
-		{ 
-			return Vec3(vec_[0] + rhs.x() , vec_[1] + rhs.y() , vec_[2] + rhs.z());
-		}
-
-		template <typename S>
-		Vec3 operator+(const S& rhs) const
+		Vec3<T> operator+(const Vec3<S> & rhs) const
 		{
-			return Vec3(vec_[0] + rhs, vec_[1] + rhs, vec_[2] + rhs);
+			return Vec3<T>(vec_[0] + rhs.x(), vec_[1] + rhs.y(), vec_[2] + rhs.z());
+		}
+		template <typename S>
+		Vec3<T>& operator+=(const Vec3<S> & rhs)
+		{
+			vec_[0] += rhs.x();
+			vec_[1] += rhs.y();
+			vec_[2] += rhs.z();
+			return *this;
+		}
+
+		Vec3<T> operator+(const T & rhs) const
+		{
+			return Vec3<T>(vec_[0] + rhs, vec_[1] + rhs, vec_[2] + rhs);
+		}
+
+		Vec3<T>& operator+=(const T & rhs)
+		{
+			vec_[0] += rhs;
+			vec_[1] += rhs;
+			vec_[2] += rhs;
+			return *this;
 		}
 
 		template <typename S>
-		Vec3 operator-(const Vec3<S> & rhs) const
+		Vec3<T> operator-(const Vec3<S> & rhs) const
 		{ 
 			return Vec3(vec_[0] - rhs.x() , vec_[1] - rhs.y() , vec_[2] - rhs.z());
 		}
 
 		template <typename S>
-		Vec3 operator*(const Vec3<S> & rhs) const
+		Vec3<T>& operator-=(const Vec3<S> & rhs)
+		{
+			vec_[0] -= rhs.x();
+			vec_[1] -= rhs.y();
+			vec_[2] -= rhs.z();
+			return *this;
+		}
+
+		Vec3<T> operator-(const T & rhs) const
+		{
+			return Vec3<T>(vec_[0] - rhs, vec_[1] - rhs, vec_[2] - rhs);
+		}
+
+		Vec3<T>& operator-=(const T & rhs)
+		{
+			vec_[0] -= rhs;
+			vec_[1] -= rhs;
+			vec_[2] -= rhs;
+			return *this;
+		}
+
+		template <typename S>
+		Vec3<T> operator*(const Vec3<S> & rhs) const
 		{
 			return Vec3(vec_[0] * rhs.x(), vec_[1] * rhs.y(), vec_[2] * rhs.z());
 		}
 
-		Vec3 operator*(const T & rhs) const
+		template <typename S>
+		Vec3<T>& operator*=(const Vec3<S> & rhs)
+		{
+			vec_[0] *= rhs.x();
+			vec_[1] *= rhs.y();
+			vec_[2] *= rhs.z();
+			return *this;
+		}
+
+		Vec3<T> operator*(const T & rhs) const
 		{ 
 			return Vec3(vec_[0] * rhs , vec_[1] * rhs , vec_[2] * rhs);
 		}
 
-		Vec3 operator/(const T & rhs) const
+		Vec3<T>& operator*=(const T & rhs)
+		{
+			vec_[0] *= rhs;
+			vec_[1] *= rhs;
+			vec_[2] *= rhs;
+			return *this;
+		}
+
+		Vec3<T> operator/(const T & rhs) const
 		{ 
 			CHECK_ASSERT( rhs != 0);
 			return Vec3(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs) , vec_[2]* (1.0f  / rhs));
+		}
+
+		Vec3<T>& operator/=(const T & rhs)
+		{
+			vec_[0] /= rhs;
+			vec_[1] /= rhs;
+			vec_[2] /= rhs;
+			return *this;
 		}
 
 		void Print()
@@ -346,26 +461,120 @@ namespace vEngine
 		}
 
 		template <typename S>
-		Vec4 operator+(const Vec4<S> & rhs) const
+		Vec4<T> operator+(const Vec4<S> & rhs) const
 		{ 
-			return Vec4(vec_[0] + rhs.x() , vec_[1] + rhs.y() , vec_[2] + rhs.z() , vec_[3] + rhs.w());
+			return Vec4<T>(vec_[0] + rhs.x() , vec_[1] + rhs.y() , vec_[2] + rhs.z() , vec_[3] + rhs.w());
 		}
 
 		template <typename S>
-		Vec4 operator-(const Vec4<S> & rhs) const
-		{ 
-			return Vec4(vec_[0] - rhs.x() , vec_[1] - rhs.y() , vec_[2] - rhs.z() , vec_[3] - rhs.w());
-		}		
+		Vec4<T>& operator+=(const Vec4<S> & rhs)
+		{
+			vec_[0] += rhs.x();
+			vec_[1] += rhs.y();
+			vec_[2] += rhs.z();
+			vec_[3] += rhs.w();
+			return *this;
+		}
+
+		Vec4<T> operator+(const T & rhs) const
+		{
+			return Vec4<T>(vec_[0] + rhs, vec_[1] + rhs, vec_[2] + rhs, vec_[3] + rhs);
+		}
+
+		Vec4<T> operator+=(const T & rhs)
+		{
+			vec_[0] += rhs;
+			vec_[1] += rhs;
+			vec_[2] += rhs;
+			vec_[3] += rhs;
+			return *this;
+		}
+
+		template <typename S>
+		Vec4<T> operator-(const Vec4<S> & rhs) const
+		{
+			return Vec4<T>(vec_[0] - rhs.x(), vec_[1] - rhs.y(), vec_[2] - rhs.z(), vec_[3] - rhs.w());
+		}
 		
-		Vec4 operator*(const T & rhs) const
+		template <typename S>
+		Vec4<T>& operator-=(const Vec4<S> & rhs)
+		{
+			vec_[0] -= rhs.x();
+			vec_[1] -= rhs.y();
+			vec_[2] -= rhs.z();
+			vec_[3] -= rhs.w();
+			return *this;
+		}
+
+		Vec4<T> operator-(const T & rhs) const
+		{
+			return Vec4<T>(vec_[0] - rhs, vec_[1] - rhs, vec_[2] - rhs, vec_[3] - rhs);
+		}
+
+		Vec4<T> operator-=(const T & rhs)
+		{
+			return *this - rhs;
+		}
+
+		template <typename S>
+		Vec4<T> operator*(const Vec4<S> & rhs) const
+		{
+			return Vec4<T>(vec_[0] * rhs.x(), vec_[1] * rhs.y(), vec_[2] * rhs.z(), vec_[3] * rhs.w());
+		}
+
+		template <typename S>
+		Vec4<T>& operator*=(const Vec4<S> & rhs)
+		{
+			vec_[0] *= rhs.x();
+			vec_[1] *= rhs.y();
+			vec_[2] *= rhs.z();
+			vec_[3] *= rhs.w();
+			return *this;
+		}
+
+		Vec4<T> operator*(const T & rhs) const
 		{ 
 			return Vec4(vec_[0] * rhs , vec_[1] * rhs , vec_[2] * rhs , vec_[3] * rhs);
 		}
 
-		Vec4 operator/(const T & rhs) const
+		Vec4<T>& operator*=(const T & rhs)
+		{
+			vec_[0] *= rhs;
+			vec_[1] *= rhs;
+			vec_[2] *= rhs;
+			vec_[3] *= rhs;
+			return *this;
+		}
+
+		template <typename S>
+		Vec4<T> operator/(const Vec4<S> & rhs) const
+		{
+			return Vec4<T>(vec_[0] / rhs.x(), vec_[1] / rhs.y(), vec_[2] / rhs.z(), vec_[3] / rhs.w());
+		}
+
+		template <typename S>
+		Vec4<T>& operator/=(const Vec4<S> & rhs)
+		{
+			vec_[0] /= rhs.x();
+			vec_[1] /= rhs.y();
+			vec_[2] /= rhs.z();
+			vec_[3] /= rhs.w();
+			return *this;
+		}
+
+		Vec4<T> operator/(const T & rhs) const
 		{ 
 			CHECK_ASSERT( rhs != 0);
-			return Vec4(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs) , vec_[2]* (1.0f  / rhs),vec_[3]* (1.0f  / rhs));
+			return Vec4<T>(vec_[0] * (1.0f / rhs) , vec_[1]* (1.0f  / rhs) , vec_[2]* (1.0f  / rhs),vec_[3]* (1.0f  / rhs));
+		}
+
+		Vec4<T>& operator/=(const T & rhs)
+		{
+			vec_[0] /= rhs;
+			vec_[1] /= rhs;
+			vec_[2] /= rhs;
+			vec_[3] /= rhs;
+			return *this;
 		}
 	};
 

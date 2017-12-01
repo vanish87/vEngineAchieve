@@ -132,7 +132,7 @@ namespace vEngine
 			Math::GetPolarDecomposition2D(Fe, R, S);
 			//PRINT_VAR(R);
 
-			float2x2 temp = (Fe - R) * 2 * muFp * Math::Transpose(Fe);
+			float2x2 temp = 2 * muFp * (Fe - R)  * Math::Transpose(Fe);
 			//PRINT_VAR(temp);
 			
 			float2x2 lambda_mat;

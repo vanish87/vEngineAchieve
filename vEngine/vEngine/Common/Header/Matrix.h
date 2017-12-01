@@ -7,6 +7,9 @@
 
 namespace vEngine
 {
+
+	
+
 	template <typename T>
 	class Matrix
 	{
@@ -115,7 +118,7 @@ namespace vEngine
 		}
 
 		template <typename S>
-		Matrix<T>		operator-(const Matrix<S> & rhs) const
+		Matrix<T> operator-(const Matrix<S> & rhs) const
 		{
 			Matrix<T> ret;
 			ret[0] = this->data_[0] - rhs[0];
@@ -125,16 +128,16 @@ namespace vEngine
 			return ret;
 		}
 
-		Matrix<T> &		operator*(T const & rhs)
+		//here to use same T for ambiguous operator
+		Matrix<T> operator*(const T & rhs) const
 		{
-			for (size_t i = 0; i < row_; ++ i)
-			{
-				data_[i] =data_[i]* rhs;
-			}
-			return *this;
+			Matrix<T> ret;
+			ret[0] = data_[0] * rhs;
+			ret[1] = data_[1] * rhs;
+			ret[2] = data_[2] * rhs;
+			ret[3] = data_[3] * rhs;
+			return ret;
 		}
-
-
 	};
 
 	template <typename T>
@@ -159,11 +162,11 @@ namespace vEngine
 			data_[1] = y;
 		}
 		explicit Matrix2D(const T & e11, const T & e12,
-						  const T & e21, const T & e22 )
+			const T & e21, const T & e22)
 		{
-			data_[0][0] = e11;	data_[0][1] = e12;	
+			data_[0][0] = e11;	data_[0][1] = e12;
 			data_[1][0] = e21;	data_[1][1] = e22;
-			
+
 		}
 		explicit Matrix2D(const T(&src)[2][2])
 		{
@@ -246,13 +249,12 @@ namespace vEngine
 			return ret;
 		}
 
-		Matrix2D<T> &		operator*(T const & rhs)
+		Matrix2D<T> 	operator*(const T & rhs) const
 		{
-			for (size_t i = 0; i < row_; ++i)
-			{
-				data_[i] = data_[i] * rhs;
-			}
-			return *this;
+			Matrix2D<T> ret;
+			ret[0] = data_[0] * rhs;
+			ret[1] = data_[1] * rhs;
+			return ret;
 		}
 
 		void Print()
@@ -262,6 +264,21 @@ namespace vEngine
 		}
 
 	};
+
+	template <typename T>
+	Matrix2D<T>	operator*(const T & lhs, const Matrix2D<T> & rhs)
+	{
+		return rhs * lhs;
+	}
+
+	template <typename T>
+	Matrix<T>	operator*(const T & lhs, const Matrix<T> & rhs)
+	{
+		return rhs * lhs;
+	}
+
+
+	
 }
 
 #endif
