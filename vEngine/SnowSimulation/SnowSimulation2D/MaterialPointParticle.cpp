@@ -40,7 +40,7 @@ namespace vEngine
 		{
 			this->restriction_instance_.Apply(*this); 
 			
-			float Delta = 1/60.0f;
+			float Delta = MS_PER_UPDATE;
 			if (Delta > 0)
 			{
 				this->last_frame_info_ = this->current_frame_info_;
@@ -51,9 +51,9 @@ namespace vEngine
 
 				if (this->render_element_ != nullptr)
 				{
-					float4x4 m = this->render_element_->GetLocalMatrix();
+					float4x4& m = this->render_element_->GetLocalMatrix();
 					Math::Translate(m, this->current_frame_info_.location.x(), this->current_frame_info_.location.y(), this->current_frame_info_.location.z());
-					this->render_element_->SetModelMatrix(m);
+					//this->render_element_->SetModelMatrix(m);
 				}
 				this->current_frame_info_.acceleration = float3(0, 0, 0);
 			}

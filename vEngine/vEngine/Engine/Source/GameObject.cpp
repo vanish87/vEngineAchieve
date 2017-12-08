@@ -14,7 +14,8 @@ namespace vEngine
 
 	void GameObject::Update()
 	{
-
+		//see Component pattern in Game Programming Pattern
+		//here we should have to update all components of game objects
 	}
 
 	void GameObject::Load()

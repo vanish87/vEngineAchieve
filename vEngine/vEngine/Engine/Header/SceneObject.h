@@ -23,7 +23,7 @@ namespace vEngine
 		DEBUG_CLASS_FILE_NAME
 
 		//do update aabb and set model_matrix equals to its render_element_'s
-		virtual void Update();
+		virtual void Update() override;
 		virtual RenderElement* GetRenderElement();
 
 		virtual void AddToScene();
@@ -32,7 +32,7 @@ namespace vEngine
 		void SetVisiable(bool visiable);
 
 		bool MainThreadUpdate();
-		void SetVMainThreadUpdate(bool InMain);
+		void SetMainThreadUpdate(bool InMain);
 	protected:
 
 		RenderElement* render_element_;

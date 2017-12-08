@@ -93,7 +93,7 @@ namespace vEngine
 
 				it.SetScale(float3(1, 1, 1));
 				it.SetVisiable(true);
-				it.SetVMainThreadUpdate(false);
+				it.SetMainThreadUpdate(false);
 
 				it.AddToScene();
 

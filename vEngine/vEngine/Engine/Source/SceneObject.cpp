@@ -15,6 +15,8 @@ namespace vEngine
 
 	void SceneObject::Update()
 	{
+		GameObject::Update();
+
 		CHECK_ASSERT(this->render_element_ != nullptr);
 		if (this->render_element_ != nullptr)
 		{
@@ -44,7 +46,7 @@ namespace vEngine
 		return this->update_in_main_thread_;
 	}
 
-	void SceneObject::SetVMainThreadUpdate(bool InMain)
+	void SceneObject::SetMainThreadUpdate(bool InMain)
 	{
 		this->update_in_main_thread_ = InMain;
 	}
