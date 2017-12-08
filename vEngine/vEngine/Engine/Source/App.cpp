@@ -6,6 +6,8 @@
 #include "Engine/Header/Font.h"
 #include "Engine/Header/Text.h"
 
+#include "Common/Header/Timer.h"
+
 
 namespace vEngine
 {
@@ -48,9 +50,13 @@ namespace vEngine
 	void App::Run()
 	{
 		MSG msg = {0};
-		DWORD next_game_tick;
-		int loops;
-		next_game_tick = GetTickCount();
+		//DWORD next_game_tick;
+		//int loops;
+		//next_game_tick = GetTickCount();
+
+		Timer UpdateTimer;
+		double Previous = UpdateTimer.Time();
+		double Lag = 0;
 
 		while( WM_QUIT != msg.message )
 		{
@@ -61,10 +67,14 @@ namespace vEngine
 			}
 			else
 			{
-
-
-				loops = 0;
+				//loops = 0;
 				//while( GetTickCount() > next_game_tick && loops < MAX_CYCLES_PER_FRAME ) 
+
+				double Current = UpdateTimer.Time();
+				double Elapsed = Current - Previous;
+				Previous = Current;
+				Lag += Elapsed;
+				//while(Lag >= MS_PER_UPDATE)
 				{
 					Font::GetFontByName("msyh").ClearCPUBuffer();
 					this->Update();//do user's update
@@ -73,8 +83,9 @@ namespace vEngine
 					Context::Instance().GetSceneManager().Update();
 
 
-					next_game_tick += UPDATE_INTERVAL;
-					loops++;
+// 					next_game_tick += UPDATE_INTERVAL;
+// 					loops++;
+					Lag -= MS_PER_UPDATE;
 				}
 				Context::Instance().GetSceneManager().Flush();
 
