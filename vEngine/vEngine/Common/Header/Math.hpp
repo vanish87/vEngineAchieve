@@ -73,6 +73,23 @@ namespace vEngine
 		}
 
 		template <typename T>
+		Matrix3D<T>	Multiply(const Matrix3D<T> & lhs, const Matrix3D<T> & rhs)
+		{
+			CHECK_ASSERT(lhs.row() == rhs.col());
+			Matrix3D<T> ret;
+			size_t dim = 3;
+
+			for (int row = 0; row < dim; row++)
+				for (int col = 0; col < dim; col++)
+				{
+					ret[row][col] = 0;
+					for (int i = 0; i < dim; i++)
+						ret[row][col] += lhs[row][i] * rhs[i][col];
+				}
+			return ret;
+		}
+
+		template <typename T>
 		T Dot(Vec2<T> const & lhs, Vec2<T> const & rhs)
 		{
 			return T(lhs.x()*rhs.x() + lhs.y()*rhs.y());
@@ -180,6 +197,14 @@ namespace vEngine
 		}
 
 		template <typename T>
+		void Identity(Matrix3D<T> & lhs)
+		{
+			lhs = Matrix3D<T>(1, 0, 0,
+							  0, 1, 0, 
+							  0, 0, 1);
+		}
+
+		template <typename T>
 		Matrix<T>  Inverse(Matrix<T> & rhs)
 		{
 			//from KlayGE
@@ -282,6 +307,15 @@ namespace vEngine
 			return Matrix2D<T>(
 				lhs(0, 0), lhs(1, 0), 
 				lhs(0, 1), lhs(1, 1)
+				);
+		}
+		template <typename T>
+		Matrix3D<T>  Transpose(Matrix3D<T> & lhs)
+		{
+			return Matrix3D<T>(
+				lhs(0, 0), lhs(1, 0), lhs(2, 0),
+				lhs(0, 1), lhs(1, 1), lhs(2, 1),
+				lhs(0, 2), lhs(1, 2), lhs(2, 2)
 				);
 		}
 

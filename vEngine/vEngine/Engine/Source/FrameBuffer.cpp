@@ -1,4 +1,5 @@
 #include "Engine/Header/FrameBuffer.h"
+#include "Engine/Header/Texture.h"
 
 namespace vEngine
 {
@@ -58,6 +59,8 @@ namespace vEngine
 				return;
 			}
 		}
+
+		CHECK_ASSERT(render_tex->GetUsage() == TU_SR_RT || render_tex->GetUsage() == TU_RENDER_TARGET);
 		render_texture_.push_back(render_tex);
 	}
 

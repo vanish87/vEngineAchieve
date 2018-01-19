@@ -565,6 +565,8 @@ namespace vEngine
 			float2x2 Vtp;
 			Math::GetSVD2D(it.Fe, Up, Dp, Vtp);
 
+			Vtp = Math::Transpose(Vtp);
+
 			//here CRIT_COMPRESS stores (1 - Sigma)
 			//CRIT_STRETCH stores (1 + Sigma)
 			Dp.x() = Math::Clamp(Dp.x(), CRIT_COMPRESS, CRIT_STRETCH);
@@ -681,12 +683,31 @@ namespace vEngine
 
 	void TestFunction()
 	{
-		float2x2 A = float2x2(1,0, 0.13128, 1.17665);
+		/*float2x2 A = float2x2(1,2, 3, 4);
 		float2x2 Up;
 		float2	 Dp;
 		float2x2 Vtp;
 
 		Math::GetSVD2D(A, Up, Dp, Vtp);
+
+
+		PRINT_VAR(Up);
+		PRINT_VAR(Dp);
+		PRINT_VAR(Vtp);*/
+
+
+
+		float3x3 A = float3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		float3x3 Up;
+		float3	 Dp;
+		float3x3 Vtp;
+
+
+		Math::GetSVD3D(A, Up, Dp, Vtp);
+
+
+
+		PRINT_VAR(Up);
 	}
 
 

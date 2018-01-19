@@ -144,6 +144,7 @@ namespace vEngine
 		//in the end of this function, I TRANSPOSE V so it will return V-Transpose instead of V
 		//this is different with original paper, which returns V
 		void GetSVD2D(float2x2 A, float2x2& U, float2& D, float2x2& Vt);
+		void GetSVD3D(float3x3 A, float3x3& U, float3& D, float3x3& Vt);
 	}
 
 }

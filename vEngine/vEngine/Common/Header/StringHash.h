@@ -12,7 +12,7 @@ namespace vEngine
 	{
 	public:
 		StringHash(const std::string String)
-			:HashValue(_Hash(String.c_str(), 0)), StringValue(String)
+			:HashValue(RT_HASH(String.c_str())), StringValue(String)
 		{
 
 		}

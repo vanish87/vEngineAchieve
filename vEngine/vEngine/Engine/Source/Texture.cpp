@@ -23,9 +23,14 @@ namespace vEngine
 		usage_ = usage;
 	}
 
+	TextureUsage Texture::GetUsage()
+	{
+		return this->usage_;
+	}
+
 	TextureType Texture::GetType()
 	{
-		return type_;
+		return this->type_;
 	}
 
 

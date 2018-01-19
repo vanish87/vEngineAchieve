@@ -58,7 +58,7 @@ namespace vEngine
 
 
 		WNDCLASS wcex;
-		wcex.style = CS_HREDRAW | CS_VREDRAW;
+		wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;//CS_OWNDC to create own device context
 		wcex.lpfnWndProc = WndProc;
 		wcex.cbClsExtra = 0;
 		wcex.cbWndExtra = sizeof(this);

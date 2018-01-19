@@ -257,6 +257,12 @@ namespace vEngine
 			return vec_[index];
 		}
 
+		const T& operator[](size_t index) const
+		{
+			CHECK_ASSERT(index < 3);
+			return vec_[index];
+		}
+
 		template <typename S>
 		Vec3<T> operator+(const Vec3<S> & rhs) const
 		{

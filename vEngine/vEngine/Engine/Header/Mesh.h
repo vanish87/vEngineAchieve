@@ -17,7 +17,7 @@ namespace vEngine
 		
 		DEBUG_CLASS_FILE_NAME
 
-		Mesh(std::string name, RenderLayout* render_layout, float4x4 model_matrix, VertexType* vb,uint32_t vsize, uint32_t* ib, uint8_t mat_id = NULL)
+		Mesh(std::string name, RenderLayout* render_layout, float4x4 model_matrix, VertexType* vb,uint32_t vsize, uint32_t* ib, uint8_t mat_id = 0)
 			:RenderElement(model_matrix), name_(name), render_layout_(render_layout),
 			material_id_(mat_id),
 			vb_(vb), vsize_(vsize), ib_(ib)

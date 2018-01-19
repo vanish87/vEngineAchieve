@@ -88,6 +88,9 @@ namespace vEngine
  	class Matrix;
 	typedef Matrix<float> float4x4;
 
+	template <typename T>
+	class Matrix3D;
+	typedef Matrix3D<float> float3x3;
 
 	template <typename T>
 	class Matrix2D;
@@ -103,6 +106,7 @@ namespace vEngine
 	class StringHash;
 	typedef StringHash string_hash;
 	#else
+	#warning "This is not workign here becasue size_t(string xxx) will return address of this string"
 	typedef size_t string_hash;
 	#endif
 

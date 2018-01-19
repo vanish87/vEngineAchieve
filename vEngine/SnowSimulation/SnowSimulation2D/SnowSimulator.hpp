@@ -45,7 +45,7 @@ namespace vEngine
 
 		ReturnCode Reset();
 
-		static const uint32_t	NUMBER_OF_PARTICLES = 500;
+		static const uint32_t	NUMBER_OF_PARTICLES = 50;
 		static const float3		GRAVITY_CONSTANT;
 
 	private:

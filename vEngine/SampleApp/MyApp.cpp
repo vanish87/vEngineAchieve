@@ -11,6 +11,8 @@
 #include "D3D11\D3DSkyDome.h"
 
 #include "TestCase/TestCase.h"
+#include "Engine/Header/CommonTools.h"
+#include "Common/Header/StringHash.h"
 
 using namespace vEngine;
 
@@ -32,6 +34,13 @@ MyApp::~MyApp(void)
 
 void MyApp::InitObjects()
 {
+	string_hash testh1 = string_hash("test");
+
+	string_hash test111 = CT_HASH("test");
+	string_hash test12 = CT_HASH("test");
+
+	CHECK_ASSERT(test111 == testh1);
+
 	//ScriptTest::GetInstance().Run();
 	ScriptContext& script = Context::Instance().GetScriptContext();
 	ScriptFuctionDescription dec;

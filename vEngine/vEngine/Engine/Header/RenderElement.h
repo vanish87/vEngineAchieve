@@ -35,6 +35,10 @@ namespace vEngine
 		virtual void EndRender() = 0;
 
 	protected:
+		//this is not necessary because we need to save it into SceneObject
+		//I have a duplicated value here because I create SceneObject manually
+		//so Update of SceneObejct copy this to its
+		//But ideally I want to set value into SceneOject's matrix directly when loading asset from disk file.
 		float4x4 local_matrix_;
 
 		ShaderObject* shader_object_;

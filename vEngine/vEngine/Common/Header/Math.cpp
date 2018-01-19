@@ -220,7 +220,7 @@ namespace vEngine
 			float3 edge1, edge2, tvec, pvec, qvec;
 			float  u, v;
 			float det, inv_det;
-			float EPSILON = 0.000001f;
+			float epsilon = 0.000001f;
 
 			t = std::numeric_limits<float>::max();
 
@@ -253,7 +253,7 @@ namespace vEngine
 			//end cull test
 
 /*			//non-culling
-			if(det > -EPSILON && det < EPSILON)
+			if(det > -std::numeric_limits<float>::epsilon() && det < std::numeric_limits<float>::epsilon())
 				return false;
 			inv_det = 1.0f / det;
 
@@ -289,7 +289,7 @@ namespace vEngine
 				};
 
 				float F;
-				int32_t FInt;
+				int64_t FInt;
 			};
 			CompareUnion LhsFloat(lhs);
 			CompareUnion RhsFloat(rhs);
@@ -305,7 +305,7 @@ namespace vEngine
 				return false;
 			}
 
-			int32_t Ulps = (std::abs)(LhsFloat.FInt - RhsFloat.FInt);
+			int64_t Ulps = (std::abs)(LhsFloat.FInt - RhsFloat.FInt);
 			if (Ulps <= FLOAT_MAX_ULP)
 				return true;
 			return false;
@@ -439,6 +439,10 @@ namespace vEngine
 			}
 
 			S = Math::Transpose(R) * A;
+			PRINT_VAR(R);
+			PRINT_VAR(S);
+			float2x2 AToVerify = R * S;
+			PRINT_VAR(AToVerify);
 			/*
 			PRINT_WARNING("Start GetPolarDecomposition2D");
 			PRINT_VAR(A);
@@ -449,14 +453,14 @@ namespace vEngine
 			PRINT_VAR(AToVerify);
 			PRINT_WARNING("End GetPolarDecomposition2D");
 
-			const float EPSILON = 1e-4f;
+			const float std::numeric_limits<float>::epsilon() = 1e-4f;
 			CHECK_ASSERT(Math::IsFloatEqual(A[0][0], AToVerify[0][0]));
 			CHECK_ASSERT(Math::IsFloatEqual(A[0][1], AToVerify[0][1]));
 			CHECK_ASSERT(Math::IsFloatEqual(A[1][0], AToVerify[1][0]));
 			CHECK_ASSERT(Math::IsFloatEqual(A[1][1], AToVerify[1][1]));*/
 		}
 
-		void GetSVD2D(float2x2 A, float2x2& U, float2& D, float2x2& Vt) 
+		void GetSVD2D(float2x2 A, float2x2& U, float2& D, float2x2& V) 
 		{
 			float2x2 R;
 			float2x2 S;
@@ -491,17 +495,18 @@ namespace vEngine
 				D[0] = D[1];
 				D[1] = temp;
 
-				Vt = G2(-s, c);
+				V = G2(-s, c);
 			}
 			else
 			{
-				Vt = G2(c, s);
+				V = G2(c, s);
 			}
 
-			U = R*Vt;
+			U = R*V;
 
+			//we will transpose it outside the function
 			//before this variable Vt stores V
-			Vt = Math::Transpose(Vt);
+			//Vt = Math::Transpose(Vt);
 			/*
 			PRINT_WARNING("Start GetSVD2D");
 			PRINT_VAR(A);
@@ -517,7 +522,7 @@ namespace vEngine
 			PRINT_VAR(AToVerify);
 			PRINT_WARNING("End GetSVD2D");
 
-			const float EPSILON = 1e-4f;
+			const float std::numeric_limits<float>::epsilon() = 1e-4f;
 			CHECK_ASSERT(Math::IsFloatEqual(A[0][0], AToVerify[0][0]));
 			CHECK_ASSERT(Math::IsFloatEqual(A[0][1], AToVerify[0][1]));
 			CHECK_ASSERT(Math::IsFloatEqual(A[1][0], AToVerify[1][0]));
@@ -593,6 +598,433 @@ namespace vEngine
 			PRINT_VAR(AToVerify);
 
 		}*/
+
+
+
+		float2 GetGivensConventionalCS(float a, float b)
+		{
+			float d = a * a + b * b;
+			float c = 1;
+			float s = 0;
+			if (Math::Abs(d) > 0)
+			{
+				float t = Math::InvSqrt(d);
+				c = a * t;
+				s = -b * t;
+			}
+
+			return float2(c, s);
+		}
+
+		float2 GetGivensUnConventionalCS(float a, float b)
+		{
+
+			float d = a * a + b * b;
+			float c = 1;
+			float s = 0;
+			if (Math::Abs(d) > 0)
+			{
+				float t = Math::InvSqrt(d);
+				c = a * t;
+				s = b * t;
+			}
+
+			return float2(c, s);
+		}
+
+		float3x3 G3_12(float c, float s, bool use_conventional = true)
+		{
+			float2 cs = use_conventional ? GetGivensConventionalCS(c, s) : GetGivensUnConventionalCS(c, s);
+			c = cs.x();
+			s = cs.y();
+			return float3x3(c, s, 0,
+				-s, c, 0,
+				0, 0, 1);
+		}
+
+
+		float3x3 G3_23(float c, float s, bool use_conventional = true)
+		{
+			float2 cs = use_conventional ? GetGivensConventionalCS(c, s) : GetGivensUnConventionalCS(c, s);
+			c = cs.x();
+			s = cs.y();
+			return float3x3(1, 0, 0,
+				0, c, s,
+				0, -s, c);
+		}
+
+
+		float3x3 G3_13(float c, float s, bool use_conventional = true)
+		{
+			float2 cs = use_conventional ? GetGivensConventionalCS(c, s) : GetGivensUnConventionalCS(c, s);
+			c = cs.x();
+			s = cs.y();
+			return float3x3(c, 0, s,
+				0, 1, 0,
+				-s, 0, c);
+		}		
+		
+
+		void CodeZerochasing( float3x3& U,  float3x3& A,  float3x3& V)
+		{
+			float3x3 G = G3_12(A[0][0], A[1][0]);
+			A = Math::Multiply(Math::Transpose(G), A);
+			U = Math::Multiply(U, G);
+			//U = MyMul(U, G); same as mul
+			//checked
+
+			float c = A[0][1];
+			float s = A[0][2];
+			if (Math::Abs(A[1][0]) > std::numeric_limits<float>::epsilon())
+			{
+				c = A[0][0] * A[0][1] + A[1][0] * A[1][1];
+				s = A[0][0] * A[0][2] + A[1][0] * A[1][2];
+			}
+
+			G = G3_23(c, s);
+			A = Math::Multiply(A, G);
+			V = Math::Multiply(V, G);
+			//checked;
+
+			G = G3_23(A[1][1], A[2][1]);
+			A = Math::Multiply(Math::Transpose(G), A);
+			U = Math::Multiply(U, G);
+			//checked
+		}
+
+		void Zerochasing( float3x3& U,  float3x3& A,  float3x3& V)
+		{
+			float3x3 G = G3_23(A[0][1], A[0][2]);
+			A = Math::Multiply(A, G);
+			U = Math::Multiply(Math::Transpose(G), U);
+
+			G = G3_23(A[0][1], A[0][2]);
+			A = Math::Multiply(Math::Transpose(G), A);
+			V = Math::Multiply(Math::Transpose(G), V);
+
+			G = G3_23(A[1][1], A[2][1]);
+			A = Math::Multiply(Math::Transpose(G), A);
+			U = Math::Multiply(U, G);
+		}
+
+		void Bidiagonalize( float3x3& U,  float3x3& A,  float3x3& V)
+		{
+			float3x3 G = G3_23(A[1][0], A[2][0]);
+			A = Math::Multiply(Math::Transpose(G), A);
+			U = Math::Multiply(U, G);
+			//checked
+
+			CodeZerochasing(U, A, V);
+		}
+
+		float FrobeniusNorm(float3x3 input)
+		{
+			float ret = 0;
+			for (int i = 0; i < 3; ++i)
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					ret += input[i][j] * input[i][j];
+				}
+			}
+
+			return sqrt(ret);
+		}
+
+		void FlipSign(int index,  float3x3& mat, float3& sigma)
+		{
+			mat[0][index] = -mat[0][index];
+			mat[1][index] = -mat[1][index];
+			mat[2][index] = -mat[2][index];
+			sigma[index] = -sigma[index];
+		}
+
+		void FlipSignColumn( float3x3& mat, int col)
+		{
+			mat[0][col] = -mat[0][col];
+			mat[1][col] = -mat[1][col];
+			mat[2][col] = -mat[2][col];
+		}
+
+		inline void Swap(float& a, float& b)
+		{
+			float temp = a;
+			a = b;
+			b = temp;
+		}
+
+
+		inline void Swap(float3& a, float3& b)
+		{
+			float3 temp = a;
+			a = b;
+			b = temp;
+		}
+
+		inline void SwapColumn( float3x3& a, int col_a,  float3x3& b, int col_b)
+		{
+			float3 temp = float3(a[0][col_a], a[1][col_a], a[2][col_a]);
+			a[0][col_a] = b[0][col_b];
+			a[1][col_a] = b[1][col_b];
+			a[2][col_a] = b[2][col_b];
+
+			b[0][col_b] = temp[0];
+			b[1][col_b] = temp[1];
+			b[2][col_b] = temp[2];
+		}
+
+		void SortWithTopLeftSub( float3x3& U, float3& sigma,  float3x3& V)
+		{
+			if (Math::Abs(sigma[1]) >= Math::Abs(sigma[2]))
+			{
+				if (sigma[1] < 0)
+				{
+					FlipSign(1, U, sigma);
+					FlipSign(2, U, sigma);
+				}
+				return;
+			}
+			if (sigma[2] < 0)
+			{
+				FlipSign(1, U, sigma);
+				FlipSign(2, U, sigma);
+			}
+			Swap(sigma[1], sigma[2]);
+			SwapColumn(U, 1, U, 2);
+			SwapColumn(V, 1, V, 2);
+
+			if (sigma[1] > sigma[0])
+			{
+				Swap(sigma[0], sigma[1]);
+				SwapColumn(U, 0, U, 1);
+				SwapColumn(V, 0, V, 1);
+			}
+			else
+			{
+				FlipSignColumn(U, 2);
+				FlipSignColumn(V, 2);
+			}
+		}
+
+		void SortWithBotRightSub( float3x3& U, float3& sigma,  float3x3& V)
+		{
+			if (Math::Abs(sigma[0]) >= Math::Abs(sigma[1]))
+			{
+				if (sigma[0] < 0)
+				{
+					FlipSign(0, U, sigma);
+					FlipSign(2, U, sigma);
+				}
+				return;
+			}
+			Swap(sigma[0], sigma[1]);
+			SwapColumn(U, 0, U, 1);
+			SwapColumn(V, 0, V, 1);
+
+			if (Math::Abs(sigma[1]) < Math::Abs(sigma[2]))
+			{
+				Swap(sigma[1], sigma[2]);;
+				SwapColumn(U, 1, U, 2);
+				SwapColumn(V, 1, V, 2);
+			}
+			else
+			{
+				FlipSignColumn(U, 2);
+				FlipSignColumn(V, 2);
+			}
+
+			if (sigma[1] < 0)
+			{
+				FlipSign(1, U, sigma);
+				FlipSign(2, U, sigma);
+			}
+		}
+
+		void SolveReducedTopLeft( float3x3& B,  float3x3& U, float3& sigma,  float3x3& V)
+		{
+			float s3 = B[2][2];
+			//float2x2 u = G2(1, 0);
+			//float2x2 v = G2(1, 0);
+
+			float2x2 top_left = float2x2(B[0][0], B[0][1], B[1][0], B[1][1]);
+
+			float2x2 A2 = top_left;
+			float2x2 U2;
+			float2 D2;
+			float2x2 V2;
+			GetSVD2D(A2, U2, D2, V2);
+
+			float3x3 u3 = G3_12(U2[0][0], U2[0][1], false);
+			float3x3 v3 = G3_12(V2[0][0], V2[0][1], false);
+
+			U = Math::Multiply(U, u3);
+			V = Math::Multiply(V, v3);
+
+			sigma = float3(D2.x(), D2.y(), s3);
+		}
+
+
+		void SolveReducedBotRight( float3x3& B,  float3x3& U, float3& sigma,  float3x3& V)
+		{
+			float s1 = B[0][0];
+			//float2x2 u = G2(1, 0);
+			//float2x2 v = G2(1, 0);
+
+			float2x2 bot_right = float2x2(B[1][1], B[1][2], B[2][1], B[2][2]);
+
+			float2x2 A2 = bot_right;
+			float2x2 U2;
+			float2 D2;
+			float2x2 V2;
+			GetSVD2D(A2, U2, D2, V2);
+
+			float3x3 u3 = G3_12(U2[0][0], U2[0][1], false);
+			float3x3 v3 = G3_12(V2[0][0], V2[0][1], false);
+
+			U = Math::Multiply(U, u3);
+			V = Math::Multiply(V, v3);
+			sigma = float3(s1, D2.x(), D2.y());
+		}
+
+		void PostProcess(float3x3 B,  float3x3& U,  float3x3& V, float3 alpha, float2 beta, float3& sigma, float tao)
+		{
+			if (Math::Abs(beta[1]) <= tao)
+			{
+				SolveReducedTopLeft(B, U, sigma, V);
+				SortWithTopLeftSub(U, sigma, V);
+			}
+			else if (Math::Abs(beta[0]) <= tao)
+			{
+				SolveReducedBotRight(B, U, sigma, V);
+				SortWithBotRightSub(U, sigma, V);
+			}
+			else if (Math::Abs(alpha[1]) <= tao)
+			{
+				//UnConventional G here
+				float3x3 G = G3_23(B[1][2], B[2][2], false);
+				B = Math::Multiply(Math::Transpose(G), B);
+				U = Math::Multiply(U, G);
+
+				SolveReducedTopLeft(B, U, sigma, V);
+				SortWithTopLeftSub(U, sigma, V);
+			}
+			else if (Math::Abs(alpha[2]) <= tao)
+			{
+				float3x3 G = G3_23(B[1][1], B[1][2]);
+				B = Math::Multiply(B, G);
+				V = Math::Multiply(V, G);
+
+				G = G3_13(B[0][0], B[0][2]);
+				B = Math::Multiply(B, G);
+				V = Math::Multiply(V, G);
+
+				//checked
+				SolveReducedTopLeft(B, U, sigma, V);
+				//checked
+				SortWithTopLeftSub(U, sigma, V);
+				//checked
+			}
+			else if (Math::Abs(alpha[0]) <= tao)
+			{
+				//UnConventional G here
+				float3x3 G = G3_12(B[0][1], B[1][1], false);
+				B = Math::Multiply(Math::Transpose(G), B);
+				U = Math::Multiply(U, G);
+
+				//UnConventional G here
+				G = G3_13(B[0][2], B[2][2], false);
+				B = Math::Multiply(Math::Transpose(G), B);
+				U = Math::Multiply(U, G);
+
+				SolveReducedBotRight(B, U, sigma, V);
+				SortWithBotRightSub(U, sigma, V);
+			}
+			else
+			{
+				//sigma = float3(111, 222, 333);
+			}
+		}
+
+
+		void GetSVD3D(float3x3 A,  float3x3& U,  float3& D,  float3x3& V)
+		{
+			float3x3 B = A;
+			Math::Identity(U);
+			D = float3(0, 0, 0);
+			Math::Identity(V);
+			Bidiagonalize(U, B, V);
+			//chekced
+
+
+			float3 alpha = float3(B[0][0], B[1][1], B[2][2]);
+			float2 beta = float2(B[0][1], B[1][2]);
+			float2 gamma = float2(alpha[0] * beta[0], alpha[1] * beta[1]);
+
+			float tol = 128 * std::numeric_limits<float>::epsilon();
+			float tao = tol * Math::Max(0.5f * FrobeniusNorm(B), 1.0f);
+
+
+			while (Math::Abs(alpha[0]) > tao && Math::Abs(alpha[1]) > tao && Math::Abs(alpha[2]) > tao &&
+				Math::Abs(beta[0])  > tao && Math::Abs(beta[1]) > tao)
+			{
+				float a1 = alpha[1] * alpha[1] + beta[0] * beta[0];
+				float a2 = alpha[2] * alpha[2] + beta[1] * beta[1];
+				float b1 = gamma[1];
+
+
+				float d = (a1 - a2) * 0.5f;
+				float mu = (b1 * b1) / (Math::Abs(d) + sqrt(d*d + b1*b1));
+				//copy sign from d to mu
+				//float d_sign = sign(d);
+				//mu = d_sign * Math::Abs(mu);
+
+				mu = std::copysign(mu, d);
+
+				//code not in the paper
+				//mu = a2 - mu;
+				//----------------
+
+				float3x3 G = G3_12(alpha[0] * alpha[0] - mu, gamma[0]);
+				B = Math::Multiply(B, G);
+				V = Math::Multiply(V, G);
+
+				CodeZerochasing(U, B, V);
+
+				alpha = float3(B[0][0], B[1][1], B[2][2]);
+				beta = float2(B[0][1], B[1][2]);
+				gamma = float2(alpha[0] * beta[0], alpha[1] * beta[1]);
+			}
+
+			PostProcess(B, U, V, alpha, beta, D, tao);
+
+			PRINT_WARNING("Start GetSVD3D");
+			PRINT_VAR(A);
+			PRINT("To verify:");
+			PRINT_VAR(U);
+			PRINT_VAR(D);
+			PRINT_VAR(V);
+
+			float3x3 D_mat;
+			D_mat[0][0] = D[0];
+			D_mat[1][1] = D[1];
+			D_mat[2][2] = D[2];
+			float3x3 AToVerify = U * D_mat * Math::Transpose(V);
+			PRINT_VAR(AToVerify);
+			PRINT_WARNING("End GetSVD3D");
+
+
+			CHECK_ASSERT(Math::IsFloatEqual(A[0][0], AToVerify[0][0]));
+			CHECK_ASSERT(Math::IsFloatEqual(A[0][1], AToVerify[0][1]));
+			CHECK_ASSERT(Math::IsFloatEqual(A[0][2], AToVerify[0][2]));
+
+			CHECK_ASSERT(Math::IsFloatEqual(A[1][0], AToVerify[1][0]));
+			CHECK_ASSERT(Math::IsFloatEqual(A[1][1], AToVerify[1][1]));
+			CHECK_ASSERT(Math::IsFloatEqual(A[1][2], AToVerify[1][2]));
+
+			CHECK_ASSERT(Math::IsFloatEqual(A[2][0], AToVerify[2][0]));
+			CHECK_ASSERT(Math::IsFloatEqual(A[2][1], AToVerify[2][1]));
+			CHECK_ASSERT(Math::IsFloatEqual(A[2][2], AToVerify[2][2]));
+		}
 	}
 
 }

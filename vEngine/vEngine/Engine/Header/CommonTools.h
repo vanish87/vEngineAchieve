@@ -16,7 +16,11 @@ struct EnsureConst
 	static const size_t value = N;
 };
 
+#ifdef _DEBUG
+#define CT_HASH(x) x
+#define RT_HASH(x) _Hash(x, 0)
+#else
 #define CT_HASH(x) (EnsureConst<_Hash(x, 0)>::value)
 #define RT_HASH(x) _Hash(x, 0)
-
+#endif
 #endif

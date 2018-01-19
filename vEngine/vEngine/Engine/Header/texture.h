@@ -17,6 +17,7 @@ namespace vEngine
 		virtual ~Texture(void);
 
 		void SetUsage(TextureUsage usage);
+		TextureUsage GetUsage();
 		TextureType GetType();
 
 		void* Map(AccessType access_type)

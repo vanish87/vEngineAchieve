@@ -148,7 +148,7 @@ namespace vEngine
 
 		static const short row_ = 2;
 		static const short col_ = 2;
-		static const short size_ = 4;
+		static const short size_ = 2;
 
 	public:
 		Matrix2D()
@@ -266,7 +266,148 @@ namespace vEngine
 	};
 
 	template <typename T>
+	class Matrix3D
+	{
+	private:
+		Vec3<Vec3<T>> data_;
+
+		static const short row_ = 3;
+		static const short col_ = 3;
+		static const short size_ = 3;
+
+	public:
+		Matrix3D()
+		{
+			data_[0][0] = 0;	data_[0][1] = 0; data_[0][2] = 0;
+			data_[1][0] = 0;	data_[1][1] = 0; data_[1][2] = 0;
+			data_[2][0] = 0;	data_[2][1] = 0; data_[2][2] = 0;
+		}
+		explicit Matrix3D(const Vec3<T> & x, const Vec3<T> & y, const Vec3<T> & z)
+		{
+			data_[0] = x;
+			data_[1] = y;
+			data_[2] = z;
+		}
+		explicit Matrix3D(const T & e11, const T & e12, const T & e13,
+						  const T & e21, const T & e22, const T & e23,
+						  const T & e31, const T & e32, const T & e33)
+		{
+			data_[0][0] = e11;	data_[0][1] = e12, data_[0][2] = e13;
+			data_[1][0] = e21;	data_[1][1] = e22, data_[1][2] = e23;
+			data_[2][0] = e31;	data_[2][1] = e32, data_[2][2] = e33;
+
+		}
+		explicit Matrix3D(const T(&src)[3][3])
+		{
+			for (size_t i = 0; i < row_; i++)
+				for (size_t j = 0; j < col_; j++)
+					data_[i][j] = src[i][j];
+		}
+
+		Matrix3D(const Matrix3D & rhs)//copy constructor
+		{
+			data_[0] = rhs.Row(0);
+			data_[1] = rhs.Row(1);
+			data_[2] = rhs.Row(2);
+		}
+
+		Matrix3D& operator=(const Matrix3D & rhs)
+		{
+			if (this == &rhs) return *this;
+			data_ = rhs.data_;
+			return *this;
+		}
+
+		static size_t size() { return size_; }
+		static size_t row() { return row_; }
+		static size_t col() { return col_; }
+
+		T& operator()(size_t row, size_t col)
+		{
+			return data_[row][col];
+		}
+		const T& operator()(size_t row, size_t col) const
+		{
+			return data_[row][col];
+		}
+
+		const Vec3<T> & Row(size_t index) const
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+
+		Vec3<T> & Row(size_t index)
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+
+		const Vec3<T> &	operator[](int index) const //get const row
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+		Vec3<T> &		operator[](int index) //get row
+		{
+			CHECK_ASSERT(index < this->row_);
+			return data_[index];
+		}
+
+		template <typename S>
+		Matrix3D<T>		operator*(const Matrix3D<S> & rhs) const
+		{
+			Matrix3D<T> ret = Math::Multiply(*this, rhs);
+			return ret;
+		}
+
+		template <typename S>
+		Matrix3D<T>		operator+(const Matrix3D<S> & rhs) const
+		{
+			Matrix3D<T> ret;
+			ret[0] = this->data_[0] + rhs[0];
+			ret[1] = this->data_[1] + rhs[1];
+			ret[1] = this->data_[2] + rhs[2];
+			return ret;
+		}
+
+		template <typename S>
+		Matrix3D<T>		operator-(const Matrix3D<S> & rhs) const
+		{
+			Matrix3D<T> ret;
+			ret[0] = this->data_[0] - rhs[0];
+			ret[1] = this->data_[1] - rhs[1];
+			ret[1] = this->data_[2] - rhs[2];
+			return ret;
+		}
+
+		Matrix3D<T> 	operator*(const T & rhs) const
+		{
+			Matrix3D<T> ret;
+			ret[0] = data_[0] * rhs;
+			ret[1] = data_[1] * rhs;
+			ret[2] = data_[2] * rhs;
+			return ret;
+		}
+
+		void Print()
+		{
+			PRINT(data_[0][0] << " " << data_[0][1] << " " << data_[0][2]);
+			PRINT(data_[1][0] << " " << data_[1][1] << " " << data_[1][2]);
+			PRINT(data_[2][0] << " " << data_[2][1] << " " << data_[2][2]);
+		}
+
+	};
+
+	template <typename T>
 	Matrix2D<T>	operator*(const T & lhs, const Matrix2D<T> & rhs)
+	{
+		return rhs * lhs;
+	}
+
+
+	template <typename T>
+	Matrix3D<T>	operator*(const T & lhs, const Matrix3D<T> & rhs)
 	{
 		return rhs * lhs;
 	}

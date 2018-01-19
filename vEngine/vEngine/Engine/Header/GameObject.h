@@ -21,7 +21,7 @@ namespace vEngine
 		virtual void Load();
 		//user should keep tracking and make sure GameObject* is valid
 		//it could be released by registering an observer to it 
-		//and to remove it when it has be destructed.
+		//and to remove it when it has been destructed.
 		virtual void AddComponent(GameObject* const GameObject_);
 		virtual GameObject& FindComponentByUUID(const UUID& UUID_);
 
