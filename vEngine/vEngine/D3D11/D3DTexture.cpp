@@ -153,6 +153,7 @@ namespace vEngine
 
 	void D3DTexture2D::SetD3DTexture( ID3D11Texture2D* d3d_texture )
 	{
+		CHECK_AND_ASSERT(false, "TODO: to reset d3d_rt_view_ and d3d_sr_view_");
 		this->d3d_texture2D_ = d3d_texture;
 	}
 

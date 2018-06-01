@@ -270,7 +270,7 @@ float4 LightingPS( in LightingVout pin): SV_Target
 
 	float4 occlusion = blur_occlusion_tex.Load( samplelndices );
 	//cal lighting
-	return float4(1,1,1,1);
+	//return float4(1,1,1,1);
 	return CalulateLighting( normal, world_pos.xyz, shininess, shadow, occlusion);
 	
 }
