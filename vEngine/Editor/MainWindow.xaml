@@ -3,10 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:int="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:cs="clr-namespace:Editor"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <int:WindowsFormsHost Margin="0,0,70,0">
+        Title="MainWindow" Height="670.959" Width="674.976">
+    <Grid Margin="0,0,138.143,0.286">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="251*"/>
+            <ColumnDefinition Width="280*"/>
+        </Grid.ColumnDefinitions>
+        <WindowsFormsHost Margin="0,10,-0.001,348" Grid.ColumnSpan="2">
             <cs:D3DUserControl/>
-        </int:WindowsFormsHost>
+        </WindowsFormsHost>
+        <Border Name="D3DHwndHost" Margin="0,299,-0.001,10" Grid.ColumnSpan="2" />
+        <StackPanel HorizontalAlignment="Right" Height="622" Margin="0,15,-126.001,5" Width="121" Grid.Column="1">
+            <Button Content="Button"/>
+            <Button Content="Button"/>
+            <Label Content="Label"/>
+        </StackPanel>
     </Grid>
 </Window>

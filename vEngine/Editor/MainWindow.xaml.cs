@@ -24,11 +24,16 @@ namespace Editor
         public MainWindow()
         {
             InitializeComponent();
-            //this.D3DRenderWindow.Loaded += new RoutedEventHandler(this.WindowLoaded);
+            this.Loaded += new RoutedEventHandler(this.WindowLoaded);
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            // Create our OpenGL Hwnd 'control'...
+            System.Windows.Interop.HwndHost host = new D3DHwndHost();
+
+            // ... and attach it to the placeholder control:
+            D3DHwndHost.Child = host;
             //vEngine.InitD3D((new System.Windows.Interop.WindowInteropHelper(this)).Handle, 200,300);
             //vEngine.RenderFrame();
         }

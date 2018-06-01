@@ -88,6 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="D3DHwndHost.cs" />
     <Compile Include="D3DUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
