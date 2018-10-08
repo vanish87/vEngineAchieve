@@ -21,6 +21,7 @@ namespace Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainViewModel vm;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,12 +31,21 @@ namespace Editor
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             // Create our OpenGL Hwnd 'control'...
-            System.Windows.Interop.HwndHost host = new D3DHwndHost();
+            //System.Windows.Interop.HwndHost host = new D3DHwndHost();
 
             // ... and attach it to the placeholder control:
-            D3DHwndHost.Child = host;
+            //D3DHwndHost.Child = host;
             //vEngine.InitD3D((new System.Windows.Interop.WindowInteropHelper(this)).Handle, 200,300);
             //vEngine.RenderFrame();
+
+            vm = new MainViewModel
+            {
+                Content = new D3DHwndHost()
+            };
+
+            InitializeComponent();
+
+            DataContext = vm;
         }
 
 
