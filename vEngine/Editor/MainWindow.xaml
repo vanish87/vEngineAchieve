@@ -9,10 +9,11 @@
             <ColumnDefinition Width="251*"/>
             <ColumnDefinition Width="251*"/>
         </Grid.ColumnDefinitions>
-         <WindowsFormsHost Margin="9.857,137,9.857,221" Grid.Column="1">
+         <!-- <WindowsFormsHost Margin="9.857,137,9.857,221" Grid.Column="1">
             <cs:D3DUserControl/>
         </WindowsFormsHost> 
-        <ContentControl Content="{Binding Content}" Margin="10,137,10.143,221"/>
+        <ContentControl Content="{Binding Content}" Margin="10,137,10.143,221"/> -->
+        <Border Name="insertHwndHostHere" Height="200" Width="500"/>
         <StackPanel HorizontalAlignment="Right" Height="622" Margin="0,15,-126.001,5" Width="121" Grid.Column="1">
             <Button Content="Button"/>
             <Button Content="Button"/>

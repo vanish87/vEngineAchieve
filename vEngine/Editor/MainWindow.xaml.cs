@@ -38,14 +38,16 @@ namespace Editor
             //vEngine.InitD3D((new System.Windows.Interop.WindowInteropHelper(this)).Handle, 200,300);
             //vEngine.RenderFrame();
 
-            vm = new MainViewModel
-            {
-                Content = new D3DHwndHost()
-            };
+            //             vm = new MainViewModel
+            //             {
+            //                 Content = new D3DHwndHost()
+            //             };
+
+            insertHwndHostHere.Child = new D3DHwndHost();
 
             InitializeComponent();
 
-            DataContext = vm;
+            //DataContext = vm;
         }
 
 
