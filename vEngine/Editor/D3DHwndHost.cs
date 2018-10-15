@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace Editor
 {
+    public class vEngine
+    {
+        [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void InitD3D(IntPtr window, int Width, int Height);
+
+        [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void RenderFrame();
+
+        [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void CleanD3D();
+    }
+
     public class D3DHwndHost : HwndHost
     {
         protected IntPtr Hwnd { get; private set; }
@@ -121,6 +132,11 @@ namespace Editor
                 Source = this,
             });
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            //throw new NotImplementedException();
+        }        
     }
 
     internal class NativeMethods
