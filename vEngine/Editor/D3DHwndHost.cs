@@ -17,7 +17,13 @@ namespace Editor
 
         [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void CleanD3D();
-    }
+
+        [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void InitApp(IntPtr hWnd);
+
+        [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void RunApp();
+}
 
     public class D3DHwndHost : HwndHost
     {
@@ -57,12 +63,14 @@ namespace Editor
 
         private void OnCompositionTargetRendering(object sender, EventArgs eventArgs)
         {
-            vEngine.RenderFrame();
+            //vEngine.RenderFrame();
         }
 
         protected  void Initialize()
         {
-            vEngine.InitD3D(Hwnd, 320, 240);
+            //vEngine.InitD3D(Hwnd, (int)this.ActualWidth, (int)this.ActualHeight);
+            vEngine.InitApp(Hwnd);
+            vEngine.RunApp();
         }
         protected  void Uninitialize() { }
         protected  void Resized() { }

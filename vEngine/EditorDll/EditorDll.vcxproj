@@ -214,9 +214,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Header\AppWrapper.h" />
     <ClInclude Include="Header\Interface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AppWrapper.cpp" />
     <ClCompile Include="Source\Interface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

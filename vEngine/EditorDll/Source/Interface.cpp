@@ -246,3 +246,18 @@ void CleanD3D(void)
 {
 
 }
+
+
+
+void InitApp(HWND hWnd)
+{
+	Configure MyConfig;
+	MyConfig.LoadConfig("Configure/Config.xml");
+	Context::Instance().Setup(MyConfig.GetContextSetting());
+	app.Initialize(hWnd);
+}
+
+void RunApp()
+{
+	app.Run();
+}

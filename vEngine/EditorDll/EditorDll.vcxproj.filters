@@ -18,9 +18,15 @@
     <ClInclude Include="Header\Interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Header\AppWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AppWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
