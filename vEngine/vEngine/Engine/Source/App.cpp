@@ -26,7 +26,7 @@ namespace vEngine
 	{
 	}
 
-	void App::Initialize()
+	void App::Initialize(void* hwnd)
 	{
 		Configure::ContextSetting config = Context::Instance().GetConfigure();
 
@@ -34,7 +34,7 @@ namespace vEngine
 		Context::Instance().RegisterAppInstance(this);
 
 		//then create system window
-		this->win_.InitWindow(app_name_, config.render_setting);
+		this->win_.InitWindow(app_name_, config.render_setting, hwnd);
 
 		//then create rendering window
 		Context::Instance().GetRenderFactory().GetRenderEngine().InitRenderWindow(app_name_, config.render_setting);

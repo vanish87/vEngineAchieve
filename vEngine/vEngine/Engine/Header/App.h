@@ -17,7 +17,7 @@ namespace vEngine
 		App(void);
 		virtual ~App(void);
 		App(std::string app_name);
-		void Initialize();
+		void Initialize(void* hwnd = nullptr);
 		void Run();
 
 		void LockCursor(bool lock);

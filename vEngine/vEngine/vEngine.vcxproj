@@ -169,6 +169,7 @@
     <ClInclude Include="Engine\Header\ResourceLoader.h" />
     <ClInclude Include="Engine\Header\SceneManager.h" />
     <ClInclude Include="Engine\Header\SceneObject.h" />
+    <ClInclude Include="Engine\Header\ScriptContext.h" />
     <ClInclude Include="Engine\Header\ScriptStack.h" />
     <ClInclude Include="Engine\Header\ScriptTest.h" />
     <ClInclude Include="Engine\Header\ShaderObject.h" />

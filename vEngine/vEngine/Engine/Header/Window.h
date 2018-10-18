@@ -17,7 +17,7 @@ namespace vEngine
 	{
 		friend class App;
 	public:
-		void InitWindow(std::string app_name, Configure::RenderSetting& render_setting);
+		void InitWindow(std::string app_name, Configure::RenderSetting& render_setting, void* hwnd = nullptr);
 		virtual ~Window(void);
 
 		HWND GetWnd() const
@@ -39,6 +39,7 @@ namespace vEngine
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		LRESULT CALLBACK MsgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 		HWND wnd_;
+		WNDPROC default_wnd_proc_;
 		std::string win_name_;
 		bool inited_; 
 		//WinndowRect should slightly bigger than rendering resolution
