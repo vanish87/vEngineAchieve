@@ -114,6 +114,7 @@ namespace Editor
             {
                 case NativeMethods.WM_LBUTTONDOWN:
                     RaiseMouseEvent(MouseButton.Left, Mouse.MouseDownEvent);
+                    NativeMethods.SetFocus(hwnd);
                     break;
 
                 case NativeMethods.WM_LBUTTONUP:
@@ -126,6 +127,9 @@ namespace Editor
 
                 case NativeMethods.WM_RBUTTONUP:
                     RaiseMouseEvent(MouseButton.Right, Mouse.MouseUpEvent);
+                    break;
+                default:
+                    //Console.WriteLine(msg);
                     break;
             }
 
@@ -200,6 +204,9 @@ namespace Editor
 
         [DllImport("user32.dll", EntryPoint = "DestroyWindow", CharSet = CharSet.Auto)]
         public static extern bool DestroyWindow(IntPtr hwnd);
+
+        [DllImport("user32.dll", EntryPoint = "SetFocus", CharSet = CharSet.Auto)]
+        public static extern IntPtr SetFocus(IntPtr hwnd);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetModuleHandle(string module);
