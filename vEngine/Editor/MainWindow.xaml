@@ -1,13 +1,8 @@
 ﻿<Window x:Class="Editor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="670.959" Width="674.976">
-    <Grid Margin="0,0,138.143,0.286">
-        <Border Name="insertHwndHostHere" Margin="15,15,16,10"/>
-        <StackPanel HorizontalAlignment="Right" Height="622" Margin="0,15,-126.001,5" Width="121" Grid.Column="1">
-            <Button Content="Button"/>
-            <Button Content="Button"/>
-            <Label Content="Label"/>
-        </StackPanel>
+        Title="MainWindow" Width="1300" Height="750" >
+    <Grid>
+        <Border Name="insertHwndHostHere" Width="1280" Height="720" />
     </Grid>
 </Window>
