@@ -261,3 +261,8 @@ void RunApp()
 {
 	app.Run();
 }
+
+void QuitApp()
+{
+	//app.Quit();
+}

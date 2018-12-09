@@ -58,7 +58,7 @@ namespace vEngine
 		double Previous = UpdateTimer.Time();
 		double Lag = 0;
 
-		while( WM_QUIT != msg.message )
+		while( WM_QUIT != msg.message)
 		{
 			if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
 			{
@@ -110,6 +110,7 @@ namespace vEngine
 	{
 		return this->win_;
 	}
+
 
 	void App::LockCursor( bool lock )
 	{

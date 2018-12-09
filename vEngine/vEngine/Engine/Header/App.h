@@ -19,7 +19,8 @@ namespace vEngine
 		App(std::string app_name);
 		void Initialize(void* hwnd = nullptr);
 		void Run();
-
+		void Quit();
+		
 		void LockCursor(bool lock);
 		void SetCursor(int x, int y);
 

@@ -27,9 +27,13 @@ extern "C"
 
 extern "C"
 {
-	__declspec(dllexport) void InitApp(HWND hWnd);    // sets up and initializes Direct3D
+	__declspec(dllexport) void InitApp(HWND hWnd);    // sets up and initializes engine app
 }
 extern "C"
 {
-	__declspec(dllexport) void RunApp();    // sets up and initializes Direct3D
+	__declspec(dllexport) void RunApp();    // run engine loop
+}
+extern "C"
+{
+	__declspec(dllexport) void QuitApp();    // quit
 }

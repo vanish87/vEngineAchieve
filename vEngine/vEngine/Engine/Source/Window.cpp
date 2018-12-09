@@ -138,10 +138,10 @@ namespace vEngine
 		{
 			LRESULT ret = win->MsgProc(hWnd, message, wParam, lParam);
 			CHECK_ASSERT(ret == S_OK);
+			return win->default_wnd_proc_(hWnd, message, wParam, lParam);
 		}
 		
-		return win->default_wnd_proc_(hWnd, message, wParam, lParam);
-
+		return S_FALSE;
 	}
 
 	LRESULT CALLBACK Window::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

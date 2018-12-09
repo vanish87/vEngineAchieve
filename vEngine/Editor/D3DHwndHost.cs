@@ -23,7 +23,14 @@ namespace Editor
 
         [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void RunApp();
-}
+
+/*
+        [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void HandleMessage(IntPtr msg);*/
+
+        [DllImport("EditorDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QuitApp();
+    }
 
     public class D3DHwndHost : HwndHost
     {
@@ -70,9 +77,17 @@ namespace Editor
         {
             //vEngine.InitD3D(Hwnd, (int)this.ActualWidth, (int)this.ActualHeight);
             vEngine.InitApp(Hwnd);
-            vEngine.RunApp();
+            new System.Threading.Thread(() =>
+            {
+                System.Threading.Thread.CurrentThread.IsBackground = true;
+                System.Threading.Thread.CurrentThread.Name = "GameMainThread";
+                vEngine.RunApp();
+            }).Start();
         }
-        protected  void Uninitialize() { }
+        protected  void Uninitialize()
+        {
+            vEngine.QuitApp();
+        }
         protected  void Resized() { }
 
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
@@ -113,20 +128,20 @@ namespace Editor
             switch (msg)
             {
                 case NativeMethods.WM_LBUTTONDOWN:
-                    RaiseMouseEvent(MouseButton.Left, Mouse.MouseDownEvent);
+                    //RaiseMouseEvent(MouseButton.Left, Mouse.MouseDownEvent);
                     NativeMethods.SetFocus(hwnd);
                     break;
 
                 case NativeMethods.WM_LBUTTONUP:
-                    RaiseMouseEvent(MouseButton.Left, Mouse.MouseUpEvent);
+                    //RaiseMouseEvent(MouseButton.Left, Mouse.MouseUpEvent);
                     break;
 
                 case NativeMethods.WM_RBUTTONDOWN:
-                    RaiseMouseEvent(MouseButton.Right, Mouse.MouseDownEvent);
+                   // RaiseMouseEvent(MouseButton.Right, Mouse.MouseDownEvent);
                     break;
 
                 case NativeMethods.WM_RBUTTONUP:
-                    RaiseMouseEvent(MouseButton.Right, Mouse.MouseUpEvent);
+                    //RaiseMouseEvent(MouseButton.Right, Mouse.MouseUpEvent);
                     break;
                 default:
                     //Console.WriteLine(msg);
