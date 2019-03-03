@@ -1,14 +1,12 @@
 #pragma once
 #include <windows.h>
 
-#include "Header/AppWrapper.h"
 
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib") //may fix in the future
 #pragma comment(lib, "dxguid.lib") 
 #pragma comment(lib, "d3dcompiler.lib") 
 
-static MyApp app;
 
 extern "C"
 {

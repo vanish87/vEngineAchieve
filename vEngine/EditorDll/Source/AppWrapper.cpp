@@ -17,7 +17,8 @@
 
 using namespace vEngine;
 
-static SandSimulator sand_sims_;
+MyApp app;
+//static SandSimulator sand_sims_;
 
 static Text t1 = L"this is a text";
 static Text t2 = L"this is a text1";
@@ -138,7 +139,7 @@ void MyApp::InitObjects()
 	t1.SetRect(int4(50, 50, 0, 0));
 	t2.SetRect(int4(100, 100, 0, 0));
 
-	sand_sims_.Start();
+	//sand_sims_.Start();
 
 	newstate_ = std::make_shared<MyState>(this);
 	Context::Instance().GetStateManager().ChangeState(newstate_, SOP_PUSH);

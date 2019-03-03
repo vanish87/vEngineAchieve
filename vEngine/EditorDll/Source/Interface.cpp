@@ -3,6 +3,7 @@
 #include "Engine/Header/EnginePreDec.h"
 #include "Common/Header/Vector.h"
 #include "Common/Header/Math.h"
+#include "Header/AppWrapper.h"
 
 #include <d3dcompiler.h>
 #include <directxmath.h>
@@ -10,6 +11,8 @@
 
 using namespace vEngine;
 using namespace DirectX;
+
+extern MyApp app;
 
 
 ID3D11Device*		d3d_device_;

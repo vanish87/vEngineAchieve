@@ -28,8 +28,8 @@ namespace Editor
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
-        { 
-            insertHwndHostHere.Child = new D3DHwndHost();
+        {
+            GameWindow.Child = new D3DHwndHost();
             InitializeComponent();
         }
 

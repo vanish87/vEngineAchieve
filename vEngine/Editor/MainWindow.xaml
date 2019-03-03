@@ -3,6 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Width="1300" Height="750" >
     <Grid>
-        <Border Name="insertHwndHostHere" Width="1280" Height="720" />
+        <Border Name="GameWindow" Width="1280" Height="720" />
     </Grid>
 </Window>
