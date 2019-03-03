@@ -139,6 +139,11 @@ namespace vEngine
 			CHECK_ASSERT(ret == S_OK);
 			return win->default_wnd_proc_(hWnd, message, wParam, lParam);
 		}
+		else
+		{
+			//important for handle window message correctly(e.g: window style messages)
+			return ::DefWindowProc(hWnd, message, wParam, lParam);
+		}
 		
 		return S_FALSE;
 	}
