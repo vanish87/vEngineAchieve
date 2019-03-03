@@ -94,7 +94,7 @@ namespace vEngine
 			window_rect_.width = static_cast<uint16_t>(rc.right - rc.left);
 			window_rect_.height = static_cast<uint16_t>(rc.bottom - rc.top);
 			this->wnd_ = CreateWindow(win_name_w.c_str(), win_name_w.c_str(),
-				WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+				WS_OVERLAPPEDWINDOW,
 				window_rect_.left, window_rect_.top, window_rect_.width, window_rect_.height,
 				nullptr, nullptr, hInstance, nullptr);		
 
@@ -106,14 +106,13 @@ namespace vEngine
 			}
 
 			::SetWindowLongPtr(this->wnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+			this->default_wnd_proc_ = ::DefWindowProc;
 
 			::ShowWindow(this->wnd_, SW_SHOWNORMAL);
 			::SetForegroundWindow(this->wnd_);
 			::SetFocus(this->wnd_);
 			::ShowCursor(!render_setting.full_screen);
 			::UpdateWindow(this->wnd_);
-
-			this->default_wnd_proc_ = ::DefWindowProc;
 		}
 
 		this->inited_ = true;
