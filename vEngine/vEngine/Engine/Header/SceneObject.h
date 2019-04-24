@@ -36,6 +36,8 @@ namespace vEngine
 	protected:
 
 		RenderElement* render_element_;
+		//TODO SceneObject only contains non-position/rotation/scale information
+		//space information will stored in SceneNode object
 		float4x4 local_matrix_;
 
 		bool visiable_;

@@ -6,7 +6,7 @@
 
 #include "Common/Header/CommonPreDec.h"
 #include "Common/Header/Vector.h"
-#include "Engine/Header/TypeAndFormat.h"
+//#include "Engine/Header/TypeAndFormat.h"
 
 
 namespace vEngine
@@ -17,9 +17,9 @@ namespace vEngine
 		AABBox(void);
 		virtual ~AABBox(void);
 
-		AABBox(std::vector<VertexType*> vertice, uint32_t vcout);
+		AABBox(std::vector<float3> vertice, uint32_t vcout);
 
-		void ComputeAABB(std::vector<VertexType*> vertice, uint32_t vcout);
+		void ComputeAABB(std::vector<float3> vertice, uint32_t vcout);
 		float3 Min();
 		float3 Max();
 

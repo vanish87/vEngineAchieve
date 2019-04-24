@@ -14,18 +14,18 @@ namespace vEngine
 	}
 
 
-	AABBox::AABBox(std::vector<VertexType*> vertice, uint32_t vcout )
+	AABBox::AABBox(std::vector<float3> vertice, uint32_t vcout )
 	{
 		ComputeAABB(vertice, vcout);
 	}
 
-	void AABBox::ComputeAABB( std::vector<VertexType*> vertice, uint32_t vcout )
+	void AABBox::ComputeAABB( std::vector<float3> vertice, uint32_t vcout )
 	{
 		float3 min( std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 		float3 max(-std::numeric_limits<float>::max(),-std::numeric_limits<float>::max(),-std::numeric_limits<float>::max());
 		for(size_t i=0; i< vcout; i++)
 		{
-			float3 pos = vertice[i]->position;
+			float3 pos = vertice[i];
 			//std::cout<<pos.x()<<" "<<pos.y()<<" "<<pos.z()<<std::endl;
 			max = Math::Max(pos, max);
 			min = Math::Min(pos, min);

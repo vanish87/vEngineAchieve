@@ -154,12 +154,12 @@ namespace vEngine
 		//       v1
 		//       *
 		//      / \
-				//     /   \
+		//     /   \
 		//  m0*-----*m1
-//   / \   / \
+		//   / \   / \
 		//  /   \ /   \
 		// *-----*-----*
-// v0    m2     v2
+		//v0    m2     v2
 
 		int numTris = (int)iin.size() / 3;
 		for (int i = 0; i < numTris; ++i)
